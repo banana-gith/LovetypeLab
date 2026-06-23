@@ -101,6 +101,13 @@ for (const character of characters) {
   lines.push(`- Missing local assets: ${total - existing}`);
   lines.push(`- Fixed look: ${character.fixedLook}`);
   lines.push("");
+  const design = characterGameDesign[character.id];
+  lines.push("### Extra route / heart memo assets");
+  lines.push("");
+  lines.push(`- **Heart memo reveal cut-in**: ${character.fixedLook} 「${design.innerLayer.privateWish}」という内面が静かに伝わる、恋愛シミュレーション結果画面用のカットイン。${design.visualFormula} 画面内に文字、番号、ロゴを入れない。恋愛相手は映さず、視線、手元、余白、二人分の小物で関係性を示す。`);
+  lines.push(`- **Repair route ending CG**: ${character.fixedLook} 怖さ「${design.innerLayer.fear}」を乗り越えた直後。まだ少し緊張が残るが、関係が切れていない表情。柔らかい映画的光、浅い被写界深度、上質でリアル。画像内文字なし。`);
+  lines.push(`- **Trust route ending CG**: ${character.fixedLook} 「${design.innerLayer.opensWhen}」という安心が表情に出る余韻シーン。二人分の飲み物、空いた席、スマホ通知などで相手の存在を示す。画像内文字なし。`);
+  lines.push("");
   let cursor = 0;
   for (const date of story.dates) {
     lines.push(`### ${date.title}`);

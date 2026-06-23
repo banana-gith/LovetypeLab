@@ -64,6 +64,15 @@ for (const [id, type, name] of characters) {
   lines.push("");
   lines.push(`**Turn-offs:** ${design.turnOffs.join(" / ")}`);
   lines.push("");
+  lines.push("### Inner Layer");
+  lines.push("");
+  lines.push(`- Public mask: ${design.innerLayer.mask}`);
+  lines.push(`- Fear: ${design.innerLayer.fear}`);
+  lines.push(`- Opens when: ${design.innerLayer.opensWhen}`);
+  lines.push(`- Closes when: ${design.innerLayer.closesWhen}`);
+  lines.push(`- Private wish: ${design.innerLayer.privateWish}`);
+  lines.push(`- Confession need: ${design.innerLayer.confessionNeed}`);
+  lines.push("");
   lines.push("### Persona");
   lines.push("");
   lines.push(`- Summary: ${persona.summary}`);
