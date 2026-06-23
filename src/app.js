@@ -1,5 +1,5 @@
 import { personaCatalog } from "./personas.js";
-import { characterFinaleScene, characterGameDesign, characterRouteEnding, personaSwitchFeedback, relationshipPulse, relationshipRoute, routeEndings, sceneCoaching, sceneDramaturgy, sceneReadingCue } from "./gameDesign.js";
+import { characterFinaleScene, characterGameDesign, characterRouteEnding, personaSwitchFeedback, relationshipPulse, relationshipRoute, routeEndings, sceneCoaching, sceneDramaturgy, sceneReadingCue, sceneTacticalRead } from "./gameDesign.js";
 import { branchTone, storyFor } from "./story.js";
 
 const $ = (selector) => document.querySelector(selector);
@@ -286,6 +286,69 @@ function applyPersonaBias(effect, kind, character = state.char) {
   );
 }
 
+function combineEffects(...effects) {
+  const merged = { trust: 0, interest: 0, comfort: 0, pressure: 0, misread: 0 };
+  for (const effect of effects) {
+    for (const [key, value] of Object.entries(effect || {})) {
+      merged[key] = (merged[key] || 0) + value;
+    }
+  }
+  return merged;
+}
+
+function momentumRead(choice, history = state.history) {
+  const last = history.at(-1);
+  const before = history.at(-2);
+  const repeated = last && before && last.branch === before.branch && before.branch === choice.branch;
+  if (repeated && choice.branch === "safe") {
+    return {
+      label: "安心に寄りすぎ",
+      copy: "丁寧さはあるが、同じ温度が続いて恋の進展が少し鈍る。ここからは小さな主語や具体的な誘いも必要。",
+      effect: { interest: -2, misread: 1 },
+    };
+  }
+  if (repeated && choice.branch === "spark") {
+    return {
+      label: "火花に寄りすぎ",
+      copy: "楽しい勢いは出ているが、相手は軽く扱われていないかを見始める。次は安心の着地が欲しい。",
+      effect: { pressure: 1, misread: 2, comfort: -2 },
+    };
+  }
+  if (repeated && choice.branch === "strain") {
+    return {
+      label: "揺れが続いている",
+      copy: "押しや流しが続き、相手は本当に見てくれているかを測っている。修復の一手が必要。",
+      effect: { pressure: 2, misread: 3, trust: -2 },
+    };
+  }
+  if (last?.branch === "strain" && choice.branch === "safe") {
+    return {
+      label: "修復の着地",
+      copy: "一度ずれたあと、受け取り直す姿勢が見えた。完璧より戻ってくる力が残る。",
+      effect: { trust: 3, comfort: 2, misread: -2 },
+    };
+  }
+  if (last?.branch === "spark" && choice.branch === "safe") {
+    return {
+      label: "火花のあとに大事にする",
+      copy: "楽しいだけで終わらせず、相手の気持ちを置ける。場面の駆け引きとしてかなり強い。",
+      effect: { trust: 2, comfort: 2, pressure: -1 },
+    };
+  }
+  if (last?.branch === "safe" && choice.branch === "spark") {
+    return {
+      label: "安心から一歩進める",
+      copy: "安全地帯を作ったあと、恋の温度を少し上げられている。守りすぎない良い変化。",
+      effect: { interest: 3, comfort: 1 },
+    };
+  }
+  return {
+    label: "読み合い継続",
+    copy: "前の反応と大きく矛盾せず、次の場面で温度を調整できる。",
+    effect: {},
+  };
+}
+
 function avatar(c, large = "") {
   if (c.portrait) {
     return `<figure class="avatar avatar-photo ${large}" style="--c:${c.color};--light:${c.light}" aria-label="${c.name}の写真">
@@ -502,7 +565,19 @@ function sceneChoices() {
     ...choice,
     effect: applyPersonaBias(choice.effect, choice.kind, c),
   }));
-  return stableShuffle(choices, `${c.id}:${state.sceneIndex}`);
+  return stableShuffle(
+    choices.map((choice) => {
+      const tactic = sceneTacticalRead(c.id, state.sceneIndex, totalScenes(c), choice);
+      const momentum = momentumRead(choice);
+      return {
+        ...choice,
+        tactic,
+        momentum,
+        effect: combineEffects(choice.effect, tactic.effect, momentum.effect),
+      };
+    }),
+    `${c.id}:${state.sceneIndex}`,
+  );
 }
 
 function stableShuffle(items, seed) {
@@ -602,13 +677,14 @@ function game() {
   const dramatic = sceneDramaturgy(c.id, scene, state.sceneIndex, count);
   const coaching = sceneCoaching(c.id, scene, state.sceneIndex, count);
   const reading = sceneReadingCue(c.id, state.sceneIndex, count);
+  const tactic = sceneTacticalRead(c.id, state.sceneIndex, count);
   const mission = dateMissionReport(c, dateIndex);
   const memory = characterMemoryReport(c);
   const stage = relationshipStage(c);
   return `<div class="game-shell">
     <header class="game-header"><button class="icon-button" data-go="profile">×</button><div class="game-person">${avatar(c)}<div><b>${c.name}</b><span>${c.style}</span></div></div><div class="game-progress"><span>DATE ${dateIndex + 1} <b>${state.sceneIndex + 1} / ${count}</b></span><i><em style="width:${((state.sceneIndex + 1) / count) * 100}%;background:${c.color}"></em></i></div></header>
     <main class="game-main"><aside class="score-strip"><div class="score-hero" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>\u7dcf\u5408\u8a55\u4fa1</span><b>${tier.label}</b><p>${tier.sub}</p></div></div>${meters()}<div class="relationship-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div><div class="meter-help">\u30bf\u30a4\u30d7\u3054\u3068\u306b\u91cd\u304f\u898b\u308b\u30dd\u30a4\u30f3\u30c8\u304c\u5c11\u3057\u9055\u3044\u307e\u3059\u3002</div></aside>
-      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context"><b>今の状況</b>${sceneContext(date, scene)}<div class="scene-insight"><span>${dramatic.beat}</span><b>${dramatic.focus}</b></div><div class="scene-coach"><span>${coaching.badge}</span><p><b>${coaching.skill}</b>${coaching.watch}</p></div><div class="scene-read"><span>READ THE ROOM</span><p><b>${reading.signal}</b>${reading.playerQuestion}</p></div><div class="scene-memory memory-${memory.tone}"><span>MEMORY</span><p><b>${memory.label}</b>${memory.copy}</p></div></div>${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent">${choiceIntentLabel(choice)}</em><p>${choice.label}</p></button>`).join("")}</div></section>
+      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context"><b>今の状況</b>${sceneContext(date, scene)}<div class="scene-insight"><span>${dramatic.beat}</span><b>${dramatic.focus}</b></div><div class="scene-coach"><span>${coaching.badge}</span><p><b>${coaching.skill}</b>${coaching.watch}</p></div><div class="scene-read"><span>READ THE ROOM</span><p><b>${reading.signal}</b>${reading.playerQuestion}</p></div><div class="scene-tactic"><span>${tactic.badge} TACTIC</span><p><b>${tactic.title}</b>${tactic.read}</p><small>刺さりやすい: ${tactic.prefer || "場面次第"} / 危ない: ${tactic.avoid || "読み違い"}</small></div><div class="scene-memory memory-${memory.tone}"><span>MEMORY</span><p><b>${memory.label}</b>${memory.copy}</p></div></div>${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent">${choiceIntentLabel(choice)}</em><p>${choice.label}</p></button>`).join("")}</div></section>
     </main>${state.picked ? feedback() : ""}
   </div>`;
 }
@@ -622,6 +698,8 @@ function feedback() {
   const reading = sceneReadingCue(c.id, state.sceneIndex, totalScenes(c));
   const mission = dateMissionReport(c, currentScene().dateIndex);
   const memory = characterMemoryReport(c);
+  const tactic = picked.tactic || sceneTacticalRead(c.id, state.sceneIndex, totalScenes(c), picked);
+  const momentum = picked.momentum || momentumRead(picked);
   const combo = currentCombo();
   const style = playStyleReport();
   return `<div class="feedback-overlay"><div class="feedback-modal chat-modal feedback-stamp-modal grade-${grade.className}">
@@ -631,6 +709,8 @@ function feedback() {
       <div class="chat-bubble you"><b>\u3042\u306a\u305f\u306e\u8fd4\u3057 / ${choiceIntentLabel(picked)}</b><p>${picked.label}</p></div>
       <div class="chat-bubble them" style="--c:${c.color};--light:${c.light}"><b>${c.name}</b><p>\u300c${picked.reaction}\u300d</p></div>
       <div class="chat-bubble inner"><b>\u4f55\u304c\u8d77\u304d\u305f\uff1f</b><p>${picked.why}</p></div>
+      <div class="chat-bubble tactic"><b>${tactic.verdict} / ${tactic.title}</b><p>${tactic.choiceFits ? tactic.payoff : tactic.choiceRisks ? tactic.trap : tactic.read}</p></div>
+      <div class="chat-bubble momentum"><b>${momentum.label}</b><p>${momentum.copy}</p></div>
       <div class="chat-bubble switch"><b>心理スイッチ / ${coaching.switch.label}</b><p>${personaSwitchFeedback(c.id, state.sceneIndex, totalScenes(c), picked.branch)}</p></div>
       <div class="chat-bubble read"><b>読み筋</b><p>良い読み: ${reading.goodRead} / 危ない誤読: ${reading.misread}</p></div>
       <div class="chat-bubble mission"><b>${mission.badge} / ${mission.status}</b><p>${mission.title}: ${mission.next}</p></div>
@@ -1075,6 +1155,8 @@ document.addEventListener("click", async (event) => {
       grade: grade.rank,
       skill: coaching.skill,
       skillBadge: coaching.badge,
+      tactic: state.picked.tactic?.title,
+      momentum: state.picked.momentum?.label,
       scores: { ...state.scores },
     });
     render();

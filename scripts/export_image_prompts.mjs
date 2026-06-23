@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { activePersonaSwitch, characterFinaleScene, characterGameDesign, characterRouteEnding, routeEndings, sceneCoaching } from "../src/gameDesign.js";
+import { activePersonaSwitch, characterFinaleScene, characterGameDesign, characterRouteEnding, routeEndings, sceneCoaching, sceneTacticalRead } from "../src/gameDesign.js";
 import { storyFor } from "../src/story.js";
 
 const characters = [
@@ -65,13 +65,14 @@ function promptFor(character, scene, index) {
   const story = storyFor(character.id);
   const total = story.dates.reduce((sum, date) => sum + date.scenes.length, 0);
   const coach = sceneCoaching(character.id, scene, index, total);
+  const tactic = sceneTacticalRead(character.id, index, total);
   const activeSwitch = activePersonaSwitch(character.id, index, total);
   return [
     `恋愛シミュレーションゲームのデートシーン用、縦長スマホUIで使う正方形寄りの写真素材。`,
     character.fixedLook,
     `場面: ${scene.title}。場所/小物: ${scene.location}。`,
     `心理: ${scene.goal}。この場面の心理スイッチは「${activeSwitch.label}」。開くサイン: ${activeSwitch.tell}。開く条件: ${activeSwitch.opens}。`,
-    `会話スキルは「${coach.skill}」、見るべきサインは「${coach.watch}」。${design?.visualFormula || ""}`,
+    `会話スキルは「${coach.skill}」、見るべきサインは「${coach.watch}」。場面別タクティックは「${tactic.title}」、刺さる動きは「${tactic.prefer || "場面次第"}」、危ない動きは「${tactic.avoid || "読み違い"}」。${design?.visualFormula || ""}`,
     `恋愛相手本人は画面に出さず、視線、2人分の飲み物、空いた席、スマホ通知、差し出された小物、余白で相手の存在を示す。`,
     `自然光または映画的な夜の光、浅い被写界深度、上質でリアル、過度な加工なし。画像内に文字、番号、字幕、ロゴを入れない。`,
     `scene-${String(index + 1).padStart(2, "0")}`,
@@ -122,6 +123,10 @@ for (const character of characters) {
   }
   for (const item of design.readingCues || []) {
     lines.push(`- **Read-the-room cue visual**: ${character.fixedLook} 「${item.signal}」が一目で伝わる観察用カット。良い読みは「${item.goodRead}」、誤読差分は「${item.misread}」。画面内文字なし、視線・手元・二人分の小物・余白で表現。`);
+  }
+  for (let index = 0; index < total; index += 1) {
+    const tactic = sceneTacticalRead(character.id, index, total);
+    lines.push(`- **Tactical read UI cut-in / ${String(index + 1).padStart(2, "0")} ${tactic.title}**: ${character.fixedLook} 場面別タクティック「${tactic.title}」が表情と余白で伝わる補助カット。刺さる動きは「${tactic.prefer || "場面次第"}」、危ない動きは「${tactic.avoid || "読み違い"}」。${tactic.read} 画面内文字なし、UI合成前提、恋愛相手は映さない。`);
   }
   for (const [missionIndex, mission] of (design.dateMissions || []).entries()) {
     lines.push(`- **Date mission clear cut-in / Date ${missionIndex + 1} ${mission.badge}**: ${character.fixedLook} 「${mission.title}」を達成した余韻が伝わる一枚。${mission.imageCue}。成功感は「${mission.success}」、失敗差分では「${mission.risk}」が表情と距離に出る。画面内文字なし、UI合成前提、恋愛相手は映さない。`);

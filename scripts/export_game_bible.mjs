@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { activePersonaSwitch, characterFinaleScene, characterGameDesign, characterRouteEnding, researchBasis, routeEndings, sceneCoaching, sceneDramaturgy } from "../src/gameDesign.js";
+import { activePersonaSwitch, characterFinaleScene, characterGameDesign, characterRouteEnding, researchBasis, routeEndings, sceneCoaching, sceneDramaturgy, sceneTacticalRead } from "../src/gameDesign.js";
 import { personaCatalog } from "../src/personas.js";
 import { storyFor } from "../src/story.js";
 
@@ -165,6 +165,7 @@ for (const [id, type, name] of characters) {
     for (const scene of date.scenes) {
       const beat = sceneDramaturgy(id, scene, index, total);
       const coach = sceneCoaching(id, scene, index, total);
+      const tactic = sceneTacticalRead(id, index, total);
       const activeSwitch = activePersonaSwitch(id, index, total);
       lines.push(`${index + 1}. **${scene.title}**`);
       lines.push(`   - Location: ${scene.location}`);
@@ -175,6 +176,10 @@ for (const [id, type, name] of characters) {
       lines.push(`   - Player move: ${beat.playerMove}`);
       lines.push(`   - Skill: ${coach.badge} / ${coach.skill}`);
       lines.push(`   - Player lesson: ${coach.lesson}`);
+      lines.push(`   - Tactical read: ${tactic.badge} / ${tactic.title}`);
+      lines.push(`   - Preferred move: ${tactic.prefer || "scene-dependent"}`);
+      lines.push(`   - Risky move: ${tactic.avoid || "misread"}`);
+      lines.push(`   - Tactical note: ${tactic.read}`);
       lines.push(`   - Payoff: ${coach.payoff}`);
       lines.push(`   - Trap: ${coach.trap}`);
       lines.push("");

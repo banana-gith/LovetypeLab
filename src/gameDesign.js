@@ -758,6 +758,191 @@ export function sceneCoaching(characterId, scene, sceneIndex, totalScenes) {
   };
 }
 
+const tacticProfiles = {
+  mina: {
+    default: {
+      title: "余白を守る",
+      read: "ミナは言葉の奥を見ている。安心だけで止まらず、静かな主語を一つ置くと恋の温度になる。",
+      preferKinds: ["empathize", "concrete"],
+      cautionKinds: ["pushy", "dismiss"],
+      preferBranches: ["safe"],
+      payoff: "待ってくれた上で、関係を続ける意思も見える。",
+      trap: "正解を急ぐほど、深さではなく圧に変わる。",
+    },
+    READY: {
+      title: "緊張を急がせない",
+      read: "告白前の震えは拒絶ではなく、大事に決めたいサイン。言い切りより先に待つ姿勢が効く。",
+      preferKinds: ["empathize", "concrete"],
+      cautionKinds: ["pushy"],
+      preferBranches: ["safe"],
+    },
+    COMMIT: {
+      title: "主語を小さく出す",
+      read: "最後は受け止めるだけでは弱い。短く自分の好意を置き、答えを迫らないのが強い。",
+      preferKinds: ["concrete", "empathize"],
+      cautionKinds: ["dismiss", "pushy"],
+      preferBranches: ["safe", "spark"],
+    },
+  },
+  rio: {
+    default: {
+      title: "ノリを約束にする",
+      read: "リオは最初の熱量を見ている。まず面白がり、最後に大事にする言葉で着地させる。",
+      preferKinds: ["playful", "action"],
+      cautionKinds: ["dismiss"],
+      preferBranches: ["spark"],
+      payoff: "自由を否定せず、二人の次の予定へ変えられる。",
+      trap: "冷静な否定から入ると、笑顔のまま距離が開く。",
+    },
+    CONFLICT: {
+      title: "笑顔の奥を拾う",
+      read: "衝突場面ではノリだけだと軽く見える。楽しいを肯定してから、傷ついた所を拾う。",
+      preferKinds: ["empathize", "playful"],
+      cautionKinds: ["dismiss", "pushy"],
+      preferBranches: ["safe"],
+    },
+    COMMIT: {
+      title: "自由を縛らず約束する",
+      read: "告白では勢いより、自由を奪わない具体的な次の約束が刺さる。",
+      preferKinds: ["action", "empathize"],
+      cautionKinds: ["pushy"],
+      preferBranches: ["spark", "safe"],
+    },
+  },
+  haruka: {
+    default: {
+      title: "気持ちを形にする",
+      read: "ハルカは優しさそのものより、続けられる形を見ている。具体性が安心になる。",
+      preferKinds: ["concrete", "empathize"],
+      cautionKinds: ["dismiss", "pushy"],
+      preferBranches: ["safe"],
+      payoff: "曖昧な好意が、信頼できる約束に変わる。",
+      trap: "雰囲気だけで押すと、誠実さより不確実さが残る。",
+    },
+    MOVE: {
+      title: "誘いを曖昧にしない",
+      read: "次の予定は、日程・理由・代案のどれかがあると一気に信頼が上がる。",
+      preferKinds: ["concrete", "action"],
+      cautionKinds: ["dismiss"],
+      preferBranches: ["safe"],
+    },
+    CONFLICT: {
+      title: "修復ルールを作る",
+      read: "衝突では感情だけで流さず、次に同じズレが起きた時の扱い方を一つ決める。",
+      preferKinds: ["concrete", "empathize"],
+      cautionKinds: ["playful", "dismiss"],
+      preferBranches: ["safe"],
+    },
+  },
+  yu: {
+    default: {
+      title: "動きながら本音を置く",
+      read: "ユウは長い確認より、体験の中で近づくほうが自然。重さを短い本音に変える。",
+      preferKinds: ["action", "playful"],
+      cautionKinds: ["pushy"],
+      preferBranches: ["spark"],
+      payoff: "考える前に一緒に動ける相手として距離が縮まる。",
+      trap: "感情確認を長く続けると、足が止まって逃げたくなる。",
+    },
+    TRUTH: {
+      title: "軽さの奥を見せる",
+      read: "本音場面では行動だけだと逃げに見える。短い一文で真剣さを混ぜる。",
+      preferKinds: ["empathize", "concrete"],
+      cautionKinds: ["dismiss"],
+      preferBranches: ["safe", "spark"],
+    },
+    COMMIT: {
+      title: "次の場所へ誘う",
+      read: "定義を長く語るより、好きという意思と次の体験をセットで出すとユウらしく進む。",
+      preferKinds: ["action", "concrete"],
+      cautionKinds: ["pushy"],
+      preferBranches: ["spark"],
+    },
+  },
+  reina: {
+    default: {
+      title: "対等に言い切る",
+      read: "レイナは曖昧な迎合を見抜く。敬意を示しながら、自分の意思も明確に出す。",
+      preferKinds: ["concrete", "action"],
+      cautionKinds: ["dismiss"],
+      preferBranches: ["safe", "spark"],
+      payoff: "有能さと誠実さが両方見え、戦友ではなく恋の相手として認識される。",
+      trap: "任せきりやご機嫌取りは、対等さを失わせる。",
+    },
+    CONFLICT: {
+      title: "解決より先に感情を拾う",
+      read: "衝突では正しさだけだと刺さる。論点を整理しつつ、彼女が飲み込んだ感情も扱う。",
+      preferKinds: ["empathize", "concrete"],
+      cautionKinds: ["dismiss", "pushy"],
+      preferBranches: ["safe"],
+    },
+    COMMIT: {
+      title: "曖昧さを残さない",
+      read: "告白では好きと付き合いたいを分けて言う。逃げない明確さが安心に変わる。",
+      preferKinds: ["concrete", "action"],
+      cautionKinds: ["dismiss"],
+      preferBranches: ["spark", "safe"],
+    },
+  },
+};
+
+function tacticRuleFor(characterId, skillBadge) {
+  const profile = tacticProfiles[characterId] || tacticProfiles.mina;
+  return { ...profile.default, ...(profile[skillBadge] || {}) };
+}
+
+function tacticEffect(rule, choice) {
+  if (!choice) return {};
+  const effect = {};
+  const add = (key, value) => {
+    effect[key] = (effect[key] || 0) + value;
+  };
+  if ((rule.preferKinds || []).includes(choice.kind)) {
+    add("trust", 2);
+    add(choice.branch === "spark" ? "interest" : "comfort", 2);
+    add("misread", -1);
+  }
+  if ((rule.preferBranches || []).includes(choice.branch)) {
+    add(choice.branch === "spark" ? "interest" : "comfort", 1);
+  }
+  if ((rule.cautionKinds || []).includes(choice.kind)) {
+    add("pressure", 2);
+    add("misread", 2);
+    add("comfort", -2);
+  }
+  if ((rule.cautionBranches || []).includes(choice.branch)) {
+    add("pressure", 1);
+    add("misread", 1);
+  }
+  return effect;
+}
+
+export function sceneTacticalRead(characterId, sceneIndex, totalScenes = 15, choice = null) {
+  const skill = skillLadder[Math.min(sceneIndex, skillLadder.length - 1)];
+  const activeSwitch = activePersonaSwitch(characterId, sceneIndex, totalScenes);
+  const rule = tacticRuleFor(characterId, skill[1]);
+  const choiceFits = choice
+    ? (rule.preferKinds || []).includes(choice.kind) || (rule.preferBranches || []).includes(choice.branch)
+    : false;
+  const choiceRisks = choice
+    ? (rule.cautionKinds || []).includes(choice.kind) || (rule.cautionBranches || []).includes(choice.branch)
+    : false;
+  return {
+    badge: skill[1],
+    skill: skill[0],
+    title: rule.title,
+    read: rule.read,
+    prefer: (rule.preferKinds || []).join(" / "),
+    avoid: (rule.cautionKinds || []).join(" / "),
+    payoff: rule.payoff || `${activeSwitch.label}が開き、次の本音に進みやすくなる。`,
+    trap: rule.trap || `${activeSwitch.hurts}と、同じキャラでもこの場面では刺さりにくい。`,
+    choiceFits,
+    choiceRisks,
+    verdict: choiceRisks ? "読み違い注意" : choiceFits ? "場面に合った駆け引き" : "悪くないが要調整",
+    effect: tacticEffect(rule, choice),
+  };
+}
+
 export function relationshipPulse(characterId, scores, flags) {
   const design = characterGameDesign[characterId] || characterGameDesign.mina;
   const totalPositive = scores.trust + scores.interest + scores.comfort;
