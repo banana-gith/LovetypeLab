@@ -28,6 +28,12 @@ This file is generated from product data. Update `src/personas.js`, `src/story.j
   - 接続の申し出は大きな告白だけでなく、質問・表情・軽い話題にも出る。選択肢は、向き合う・見送る・押し返すの違いが出るように設計する。
 - [Game Studies: This Action Will Have Consequences](https://gamestudies.org/1901/articles/stang)
   - 物語上の選択は、結果が分岐しなくても感情的な帰結が見えると意味を持つ。Love Type Labでは、会話後の相手の記憶・サイン・修復余地で結果を返す。
+- [MDPI Education Sciences: Assessing the Efficacy of Reflective Game Design](https://www.mdpi.com/2227-7102/13/12/1204)
+  - ゲーム内の経験は、行動後に振り返れる構造があるほど学習として定着しやすい。デート後は点数だけでなく、相手視点の記憶・揺れ・次の課題を短い幕間として返す。
+- [Machinations: Game systems feedback loops](https://machinations.io/articles/game-systems-feedback-loops-and-how-they-help-craft-player-experiences)
+  - 行動、反応、次の目標がつながるフィードバックループは挑戦と達成感を保つ。Love Type Labでは各デートの選択を幕間で閉じ、次のデートの読み筋へつなげる。
+- [Wired: How Dreamfall Chapters adds guilt and emotion to episodic gaming](https://www.wired.com/story/dreamfall-chapters-interview/)
+  - 章末の選択要約は単なる統計画面ではなく、選択で形が変わる物語として提示できる。幕間ノートは、線形なMVPでも感情的な帰結をキャラの声で見せるために使う。
 
 ## Game Design Principles
 
@@ -186,6 +192,8 @@ Replay plan rule: after each ending, give the player one concrete next-run plan 
 Need compass rule: each scene should expose the relationship need being tested, then score whether the player's answer satisfied, nearly satisfied, or threatened it. The need should be character-specific, drawn from the active psychological switch, and should explain autonomy, felt understanding, and concrete next-step safety without turning the character into a fixed stereotype.
 
 Connection bid rule: treat each character line as a small bid for attention, validation, play, repair, vulnerability, or future commitment. Feedback should say whether the player turned toward, turned with spark, turned away, or turned against the bid. This creates emotional consequence even when the main plot remains linear.
+
+Date intermission rule: after each date, insert a character-perspective note that names what the character privately remembers, what still feels fragile, and what the next date will test. The intermission should feel like an episodic story beat shaped by the player's choices, not a neutral score screen.
 
 - **REPAIR / 振り返った沈黙が、まだ終わりじゃない**
   - Player pattern: 深さに触れたが、少し結論や安心の言葉を急ぎすぎた
@@ -763,6 +771,8 @@ Replay plan rule: after each ending, give the player one concrete next-run plan 
 Need compass rule: each scene should expose the relationship need being tested, then score whether the player's answer satisfied, nearly satisfied, or threatened it. The need should be character-specific, drawn from the active psychological switch, and should explain autonomy, felt understanding, and concrete next-step safety without turning the character into a fixed stereotype.
 
 Connection bid rule: treat each character line as a small bid for attention, validation, play, repair, vulnerability, or future commitment. Feedback should say whether the player turned toward, turned with spark, turned away, or turned against the bid. This creates emotional consequence even when the main plot remains linear.
+
+Date intermission rule: after each date, insert a character-perspective note that names what the character privately remembers, what still feels fragile, and what the next date will test. The intermission should feel like an episodic story beat shaped by the player's choices, not a neutral score screen.
 
 - **REPAIR / 笑ったあと、少しだけ風が止まる**
   - Player pattern: 楽しさに乗りきれず、自由を軽さとして扱ったように見えた
@@ -1366,6 +1376,8 @@ Need compass rule: each scene should expose the relationship need being tested, 
 
 Connection bid rule: treat each character line as a small bid for attention, validation, play, repair, vulnerability, or future commitment. Feedback should say whether the player turned toward, turned with spark, turned away, or turned against the bid. This creates emotional consequence even when the main plot remains linear.
 
+Date intermission rule: after each date, insert a character-perspective note that names what the character privately remembers, what still feels fragile, and what the next date will test. The intermission should feel like an episodic story beat shaped by the player's choices, not a neutral score screen.
+
 - **REPAIR / しまいかけた手紙が、まだ手元にある**
   - Player pattern: 優しさはあったが、理想や創作を外側の評価でまとめてしまった
   - Epilogue: ナギは笑って別れるけれど、封筒を紙袋の奥へしまう。完全に拒絶したわけではない。ただ、見せたかったものを急いで評価された痛みが残っている。次に会うなら、作品や理想より先に、見せてくれた勇気を受け取り直したい。
@@ -1968,6 +1980,8 @@ Need compass rule: each scene should expose the relationship need being tested, 
 
 Connection bid rule: treat each character line as a small bid for attention, validation, play, repair, vulnerability, or future commitment. Feedback should say whether the player turned toward, turned with spark, turned away, or turned against the bid. This creates emotional consequence even when the main plot remains linear.
 
+Date intermission rule: after each date, insert a character-perspective note that names what the character privately remembers, what still feels fragile, and what the next date will test. The intermission should feel like an episodic story beat shaped by the player's choices, not a neutral score screen.
+
 - **REPAIR / 閉じたノートに、まだ余白が残っている**
   - Player pattern: 好意はあったが、形式や最適解を急ぎすぎてアオイの思考の自由を狭めた
   - Epilogue: アオイは穏やかに別れるけれど、帰り際にノートを開かない。感情を急いで定義されたり、正解探しで近づかれた違和感が残っている。次に会うなら、まず彼女を攻略対象ではなく、一緒に考える相手として扱い直したい。
@@ -2569,6 +2583,8 @@ Need compass rule: each scene should expose the relationship need being tested, 
 
 Connection bid rule: treat each character line as a small bid for attention, validation, play, repair, vulnerability, or future commitment. Feedback should say whether the player turned toward, turned with spark, turned away, or turned against the bid. This creates emotional consequence even when the main plot remains linear.
 
+Date intermission rule: after each date, insert a character-perspective note that names what the character privately remembers, what still feels fragile, and what the next date will test. The intermission should feel like an episodic story beat shaped by the player's choices, not a neutral score screen.
+
 - **REPAIR / 約束の輪郭を、もう一度描き直す**
   - Player pattern: 気持ちはあったが、ハルカが安心できる具体性が足りなかった
   - Epilogue: ハルカは怒るより先に、今日の会話を静かに整理している。曖昧な言葉や勢いが、彼女には関係を軽く扱われたように響いた。次は謝るだけでなく、日時・理由・代案まで見える形で信頼を戻したい。
@@ -3144,6 +3160,8 @@ Replay plan rule: after each ending, give the player one concrete next-run plan 
 Need compass rule: each scene should expose the relationship need being tested, then score whether the player's answer satisfied, nearly satisfied, or threatened it. The need should be character-specific, drawn from the active psychological switch, and should explain autonomy, felt understanding, and concrete next-step safety without turning the character into a fixed stereotype.
 
 Connection bid rule: treat each character line as a small bid for attention, validation, play, repair, vulnerability, or future commitment. Feedback should say whether the player turned toward, turned with spark, turned away, or turned against the bid. This creates emotional consequence even when the main plot remains linear.
+
+Date intermission rule: after each date, insert a character-perspective note that names what the character privately remembers, what still feels fragile, and what the next date will test. The intermission should feel like an episodic story beat shaped by the player's choices, not a neutral score screen.
 
 - **REPAIR / 重くなった空気から、一度外へ出る**
   - Player pattern: 関係を確かめようとして、ユウのテンポを止めすぎた
@@ -3721,6 +3739,8 @@ Replay plan rule: after each ending, give the player one concrete next-run plan 
 Need compass rule: each scene should expose the relationship need being tested, then score whether the player's answer satisfied, nearly satisfied, or threatened it. The need should be character-specific, drawn from the active psychological switch, and should explain autonomy, felt understanding, and concrete next-step safety without turning the character into a fixed stereotype.
 
 Connection bid rule: treat each character line as a small bid for attention, validation, play, repair, vulnerability, or future commitment. Feedback should say whether the player turned toward, turned with spark, turned away, or turned against the bid. This creates emotional consequence even when the main plot remains linear.
+
+Date intermission rule: after each date, insert a character-perspective note that names what the character privately remembers, what still feels fragile, and what the next date will test. The intermission should feel like an episodic story beat shaped by the player's choices, not a neutral score screen.
 
 - **REPAIR / 正しさでは、緊張はほどけない**
   - Player pattern: 明確さは出したが、レイナの感情の置き場所を見落とした

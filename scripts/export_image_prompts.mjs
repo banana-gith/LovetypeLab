@@ -118,6 +118,7 @@ const lines = [
   "- **Unsaid subtext chat cards**: Compact chat-bubble UI cards for character inner subtext after a player choice, three emotional variants trust / spark / risk, premium cream paper, soft shadow, character-color accent line, no readable text baked into image, optimized for immersive Japanese mobile dating-sim feedback overlays.",
   "- **Need compass UI cards**: Compact mobile cards for relationship needs in a dating simulation, variants open / near / risk / watch, small compass-heart icon space, premium cream paper with character-color foil accent, subtle progress chip areas, no readable text baked into image, optimized for 390px smartphone scenes and result screens.",
   "- **Connection bid UI cards**: Compact mobile cards for small bids for connection in a dating simulation, variants turn toward / turn with spark / turn away / turn against, tiny signal-wave and heart icon slots, premium dark chocolate and warm cream variants, no readable text baked into image, optimized for feedback chat overlays and result summaries.",
+  "- **Date intermission notebook cards**: Compact episodic review cards for after-date reflections, variants open / spark / near / risk, premium cream notebook paper, dark chocolate ink, character-color foil accents, tiny memory / fragile point / next hook icon slots, no readable text baked into image, optimized for 390px smartphone checkpoint screens.",
   "",
 ];
 
@@ -141,6 +142,7 @@ for (const character of characters) {
   lines.push(`- **Character decoder state set**: ${character.fixedLook} 「刺さるスイッチ」と「冷めるサイン」をUIカード用に見せる差分セット。刺さる状態は${design.attractionSwitches.join("、")}が表情に出る。冷める状態は${design.turnOffs.join("、")}が起きた直後の小さな距離、視線の外れ、手元のこわばりで表す。修復状態は同じ席に戻り、緊張が少しほどける。${design.visualFormula} 画面内文字なし、UI合成前提、恋愛相手は映さない。`);
   lines.push(`- **Need compass state set**: ${character.fixedLook} 場面ごとの関係欲求が満たされた/近い/傷ついた/観察中の4差分。満たされた状態は${design.attractionSwitches.join("、")}が自然に表情へ出る。傷ついた状態は${design.turnOffs.join("、")}が起きた直後の手元・視線・距離で表す。${design.visualFormula} 画面内文字なし、UI合成前提、恋愛相手は映さない。`);
   lines.push(`- **Connection bid state set**: ${character.fixedLook} 小さな接続サインへの反応差分。turn towardは視線が合い柔らかい距離、turn with sparkは笑いの直後の期待、turn awayはサインが通り過ぎた少し寂しい手元、turn againstは押し返された緊張。${design.visualFormula} 画面内文字なし、UI合成前提、恋愛相手は映さない。`);
+  lines.push(`- **Date intermission private note background**: ${character.fixedLook} デート直後の幕間ノート画面用背景。スマホの未送信メモ、二人分の飲み物や小物、次の予定を示すチケットや地図、さっきの会話を思い出す視線。良い記憶は近い余白、揺れた記憶は少し外れた視線、次回フックは手元の予定で示す。${design.visualFormula} 画面内文字なし、UI合成前提、恋愛相手は映さない。`);
   for (const route of Object.values(routeEndings)) {
     const flavoredRoute = characterRouteEnding(character.id, route.key);
     const finale = characterFinaleScene(character.id, route.key, "mixed");

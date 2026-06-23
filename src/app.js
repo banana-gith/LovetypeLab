@@ -1200,6 +1200,58 @@ function dateMissionCard(report) {
   return `<div class="date-mission mission-${report.tone}"><div><span>${report.badge}</span><b>${report.title}</b><p>${report.aim}</p></div><strong>${report.progress}%</strong><i><em style="width:${report.progress}%"></em></i><small>${report.status}: ${report.checks.map((check) => `<mark class="${check.done ? "done" : ""}">${check.label}</mark>`).join("")}</small></div>`;
 }
 
+function dateIntermissionReport(character = state.char, dateIndex = currentScene().dateIndex, history = state.history) {
+  const items = missionHistory(character, dateIndex, history);
+  const date = storyFor(character.id).dates[dateIndex];
+  const design = gameDesign(character);
+  const mission = dateMissionReport(character, dateIndex, history);
+  const summary = branchSummary(items);
+  const bidItems = items.filter((item) => item.bidTone);
+  const needItems = items.filter((item) => item.needTone);
+  const heartItems = items.filter((item) => item.heartKeyTone);
+  const bestBid = [...bidItems].reverse().find((item) => ["toward", "spark"].includes(item.bidTone));
+  const missedBid = [...bidItems].reverse().find((item) => ["away", "against"].includes(item.bidTone));
+  const openNeed = [...needItems].reverse().find((item) => item.needTone === "open");
+  const riskNeed = [...needItems].reverse().find((item) => item.needTone === "risk");
+  const openHeart = [...heartItems].reverse().find((item) => item.heartKeyTone === "open");
+  const next = dateIndex + 1 < storyFor(character.id).dates.length ? storyFor(character.id).dates[dateIndex + 1] : null;
+  const strongest = bestBid || openNeed || openHeart || items.at(-1);
+  const fragile = missedBid || riskNeed || heartItems.find((item) => item.heartKeyTone === "locked");
+  const tone = missedBid || riskNeed || summary.key === "strain" ? "risk" : mission.complete ? "open" : summary.key === "spark" ? "spark" : "near";
+  const privateLine = fragile
+    ? `「${fragile.bidTitle || fragile.needTitle || fragile.heartKeyTitle || "さっきの一言"}、少し引っかかった。でも、次の返しでちゃんと見てくれるなら、まだ話せる。」`
+    : strongest
+      ? `「${strongest.bidTitle || strongest.needTitle || strongest.heartKeyTitle || strongest.intent}を拾ってくれたの、たぶん思ったより残ってる。」`
+      : `「まだ探っている途中。でも、${character.name}はあなたの一言をちゃんと覚え始めている。」`;
+  const carry = fragile
+    ? `${fragile.bidNext || fragile.needNext || fragile.heartKeyCopy || design.lens.playerMove}`
+    : strongest
+      ? `${strongest.bidNext || strongest.needNext || strongest.heartKeyCopy || mission.success}`
+      : mission.next;
+  return {
+    tone,
+    date,
+    mission,
+    summary,
+    privateLine,
+    strongest,
+    fragile,
+    carry,
+    nextTitle: next?.title || "告白後の余韻",
+    nextHook: next
+      ? `${next.title}では、${design.lens.focus}をもう一段深く見る。前回の記憶は「${strongest?.intent || summary.label}」として残っている。`
+      : `最終結果では、${character.name}に残った記憶とルートの着地を確認する。`,
+    imageCue: `${design.visualFormula} ${date.title}のあと、スマホの未送信メモ、二人分の小物、次の予定を示す小さな余白。画面内文字なし。`,
+  };
+}
+
+function intermissionPanel(character = state.char, dateIndex = currentScene().dateIndex) {
+  const report = dateIntermissionReport(character, dateIndex);
+  const strongest = report.strongest ? `${report.strongest.bidStatus || report.strongest.needStatus || report.strongest.heartKey || "残った一手"}: ${report.strongest.bidCopy || report.strongest.needCopy || report.strongest.heartKeyCopy || report.strongest.aftertaste}` : "まだ白紙に近い。次のデートで輪郭が出る。";
+  const fragile = report.fragile ? `${report.fragile.bidStatus || report.fragile.needStatus || report.fragile.heartKey || "揺れた一手"}: ${report.fragile.bidCopy || report.fragile.needCopy || report.fragile.heartKeyCopy || report.fragile.aftertaste}` : "大きな引っかかりは少ない。次は少しだけ温度を上げられる。";
+  return `<div class="intermission-panel intermission-${report.tone}" style="--c:${character.color};--light:${character.light}"><h3>${character.name}の幕間ノート <span>INTERMISSION</span></h3><p class="private-line">${report.privateLine}</p><div><article><span>残った一手</span><b>${report.strongest?.intent || report.summary.label}</b><p>${strongest}</p></article><article><span>次に扱う余白</span><b>${report.fragile?.intent || report.mission.title}</b><p>${fragile}</p></article></div><small>持ち越し: ${report.carry} / 次回フック: ${report.nextHook}</small></div>`;
+}
+
 function hasRecovery(history = state.history) {
   return history.some((item, index) => item.branch === "strain" && history.slice(index + 1, index + 3).some((next) => next.branch === "safe"));
 }
@@ -1664,6 +1716,7 @@ function checkpoint() {
           <div><span>総合評価</span><strong>${total}</strong></div>
           <div class="relationship-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div>
         </div>
+        ${intermissionPanel(c, dateIndex)}
         <div class="checkpoint-grid">
           <article class="branch-${summary.key}"><span>多かった返し</span><b>${summary.label}</b><p>${summary.copy}</p></article>
           <article><span>今の読み筋</span><b>${route.badge}</b><p>${relationshipPulse(c.id, state.scores, state.flags)}</p></article>

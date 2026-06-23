@@ -74,6 +74,24 @@ export const researchBasis = [
     takeaway:
       "物語上の選択は、結果が分岐しなくても感情的な帰結が見えると意味を持つ。Love Type Labでは、会話後の相手の記憶・サイン・修復余地で結果を返す。",
   },
+  {
+    title: "MDPI Education Sciences: Assessing the Efficacy of Reflective Game Design",
+    url: "https://www.mdpi.com/2227-7102/13/12/1204",
+    takeaway:
+      "ゲーム内の経験は、行動後に振り返れる構造があるほど学習として定着しやすい。デート後は点数だけでなく、相手視点の記憶・揺れ・次の課題を短い幕間として返す。",
+  },
+  {
+    title: "Machinations: Game systems feedback loops",
+    url: "https://machinations.io/articles/game-systems-feedback-loops-and-how-they-help-craft-player-experiences",
+    takeaway:
+      "行動、反応、次の目標がつながるフィードバックループは挑戦と達成感を保つ。Love Type Labでは各デートの選択を幕間で閉じ、次のデートの読み筋へつなげる。",
+  },
+  {
+    title: "Wired: How Dreamfall Chapters adds guilt and emotion to episodic gaming",
+    url: "https://www.wired.com/story/dreamfall-chapters-interview/",
+    takeaway:
+      "章末の選択要約は単なる統計画面ではなく、選択で形が変わる物語として提示できる。幕間ノートは、線形なMVPでも感情的な帰結をキャラの声で見せるために使う。",
+  },
 ];
 
 const sceneBeats = [
