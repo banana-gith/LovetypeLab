@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { activePersonaSwitch, characterGameDesign, researchBasis, routeEndings, sceneCoaching, sceneDramaturgy } from "../src/gameDesign.js";
+import { activePersonaSwitch, characterGameDesign, characterRouteEnding, researchBasis, routeEndings, sceneCoaching, sceneDramaturgy } from "../src/gameDesign.js";
 import { personaCatalog } from "../src/personas.js";
 import { storyFor } from "../src/story.js";
 
@@ -80,6 +80,17 @@ for (const [id, type, name] of characters) {
   lines.push(`**Attraction switches:** ${design.attractionSwitches.join(" / ")}`);
   lines.push("");
   lines.push(`**Turn-offs:** ${design.turnOffs.join(" / ")}`);
+  lines.push("");
+  lines.push("### Character Route Endings");
+  lines.push("");
+  for (const route of Object.values(routeEndings)) {
+    const flavoredRoute = characterRouteEnding(id, route.key);
+    lines.push(`- **${flavoredRoute.badge} / ${flavoredRoute.epilogueTitle}**`);
+    lines.push(`  - Player pattern: ${flavoredRoute.playerPattern}`);
+    lines.push(`  - Epilogue: ${flavoredRoute.epilogue}`);
+    lines.push(`  - Next-run mission: ${flavoredRoute.replayMission}`);
+    lines.push(`  - Character CG cue: ${flavoredRoute.cgCue}`);
+  }
   lines.push("");
   lines.push("### Psychological Switches");
   lines.push("");

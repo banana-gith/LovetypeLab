@@ -449,6 +449,225 @@ export const routeEndings = {
   },
 };
 
+export const characterRouteMoments = {
+  mina: {
+    repair: {
+      epilogueTitle: "振り返った沈黙が、まだ終わりじゃない",
+      epilogue:
+        "ミナは改札前で少しだけ足を止める。怒っているというより、言葉にしきれなかった理想を軽く扱われたかもしれないと確かめている。次に会うなら、沈黙を埋めるより先に、彼女が守りたかった気持ちを一つだけ言い直したい。",
+      replayMission: "次回はミナの沈黙を質問で埋めず、最初の5シーンでsafeを3回以上選ぶ。",
+      playerPattern: "深さに触れたが、少し結論や安心の言葉を急ぎすぎた",
+      cgCue: "駅前の薄い夜光、ミナが半歩だけ振り返る、手元の文庫本、言葉にならない余白",
+    },
+    reconnect: {
+      epilogueTitle: "言い直せた言葉だけが、静かに残る",
+      epilogue:
+        "一度空気が冷えたあと、ミナはあなたの言い直しを最後まで聞いた。完璧な返事より、ずれたまま終わらせない姿勢が残っている。別れ際の小さな会釈は、もう一度話してもいいという控えめな合図だった。",
+      replayMission: "次回は一度ズレた場面の直後に、ミナの言葉の奥の願いを確認する選択を狙う。",
+      playerPattern: "すれ違いを急いで消さず、静かな本音へ戻る道を作った",
+      cgCue: "雨上がりの書店前、二人分の傘の距離、ミナの目元が少しほどける",
+    },
+    spark: {
+      epilogueTitle: "静かな人の胸にも、火花は残る",
+      epilogue:
+        "今日の会話には、ミナが予想していなかった熱があった。けれど彼女にとって火花は、すぐ形にされるより、ゆっくり意味を持たせたいもの。次は高揚を急がず、未来の話へ丁寧に置き換えたい。",
+      replayMission: "次回はsparkの後にsafeを入れ、盛り上がりを未来の約束へつなげる。",
+      playerPattern: "距離を縮める火花は作れたが、ミナの深さに合わせた着地が課題になった",
+      cgCue: "川沿いの灯り、ミナが笑ったあとに視線を落とす、二人分の温かい飲み物",
+    },
+    trust: {
+      epilogueTitle: "安心は届いた。次はあなたの本音を",
+      epilogue:
+        "ミナは今日、無理に明るくしなくてもいい時間を過ごせた。ただ、聞いてくれる人から恋人候補へ進むには、あなた自身の願いも少し見たい。次は彼女の理想を守りながら、自分の好意を静かに置く番だ。",
+      replayMission: "次回は安心を守りつつ、終盤で自分の好意を主語つきで一度伝える。",
+      playerPattern: "ミナの安全地帯になれたが、恋の温度をもう一段見せる余地が残った",
+      cgCue: "静かなカフェ、ミナの前に置かれた二杯目の飲み物、穏やかな期待の表情",
+    },
+    balance: {
+      epilogueTitle: "深さと好意が、同じ速度で歩き出す",
+      epilogue:
+        "あなたはミナの沈黙を待ち、必要な時には自分の気持ちも差し出した。彼女は帰り道、今日の会話を何度か思い出すはずだ。重さではなく、続いていく静かな約束として。",
+      replayMission: "次回は3つの心理スイッチをすべて解放し、告白前の沈黙を急がず守る。",
+      playerPattern: "安心と深い好意を両立し、ミナが本音を預けやすい速度を作った",
+      cgCue: "夜の川沿い、ミナが横顔で少し笑う、二人の歩幅が揃っている余韻",
+    },
+  },
+  rio: {
+    repair: {
+      epilogueTitle: "笑ったあと、少しだけ風が止まる",
+      epilogue:
+        "リオは最後まで明るく振る舞うけれど、ふとスマホを見る時間が増える。自由さを否定された痛みを、笑って隠している。次に会うなら、予定を整えるより先に、彼女のひらめきを面白がれなかったことを言い直したい。",
+      replayMission: "次回はリオの思いつきを否定せず、最初の5シーンでsparkかsafeを4回以上選ぶ。",
+      playerPattern: "楽しさに乗りきれず、自由を軽さとして扱ったように見えた",
+      cgCue: "夕方のテラス席、リオの髪が風で乱れる、笑顔の奥に少し残る寂しさ",
+    },
+    reconnect: {
+      epilogueTitle: "ごめんね、より「それ面白いね」が効く",
+      epilogue:
+        "一度しぼんだ空気を、あなたはもう一度広げ直した。リオは『そういう言い方なら好き』と笑う。彼女にとって修復は重い謝罪だけでなく、自由をちゃんと大事にし直すことだった。",
+      replayMission: "次回は衝突後、リオの案を一つ拾って具体的な寄り道に変える。",
+      playerPattern: "ズレを放置せず、リオの自由をもう一度肯定して関係を戻した",
+      cgCue: "カフェの窓際、リオがストローを持ったまま笑い直す、空いた席に柔らかい光",
+    },
+    spark: {
+      epilogueTitle: "楽しい、だけで終わらない約束",
+      epilogue:
+        "リオは帰り道、今日の会話を友達に話したくなるくらい楽しんでいる。けれど本当に刺さったのは、笑ったあとにあなたが次の約束を雑にしなかったこと。自由の中にちゃんと大事にされる感じが残った。",
+      replayMission: "次回はsparkを多めに選びつつ、終盤でtrustを2回以上伸ばす。",
+      playerPattern: "リオのテンポに乗り、火花を約束へ変える入口まで進めた",
+      cgCue: "夜の街灯、リオが振り返って笑う、二人分のドリンクと次の予定の通知",
+    },
+    trust: {
+      epilogueTitle: "安心しすぎると、少しだけ退屈になる",
+      epilogue:
+        "リオはあなたといると傷つきにくい。でも、すべてが優しく整いすぎると、彼女の中の『どこかへ行きたい』が眠ってしまう。次は安心の上に、少しだけ予定外の楽しさを足したい。",
+      replayMission: "次回はsafeの後にsparkを混ぜ、リオが提案したくなる余白を作る。",
+      playerPattern: "大事にする姿勢は届いたが、リオの冒険心をもう少し呼び起こせる",
+      cgCue: "昼のカフェ、安心したリオが窓の外を見ている、次の寄り道を待つ表情",
+    },
+    balance: {
+      epilogueTitle: "予定外が、二人の約束になる",
+      epilogue:
+        "あなたはリオの思いつきに乗り、必要なところではちゃんと大事にした。彼女は帰り際、次の予定を決めながらも『寄り道してもいい？』と聞く。自由を奪わない約束が、恋の形になりはじめている。",
+      replayMission: "次回はリオの3つの心理スイッチをすべて解放し、最後に自由を守る告白を選ぶ。",
+      playerPattern: "楽しいノリと誠実な着地を両立し、リオが自然体で近づける流れを作った",
+      cgCue: "夕暮れの歩道、リオがスマホで次の店を見せる、二人の影が近い",
+    },
+  },
+  haruka: {
+    repair: {
+      epilogueTitle: "約束の輪郭を、もう一度描き直す",
+      epilogue:
+        "ハルカは怒るより先に、今日の会話を静かに整理している。曖昧な言葉や勢いが、彼女には関係を軽く扱われたように響いた。次は謝るだけでなく、日時・理由・代案まで見える形で信頼を戻したい。",
+      replayMission: "次回は曖昧な誘いを避け、約束や感謝を具体的にする選択を3回以上入れる。",
+      playerPattern: "気持ちはあったが、ハルカが安心できる具体性が足りなかった",
+      cgCue: "朝の喫茶店の外、ハルカが予定表を見ながら少し考える、整った小物",
+    },
+    reconnect: {
+      epilogueTitle: "話し直せる人は、信頼できる",
+      epilogue:
+        "一度崩れた段取りを、あなたはごまかさず組み直した。ハルカは小さく頷き、次の予定を確認する。彼女にとって修復とは、雰囲気を戻すことではなく、次に同じズレが起きない形を作ることだった。",
+      replayMission: "次回は衝突後、具体的な代案や次のルールを一文で出す。",
+      playerPattern: "ズレを感情だけで流さず、信頼できる形へ組み直した",
+      cgCue: "カフェのテーブル、二人分の予定メモ、ハルカの表情が少し柔らかい",
+    },
+    spark: {
+      epilogueTitle: "少し珍しい予定も、理由があれば嬉しい",
+      epilogue:
+        "あなたの勢いはハルカにとって少し予想外だった。でも、そこに彼女を思って選んだ理由があれば、冒険は不安ではなく楽しみになる。次は火花を、丁寧な準備で支えたい。",
+      replayMission: "次回はsparkの誘いに、場所・時間・彼女を選んだ理由を添える。",
+      playerPattern: "会話に新鮮さは出せたが、ハルカが安心できる設計が次の鍵になった",
+      cgCue: "建築展示の入口、ハルカが少し驚いて笑う、手元に予約画面",
+    },
+    trust: {
+      epilogueTitle: "小さな約束が、恋の足場になる",
+      epilogue:
+        "ハルカは今日、あなたの言葉を信じても大丈夫だと思えた。派手な一言より、覚えていたこと、時間を守ったこと、具体的に誘ったことが効いている。次は信頼の上に、好意の温度を少し乗せたい。",
+      replayMission: "次回はsafeを軸にしつつ、終盤で好意を具体的に伝える選択を入れる。",
+      playerPattern: "約束と準備でハルカの安心を積み上げた",
+      cgCue: "朝の喫茶店、ハルカがカップを両手で持ち安心して笑う、整ったテーブル",
+    },
+    balance: {
+      epilogueTitle: "きちんとした恋に、少しだけ甘さが混ざる",
+      epilogue:
+        "あなたは約束を守りながら、ただ安全なだけでは終わらせなかった。ハルカは次の予定を確認したあと、少しだけ照れたように笑う。信頼と好意が、同じ場所に積み上がっている。",
+      replayMission: "次回は3つの心理スイッチを解放し、具体性と甘さの両方を最後まで保つ。",
+      playerPattern: "誠実さと恋の温度を両立し、ハルカが安心して進める関係を作った",
+      cgCue: "夕方の街角、ハルカが次の約束を確認しながら微笑む、腕時計と小さな花",
+    },
+  },
+  yu: {
+    repair: {
+      epilogueTitle: "重くなった空気から、一度外へ出る",
+      epilogue:
+        "ユウは笑って流そうとするけれど、足取りは少し速い。問い詰められたような空気が、彼には自由を奪われる予感として残った。次は長く説明させるより、一緒に動ける提案で空気を戻したい。",
+      replayMission: "次回は長い確認を避け、体験に誘う選択を序盤で2回以上入れる。",
+      playerPattern: "関係を確かめようとして、ユウのテンポを止めすぎた",
+      cgCue: "夜の海沿い、ユウが少し先を歩く、距離はあるが完全には離れていない",
+    },
+    reconnect: {
+      epilogueTitle: "じゃあ歩きながら話そう、で戻れる",
+      epilogue:
+        "止まった空気を、あなたは場所ごと動かした。ユウは歩き出すと少しずつ言葉を戻す。彼にとって修復は、重い話し合いに閉じ込めることではなく、動きながら本音を置ける余白を作ることだった。",
+      replayMission: "次回は衝突後、短い本音と一緒に行動提案を出す。",
+      playerPattern: "ズレた空気を体験へ移し、ユウが逃げずに話せるテンポを作った",
+      cgCue: "夜景の歩道、ユウが振り返って少し真顔になる、並んで歩く余白",
+    },
+    spark: {
+      epilogueTitle: "勢いで近づいて、短い本音で残す",
+      epilogue:
+        "ユウは今日のテンポをかなり気に入っている。笑って、動いて、少し無茶をして、そのあとに短い本音が残った。次は軽さを逃げに見せず、ここぞという場面で意味を足したい。",
+      replayMission: "次回はsparkを活かしつつ、終盤で短い本音のsafeを2回以上入れる。",
+      playerPattern: "体験の勢いで距離を縮め、ユウが自然に本音を出せる入口を作った",
+      cgCue: "夜景ドライブの停車中、ユウが笑ったあと少し真剣な目になる、車内の光",
+    },
+    trust: {
+      epilogueTitle: "安心はある。次は一緒に動きたい",
+      epilogue:
+        "あなたの誠実さはユウに届いている。ただ、守られてばかりの会話だと、彼の身体が先に退屈を感じる。次は安心を土台に、短く誘って一緒に体験する流れを作りたい。",
+      replayMission: "次回はsafeの後にaction系の選択を混ぜ、会話を体験へつなげる。",
+      playerPattern: "ユウを縛らない安心は作れたが、体験の熱量を足せる余地がある",
+      cgCue: "昼の公園、ユウが立ち上がって手元のチケットを見せる、軽い笑顔",
+    },
+    balance: {
+      epilogueTitle: "動いたあとに残る言葉が、ちゃんと本音になる",
+      epilogue:
+        "あなたはユウの軽快さに乗り、必要なところで逃げずに言葉を足した。彼は最後に『次、どこ行く？』と聞く。軽い誘いに見えて、その声には続けたい気持ちが混ざっている。",
+      replayMission: "次回は3つの心理スイッチを解放し、最後の告白を短く率直に返す。",
+      playerPattern: "行動と本音を接続し、ユウが自由なまま近づける関係を作った",
+      cgCue: "夜の海沿い、ユウが次の場所を指差す、笑いと本音が同時にある表情",
+    },
+  },
+  reina: {
+    repair: {
+      epilogueTitle: "正しさでは、緊張はほどけない",
+      epilogue:
+        "レイナは表情を崩さずに別れる。でも、沈黙の長さがいつもより少しだけ違う。感情を勝ち負けで処理されたように感じたのかもしれない。次は正論より先に、彼女が見せなかった緊張に気づけるかが試される。",
+      replayMission: "次回はレイナに主導権を丸投げせず、対等な意思を序盤で2回以上見せる。",
+      playerPattern: "明確さは出したが、レイナの感情の置き場所を見落とした",
+      cgCue: "夜景の見える歩道、レイナが背筋を伸ばしたまま少し視線を外す、直線的な光",
+    },
+    reconnect: {
+      epilogueTitle: "言い負かさず、並び直す",
+      epilogue:
+        "一度鋭くなった空気を、あなたは勝ち負けにしなかった。レイナは短く『それなら分かる』と言う。彼女にとって修復は、弱くなることではなく、対等なまま感情を置ける場所を作ることだった。",
+      replayMission: "次回は衝突後、正しさの整理と感情の確認を両方入れる。",
+      playerPattern: "対等さを失わず、レイナの緊張を置ける形で関係を戻した",
+      cgCue: "夜景の窓際、レイナが腕をほどき少しだけ目元を緩める、二人分のグラス",
+    },
+    spark: {
+      epilogueTitle: "火花は評価になる。だが曖昧さは残せない",
+      epilogue:
+        "レイナはあなたの切り返しや行動力を面白いと思っている。ただ、熱量だけで関係を進める相手ではない。次は刺激を、明確な意思と具体的な約束に変える必要がある。",
+      replayMission: "次回はsparkで惹きつけた後、次の行動を明確に提案する。",
+      playerPattern: "知性とテンポで惹きつけたが、関係の定義を曖昧にしないことが課題になった",
+      cgCue: "夜のバーラウンジ、レイナが挑むように少し笑う、スマホに次の予定",
+    },
+    trust: {
+      epilogueTitle: "任せられる。でも、それだけでは足りない",
+      epilogue:
+        "レイナはあなたを信頼できる相手として見始めている。ただ、合わせてくれるだけの人には惹かれきらない。次は彼女の強さを尊重しつつ、自分の判断と欲しい未来をまっすぐ見せたい。",
+      replayMission: "次回はsafeを軸にしつつ、自分の希望を明確に出す選択を各デートで入れる。",
+      playerPattern: "安心と尊敬は届いたが、対等な意思表示をさらに見せる余地がある",
+      cgCue: "静かなレストラン、レイナが資料ではなくあなたを見る、安心と評価が混ざる表情",
+    },
+    balance: {
+      epilogueTitle: "対等なまま、少しだけ柔らかくなる",
+      epilogue:
+        "あなたはレイナに任せきりにせず、必要な時には自分の意思を出した。そのうえで、強さの裏の緊張も見落とさなかった。彼女は最後に短く予定を確認する。言葉は端的でも、声は少し柔らかい。",
+      replayMission: "次回は3つの心理スイッチを解放し、告白では好きと付き合いたいを曖昧に分けない。",
+      playerPattern: "明確さと感情の扱いを両立し、レイナが対等に預けられる関係を作った",
+      cgCue: "夜景のテラス、レイナがまっすぐ見つめながら少し微笑む、二人分の余白",
+    },
+  },
+};
+
+export function characterRouteEnding(characterId, routeKey) {
+  const base = routeEndings[routeKey] || routeEndings.balance;
+  const flavor = characterRouteMoments[characterId]?.[routeKey] || {};
+  return { ...base, ...flavor };
+}
+
 export function relationshipRoute(characterId, scores, flags, history = []) {
   const design = characterGameDesign[characterId] || characterGameDesign.mina;
   const safe = flags.safe || 0;
@@ -458,7 +677,7 @@ export function relationshipRoute(characterId, scores, flags, history = []) {
   const totalRisk = scores.pressure + scores.misread;
   if (totalRisk >= 90 || strain >= 5) {
     return {
-      ...routeEndings.repair,
+      ...characterRouteEnding(characterId, "repair"),
       name: "距離を取り直すルート",
       badge: "REPAIR",
       summary: `${design.lens.risk}。相手はまだ完全には閉じていないが、次は踏み込む前に受け取り直す必要がある。`,
@@ -467,7 +686,7 @@ export function relationshipRoute(characterId, scores, flags, history = []) {
   }
   if (recovered) {
     return {
-      ...routeEndings.reconnect,
+      ...characterRouteEnding(characterId, "reconnect"),
       name: "すれ違い修復ルート",
       badge: "RECONNECT",
       summary: "一度空気が揺れたあと、関係の扱い方を学び直せた。恋愛ゲームとして一番ドラマが出る進み方。",
@@ -476,7 +695,7 @@ export function relationshipRoute(characterId, scores, flags, history = []) {
   }
   if (spark > safe + 2) {
     return {
-      ...routeEndings.spark,
+      ...characterRouteEnding(characterId, "spark"),
       name: "火花先行ルート",
       badge: "SPARK",
       summary: "会話の熱量と駆け引きで距離を縮めた。魅力は強いが、遊びだけに見せない誠実さが次の鍵。",
@@ -485,7 +704,7 @@ export function relationshipRoute(characterId, scores, flags, history = []) {
   }
   if (safe >= spark) {
     return {
-      ...routeEndings.trust,
+      ...characterRouteEnding(characterId, "trust"),
       name: "安心積み上げルート",
       badge: "TRUST",
       summary: "相手のペースを尊重しながら信頼を育てた。静かな強さがあり、終盤で好意を出せるとさらに刺さる。",
@@ -493,7 +712,7 @@ export function relationshipRoute(characterId, scores, flags, history = []) {
     };
   }
   return {
-    ...routeEndings.balance,
+    ...characterRouteEnding(characterId, "balance"),
     name: "バランス接近ルート",
     badge: "BALANCE",
     summary: "安心と火花の両方を使い分けた。場面ごとに攻め方を変えられている。",

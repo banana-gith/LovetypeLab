@@ -1,5 +1,5 @@
 import { personaCatalog } from "./personas.js";
-import { characterGameDesign, personaSwitchFeedback, relationshipPulse, relationshipRoute, routeEndings, sceneCoaching, sceneDramaturgy } from "./gameDesign.js";
+import { characterGameDesign, characterRouteEnding, personaSwitchFeedback, relationshipPulse, relationshipRoute, routeEndings, sceneCoaching, sceneDramaturgy } from "./gameDesign.js";
 import { branchTone, storyFor } from "./story.js";
 
 const $ = (selector) => document.querySelector(selector);
@@ -727,9 +727,10 @@ function routeAlbumPanel(character = state.char, currentRoute) {
   const routes = Object.values(routeEndings);
   const unlockedCount = routes.filter((route) => album[route.key] || route.key === currentRoute.key).length;
   return `<div class="route-album" style="--c:${character.color}"><h3>エンディングアルバム <span>${unlockedCount}/${routes.length}</span></h3><div>${routes.map((route) => {
+    const flavoredRoute = characterRouteEnding(character.id, route.key);
     const record = album[route.key];
     const unlocked = Boolean(record) || route.key === currentRoute.key;
-    return `<article class="${unlocked ? "unlocked" : "locked"} ${route.key === currentRoute.key ? "current" : ""}"><span>${unlocked ? route.badge : "LOCKED"}</span><b>${unlocked ? route.albumName : "未解放ルート"}</b><p>${unlocked ? route.playerPattern : route.unlockHint}</p>${record?.score ? `<small>BEST ${record.score}</small>` : route.key === currentRoute.key ? "<small>今回解放</small>" : ""}</article>`;
+    return `<article class="${unlocked ? "unlocked" : "locked"} ${route.key === currentRoute.key ? "current" : ""}"><span>${unlocked ? flavoredRoute.badge : "LOCKED"}</span><b>${unlocked ? flavoredRoute.albumName : "未解放ルート"}</b><p>${unlocked ? flavoredRoute.playerPattern : flavoredRoute.replayMission}</p>${record?.score ? `<small>BEST ${record.score}</small>` : route.key === currentRoute.key ? "<small>今回解放</small>" : ""}</article>`;
   }).join("")}</div></div>`;
 }
 
