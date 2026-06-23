@@ -77,6 +77,17 @@ for (const [id, type, name] of characters) {
   lines.push("");
   lines.push(`**Signature dilemma:** ${design.signatureDilemma}`);
   lines.push("");
+  lines.push("### Date Missions");
+  lines.push("");
+  for (const [missionIndex, mission] of (design.dateMissions || []).entries()) {
+    lines.push(`- **Date ${missionIndex + 1}: ${mission.badge} / ${mission.title}**`);
+    lines.push(`  - Aim: ${mission.aim}`);
+    lines.push(`  - Target: ${mission.target}`);
+    lines.push(`  - Success: ${mission.success}`);
+    lines.push(`  - Risk: ${mission.risk}`);
+    lines.push(`  - Mission image cue: ${mission.imageCue}`);
+  }
+  lines.push("");
   lines.push(`**Attraction switches:** ${design.attractionSwitches.join(" / ")}`);
   lines.push("");
   lines.push(`**Turn-offs:** ${design.turnOffs.join(" / ")}`);

@@ -92,6 +92,7 @@ const lines = [
   "- **Ending album route cards**: Five collectible ending album card backgrounds for Repair / Reconnect / Spark / Trust / Balance, premium dark chocolate UI, warm cream foil accents, one locked-state variant with soft blur, no readable text baked into image, optimized for compact Japanese mobile game result screens.",
   "- **Character understanding cards**: Three small progress-card backgrounds for psychological switches, open / near / risk states, warm cream paper, subtle coral-gold accent line, thin progress bar space, no readable text baked into image, transparent background option for UI composition.",
   "- **Read-the-room cue cards**: Compact dark premium UI cards for pre-choice observation hints, warm cream foil label area, tiny icon space for eye / breath / clock / spark / compass, no readable text baked into image, optimized for 390px smartphone scenes.",
+  "- **Date mission cards**: Three compact mobile mission card backgrounds for Date 1 / Date 2 / Date 3 progress, premium warm cream and dark chocolate variants, small progress bar space, tiny trophy / compass / heart-line icon slots, no readable text baked into image, optimized for 390px smartphone game UI.",
   "",
 ];
 
@@ -119,6 +120,9 @@ for (const character of characters) {
   }
   for (const item of design.readingCues || []) {
     lines.push(`- **Read-the-room cue visual**: ${character.fixedLook} 「${item.signal}」が一目で伝わる観察用カット。良い読みは「${item.goodRead}」、誤読差分は「${item.misread}」。画面内文字なし、視線・手元・二人分の小物・余白で表現。`);
+  }
+  for (const [missionIndex, mission] of (design.dateMissions || []).entries()) {
+    lines.push(`- **Date mission clear cut-in / Date ${missionIndex + 1} ${mission.badge}**: ${character.fixedLook} 「${mission.title}」を達成した余韻が伝わる一枚。${mission.imageCue}。成功感は「${mission.success}」、失敗差分では「${mission.risk}」が表情と距離に出る。画面内文字なし、UI合成前提、恋愛相手は映さない。`);
   }
   lines.push("");
   let cursor = 0;
