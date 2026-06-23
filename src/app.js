@@ -525,10 +525,10 @@ function choiceGrade(choice) {
   const positive = (choice.effect.trust || 0) + (choice.effect.interest || 0) + (choice.effect.comfort || 0);
   const negative = (choice.effect.pressure || 0) + (choice.effect.misread || 0);
   const score = positive - negative * 1.2;
-  if (score >= 15) return { rank: "Great!", phrase: "\u5fc3\u306b\u523a\u3055\u3063\u305f", className: "great", cue: "\u4e00\u6c17\u306b\u8ddd\u96e2\u304c\u7e2e\u307e\u308b\u8fd4\u3057" };
-  if (score >= 9) return { rank: "Good!", phrase: "\u3044\u3044\u6e29\u5ea6", className: "good", cue: "\u5b89\u5fc3\u3057\u3066\u6b21\u306b\u9032\u3081\u308b\u8fd4\u3057" };
-  if (score >= 2) return { rank: "Close!", phrase: "\u3042\u3068\u534a\u6b69", className: "close", cue: "\u60aa\u304f\u306a\u3044\u304c\u3001\u3082\u3046\u5c11\u3057\u5408\u308f\u305b\u305f\u3044\u8fd4\u3057" };
-  return { rank: "Miss!", phrase: "\u7a7a\u6c17\u304c\u63fa\u308c\u305f", className: "miss", cue: "\u76f8\u624b\u304c\u5c11\u3057\u8eab\u69cb\u3048\u308b\u8fd4\u3057" };
+  if (score >= 15) return { rank: "Great", phrase: "\u3050\u3063\u3068\u523a\u3055\u3063\u305f", className: "great", cue: "\u4e00\u6c17\u306b\u8ddd\u96e2\u304c\u7e2e\u307e\u308b\u8fd4\u3057" };
+  if (score >= 9) return { rank: "Good", phrase: "\u3044\u3044\u6e29\u5ea6", className: "good", cue: "\u5b89\u5fc3\u3057\u3066\u6b21\u306b\u9032\u3081\u308b\u8fd4\u3057" };
+  if (score >= 2) return { rank: "Close", phrase: "\u304a\u3057\u3044", className: "close", cue: "\u60aa\u304f\u306a\u3044\u304c\u3001\u3082\u3046\u5c11\u3057\u5408\u308f\u305b\u305f\u3044\u8fd4\u3057" };
+  return { rank: "Miss", phrase: "\u7a7a\u6c17\u304c\u63fa\u308c\u305f", className: "miss", cue: "\u76f8\u624b\u304c\u5c11\u3057\u8eab\u69cb\u3048\u308b\u8fd4\u3057" };
 }
 
 function choiceAftertaste(choice) {
@@ -558,7 +558,7 @@ function sceneArtwork(c, scene, sceneIndex) {
   return `<img class="scene-photo" src="${image}" alt="${c.name} - ${scene.title}">`;
 }
 
-function sceneContext(date, scene, local) {
+function sceneContextParts(date, scene) {
   const previousProgress = state.sceneIndex > 0 ? sceneAt(state.sceneIndex - 1) : null;
   const previous = previousProgress?.scene || null;
   const previousChoice = state.history.find((item) => item.sceneIndex === state.sceneIndex - 1);
@@ -571,9 +571,23 @@ function sceneContext(date, scene, local) {
     : "";
   if (previous) {
     const bridge = previousProgress.date.title === date.title ? "\u305d\u306e\u307e\u307e\u5834\u9762\u304c\u9032\u307f" : "\u65e5\u3092\u6539\u3081\u3066";
-    return `前の場面「${previous.title}」で、${state.char.name}は「${previousLine}」と反応した。${choiceMemory}${bridge}、いまは「${scene.location}」。ここでは、${scene.goal}ことが鍵になる。`;
+    return [
+      ["前の会話", `「${previous.title}」で、${state.char.name}は「${previousLine}」と反応した。`],
+      ["あなたの余韻", choiceMemory || "まだ前の返しの余韻を探っている。"],
+      ["この一枚", `${bridge}、いまは「${scene.location}」。`],
+      ["今回の鍵", `${scene.goal}こと。`],
+    ];
   }
-  return `${date.title}の始まり。${date.purpose}ために「${scene.location}」で向き合っている。まだ会話の温度は探り合いで、最初の鍵は${scene.goal}こと。`;
+  return [
+    ["場面の入口", `${date.title}の始まり。${date.purpose}ために向き合っている。`],
+    ["この一枚", `場所は「${scene.location}」。まだ会話の温度は探り合い。`],
+    ["相手の空気", `${state.char.name}は第一声で、こちらの距離感と反応の軽さを見ている。`],
+    ["今回の鍵", `${scene.goal}こと。`],
+  ];
+}
+
+function sceneContext(date, scene) {
+  return `<div class="scene-context-flow">${sceneContextParts(date, scene).map(([label, copy]) => `<article><span>${label}</span><p>${copy}</p></article>`).join("")}</div>`;
 }
 
 function game() {
@@ -594,7 +608,7 @@ function game() {
   return `<div class="game-shell">
     <header class="game-header"><button class="icon-button" data-go="profile">×</button><div class="game-person">${avatar(c)}<div><b>${c.name}</b><span>${c.style}</span></div></div><div class="game-progress"><span>DATE ${dateIndex + 1} <b>${state.sceneIndex + 1} / ${count}</b></span><i><em style="width:${((state.sceneIndex + 1) / count) * 100}%;background:${c.color}"></em></i></div></header>
     <main class="game-main"><aside class="score-strip"><div class="score-hero" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>\u7dcf\u5408\u8a55\u4fa1</span><b>${tier.label}</b><p>${tier.sub}</p></div></div>${meters()}<div class="relationship-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div><div class="meter-help">\u30bf\u30a4\u30d7\u3054\u3068\u306b\u91cd\u304f\u898b\u308b\u30dd\u30a4\u30f3\u30c8\u304c\u5c11\u3057\u9055\u3044\u307e\u3059\u3002</div></aside>
-      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context"><b>今の状況</b><p>${sceneContext(date, scene, local)}</p><div class="scene-insight"><span>${dramatic.beat}</span><b>${dramatic.focus}</b></div><div class="scene-coach"><span>${coaching.badge}</span><p><b>${coaching.skill}</b>${coaching.watch}</p></div><div class="scene-read"><span>READ THE ROOM</span><p><b>${reading.signal}</b>${reading.playerQuestion}</p></div><div class="scene-memory memory-${memory.tone}"><span>MEMORY</span><p><b>${memory.label}</b>${memory.copy}</p></div></div>${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent">${choiceIntentLabel(choice)}</em><p>${choice.label}</p></button>`).join("")}</div></section>
+      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context"><b>今の状況</b>${sceneContext(date, scene)}<div class="scene-insight"><span>${dramatic.beat}</span><b>${dramatic.focus}</b></div><div class="scene-coach"><span>${coaching.badge}</span><p><b>${coaching.skill}</b>${coaching.watch}</p></div><div class="scene-read"><span>READ THE ROOM</span><p><b>${reading.signal}</b>${reading.playerQuestion}</p></div><div class="scene-memory memory-${memory.tone}"><span>MEMORY</span><p><b>${memory.label}</b>${memory.copy}</p></div></div>${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent">${choiceIntentLabel(choice)}</em><p>${choice.label}</p></button>`).join("")}</div></section>
     </main>${state.picked ? feedback() : ""}
   </div>`;
 }
@@ -611,7 +625,7 @@ function feedback() {
   const combo = currentCombo();
   const style = playStyleReport();
   return `<div class="feedback-overlay"><div class="feedback-modal chat-modal feedback-stamp-modal grade-${grade.className}">
-    <div class="grade-stamp"><small>4 STEP CHECK</small><span>${grade.rank}</span><b>${grade.phrase}</b></div>
+    <div class="grade-stamp"><small>4段階評価</small><span>${grade.rank}</span><b>${grade.phrase}</b><p>${grade.cue}</p></div>
     <div class="chat-head" style="--c:${c.color};--light:${c.light}">${avatar(c)}<div><span>${grade.rank} RESPONSE</span><h3>${c.name}\u306e\u53cd\u5fdc</h3><p>${grade.cue}</p></div></div>
     <div class="chat-thread">
       <div class="chat-bubble you"><b>\u3042\u306a\u305f\u306e\u8fd4\u3057 / ${choiceIntentLabel(picked)}</b><p>${picked.label}</p></div>
