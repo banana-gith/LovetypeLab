@@ -146,6 +146,7 @@ for (const character of characters) {
   for (const item of design.readingCues || []) {
     lines.push(`- **Read-the-room cue visual**: ${character.fixedLook} 「${item.signal}」が一目で伝わる観察用カット。良い読みは「${item.goodRead}」、誤読差分は「${item.misread}」。画面内文字なし、視線・手元・二人分の小物・余白で表現。`);
   }
+  lines.push(`- **Continuity callback UI card set**: ${character.fixedLook} 以前の選択が今の距離感に残っていることを示す補助カット群。安心は柔らかい視線、火花は少し近い前傾、揺れは視線の外し、修復は緊張がほどける手元で表す。${design.memoryEcho?.imageCue || design.visualFormula}。画面内文字なし、UI合成前提、恋愛相手は映さない。`);
   for (let index = 0; index < total; index += 1) {
     const tactic = sceneTacticalRead(character.id, index, total);
     const contract = sceneEmotionalContract(character.id, story.dates.flatMap((date) => date.scenes)[index], index, total);

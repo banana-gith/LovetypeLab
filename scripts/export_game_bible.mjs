@@ -109,6 +109,8 @@ for (const [id, type, name] of characters) {
   lines.push("");
   lines.push("### Character Memory Echoes");
   lines.push("");
+  lines.push("Use these echoes as continuity callbacks: later scene context should name the earlier player move that is still affecting trust, spark, strain, or repair. The callback should feel like the character remembers a specific attitude, not like a generic score bonus.");
+  lines.push("");
   for (const key of ["safe", "spark", "strain", "repair", "mixed"]) {
     const memory = design.memoryEcho?.[key];
     if (!memory) continue;
@@ -204,6 +206,7 @@ for (const [id, type, name] of characters) {
       lines.push(`   - Unsaid safe subtext: ${safeSubtext.title} / ${safeSubtext.copy}`);
       lines.push(`   - Unsaid spark subtext: ${sparkSubtext.title} / ${sparkSubtext.copy}`);
       lines.push(`   - Unsaid strain subtext: ${strainSubtext.title} / ${strainSubtext.copy}`);
+      lines.push("   - Continuity callback note: if this scene follows a memorable safe, spark, strain, or repair choice, restate the earlier attitude as something still visible in the character's gaze, posture, and wording.");
       lines.push(`   - Skill: ${coach.badge} / ${coach.skill}`);
       lines.push(`   - Player lesson: ${coach.lesson}`);
       lines.push(`   - Tactical read: ${tactic.badge} / ${tactic.title}`);

@@ -683,10 +683,65 @@ function sceneArtwork(c, scene, sceneIndex) {
   return `<img class="scene-photo" src="${image}" alt="${c.name} - ${scene.title}">`;
 }
 
+function continuityMemoryKey(item, history = state.history) {
+  const hadRecentStrain = history
+    .filter((prev) => prev.sceneIndex < item.sceneIndex)
+    .slice(-2)
+    .some((prev) => prev.branch === "strain");
+  if (item.branch === "safe" && hadRecentStrain) return "repair";
+  return item.branch || "mixed";
+}
+
+function continuityScore(item, history = state.history, currentSceneIndex = state.sceneIndex) {
+  const key = continuityMemoryKey(item, history);
+  const toneWeight = { repair: 9, strain: 7, spark: 6, safe: 5, mixed: 4 };
+  const distance = Math.max(1, currentSceneIndex - item.sceneIndex);
+  const distanceWeight = distance === 1 ? 1 : distance <= 4 ? 3 : 2;
+  const choiceWeight = item.grade === "Great" ? 3 : item.grade === "Good" ? 2 : item.grade === "Close" ? 1 : 0;
+  return (toneWeight[key] || 4) + distanceWeight + choiceWeight;
+}
+
+function continuityEchoes(character = state.char, history = state.history, currentSceneIndex = state.sceneIndex, limit = 3) {
+  const past = history.filter((item) => item.sceneIndex < currentSceneIndex);
+  const design = gameDesign(character);
+  const total = totalScenes(character);
+  const seen = new Set();
+  return past
+    .map((item) => {
+      const key = continuityMemoryKey(item, past);
+      const progress = sceneAt(item.sceneIndex, character);
+      const memory = design.memoryEcho?.[key] || design.memoryEcho?.mixed || design.memoryEcho?.safe;
+      const subtext = sceneCharacterSubtext(character.id, item.sceneIndex, total, item.branch);
+      const label = key === "repair" ? "戻ってきた記憶" : key === "strain" ? "残った引っかかり" : key === "spark" ? "熱を帯びた記憶" : "安心として残った記憶";
+      return {
+        ...item,
+        key,
+        label,
+        sceneTitle: `${progress.date.title} / ${progress.scene.title}`,
+        copy: `${progress.scene.title}であなたが選んだ「${item.intent}」が、${character.name}の中で${memory?.label || "小さな記憶"}になっている。${memory?.copy || subtext.copy}`,
+        subcopy: `${subtext.title}: ${subtext.copy}`,
+        score: continuityScore(item, past, currentSceneIndex),
+      };
+    })
+    .sort((a, b) => b.score - a.score || b.sceneIndex - a.sceneIndex)
+    .filter((item) => {
+      const signature = `${item.key}-${item.sceneIndex}`;
+      if (seen.has(signature)) return false;
+      seen.add(signature);
+      return true;
+    })
+    .slice(0, limit);
+}
+
+function currentContinuityEcho(character = state.char) {
+  return continuityEchoes(character, state.history, state.sceneIndex, 1)[0] || null;
+}
+
 function sceneContextParts(date, scene, line) {
   const previousProgress = state.sceneIndex > 0 ? sceneAt(state.sceneIndex - 1) : null;
   const previous = previousProgress?.scene || null;
   const previousChoice = state.history.find((item) => item.sceneIndex === state.sceneIndex - 1);
+  const echo = currentContinuityEcho(state.char);
   const previousTone = previousChoice?.branch || "default";
   const previousLine = previous
     ? (typeof previous.line === "string" ? previous.line : previous.line[previousTone] || previous.line.default)
@@ -697,22 +752,23 @@ function sceneContextParts(date, scene, line) {
   if (previous) {
     const bridge = previousProgress.date.title === date.title ? "\u305d\u306e\u307e\u307e\u5834\u9762\u304c\u9032\u307f" : "\u65e5\u3092\u6539\u3081\u3066";
     return [
-      ["直前の会話", `さっきの「${previous.title}」で、${state.char.name}は「${previousLine}」と反応した。`],
-      ["残っている空気", choiceMemory || "まだ前の返しの余韻を探っている。"],
-      ["この一枚", `${bridge}、${scene.location}へ。いま${state.char.name}は「${line}」と切り出している。`],
-      ["今回読むこと", `ここでは、${scene.goal}かどうかを見られている。`],
+      ["直前の会話", `さっきの「${previous.title}」で、${state.char.name}は「${previousLine}」と反応した。`, "now"],
+      ["残っている空気", choiceMemory || "まだ前の返しの余韻を探っている。", `tone-${previousChoice?.branch || "mixed"}`],
+      ...(echo ? [["覚えている一手", echo.copy, `echo echo-${echo.key}`]] : []),
+      ["この一枚", `${bridge}、${scene.location}へ。いま${state.char.name}は「${line}」と切り出している。`, "photo"],
+      ["今回読むこと", `ここでは、${scene.goal}かどうかを見られている。`, "read"],
     ];
   }
   return [
-    ["直前の流れ", `${date.title}の始まり。今日は${date.purpose}ために会っている。`],
-    ["この一枚", `${scene.location}で合流。まだお互い、踏み込み方を探っている。`],
-    ["最初の一言", `${state.char.name}は「${line}」と切り出し、あなたの反応を見ている。`],
-    ["今回読むこと", `ここでは、${scene.goal}かどうかを見られている。`],
+    ["直前の流れ", `${date.title}の始まり。今日は${date.purpose}ために会っている。`, "now"],
+    ["この一枚", `${scene.location}で合流。まだお互い、踏み込み方を探っている。`, "photo"],
+    ["最初の一言", `${state.char.name}は「${line}」と切り出し、あなたの反応を見ている。`, "read"],
+    ["今回読むこと", `ここでは、${scene.goal}かどうかを見られている。`, "read"],
   ];
 }
 
 function sceneContext(date, scene, line) {
-  return `<div class="scene-context-flow">${sceneContextParts(date, scene, line).map(([label, copy]) => `<article><span>${label}</span><p>${copy}</p></article>`).join("")}</div>`;
+  return `<div class="scene-context-flow">${sceneContextParts(date, scene, line).map(([label, copy, kind = ""]) => `<article class="${kind}"><span>${label}</span><p>${copy}</p></article>`).join("")}</div>`;
 }
 
 function game() {
@@ -970,7 +1026,13 @@ function relationshipArcReport(character = state.char, history = state.history) 
 
 function relationshipArcPanel(character = state.char) {
   const arc = relationshipArcReport(character);
-  return `<div class="arc-panel" style="--c:${character.color};--light:${character.light}"><h3>恋愛ルート読解 <span>${arc.next.label}</span></h3><p>${arc.summary}</p><div>${arc.reports.map((row) => `<article class="arc-${row.tone}"><span>${row.mode}</span><b>${row.label}</b><strong>${row.status} ${row.score}%</strong><i><em style="width:${row.score}%"></em></i><p>${row.copy}</p><small>安心${row.safe} / 火花${row.spark} / 揺れ${row.strain}</small></article>`).join("")}</div></div>`;
+  return `<div class="arc-panel" style="--c:${character.color};--light:${character.light}"><h3>恋愛ルート読解 <span>${arc.next.label}</span></h3><p>${arc.summary}</p><div>${arc.reports.map((row) => `<article class="arc-${row.tone}"><span>${row.mode}</span><b>${row.label}</b><strong>${row.status} ${row.score}%</strong><i><em style="width:${row.score}%"></em></i><p>${row.copy}</p><small>安心${row.safe} / 火花${row.spark} / 揺れ${row.strain}</small></article>`).join("")}</div></div>${continuityEchoPanel(character)}`;
+}
+
+function continuityEchoPanel(character = state.char) {
+  const echoes = continuityEchoes(character, state.history, totalScenes(character), 4);
+  if (!echoes.length) return "";
+  return `<div class="continuity-panel" style="--c:${character.color};--light:${character.light}"><h3>伏線回収ログ <span>${echoes.length} cues</span></h3><p>今回のデートで、${character.name}が後半まで覚えていた態度。次に同じ相手を選ぶ時の「効いた一手」です。</p><div>${echoes.map((item) => `<article class="echo-${item.key}"><span>${item.label}</span><b>${item.sceneTitle}</b><p>${item.copy}</p><small>${item.subcopy}</small></article>`).join("")}</div></div>`;
 }
 
 function learnedSkillLog(history = state.history) {
