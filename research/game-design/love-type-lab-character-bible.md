@@ -28,6 +28,45 @@ This file is generated from product data. Update `src/personas.js`, `src/story.j
 - The final report should explain not only compatibility, but the player's recurring habit and next practice target.
 - Psychological switches should work as a readable character-understanding loop: the player sees what opens, what hurts, and which switches they learned to handle.
 
+## Route Endings
+
+These endings are selected by the player's pattern, not by a single final answer. Each ending should feel like a playable route with a next-run mission.
+
+### REPAIR / 少し離れて、もう一度見つめ直す
+
+- Key: repair
+- Epilogue: 帰り道、会話は少し少なくなる。それでも完全に途切れたわけではなく、相手は最後に一度だけ振り返る。次に会うなら、謝ることより先に、何を大切にしていたのかを言葉にできるかが試される。
+- Next-run mission: 次回は最初の5シーンでstrainを1回以下に抑え、相手の心理スイッチを1つ以上「接近」まで進める。
+- Ending CG cue: 少し距離を置いて歩く帰り道、振り返る表情、まだ関係が切れていない余白
+
+### RECONNECT / すれ違ったから、扱い方がわかった
+
+- Key: reconnect
+- Epilogue: 一度だけ空気が止まったあと、二人は言葉を選び直す。完璧なデートではないけれど、関係を雑に終わらせなかったことが、相手の中に強く残る。
+- Next-run mission: 次回はあえて火花の選択も混ぜながら、衝突後2シーン以内にsafeで修復する流れを狙う。
+- Ending CG cue: 小さな衝突のあと、同じ席に戻って話し直す、緊張が残るが目線は切れていない
+
+### SPARK / 火花は強い。だから約束に変える
+
+- Key: spark
+- Epilogue: 相手は今日の会話を何度か思い出す。楽しかった、だけで終わらせないためには、次の一言で自由や熱量をちゃんと大事にする必要がある。
+- Next-run mission: 次回はsparkを活かしながら、終盤3シーンでtrustかcomfortを伸ばす選択を最低2回入れる。
+- Ending CG cue: 夜の街やカフェの余韻、笑いの直後に少し真剣な目になる、火花と約束のあいだ
+
+### TRUST / 安心の先に、もう一歩だけ踏み出す
+
+- Key: trust
+- Epilogue: 相手はあなたといる時間を安全だと感じている。ただ、恋として進めるには、受け止めるだけでなく、あなた自身の望みを少し見せる必要がある。
+- Next-run mission: 次回はsafeを土台にしつつ、各デートの最後に自分の希望を置く選択を1回ずつ狙う。
+- Ending CG cue: 穏やかな席、二人分の飲み物、安心した表情の中に次を待つ小さな期待
+
+### BALANCE / 読み合いが、恋の形になりはじめる
+
+- Key: balance
+- Epilogue: 安心と火花のどちらにも偏りすぎず、場面ごとに距離を調整できた。相手は、あなたが自分を攻略対象ではなく一人の人として見ていることを感じている。
+- Next-run mission: 次回は3つの心理スイッチをすべて「解放」し、最後の告白前にpressureとmisreadを低く保つ。
+- Ending CG cue: 告白前後の静かな余韻、安心と高揚が同時にある表情、二人の未来を示す小物
+
 ## ミナ / INFJ
 
 **Promise:** 静かな人が心を開く瞬間を、急かさず見届ける恋。

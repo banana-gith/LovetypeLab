@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { activePersonaSwitch, characterGameDesign, sceneCoaching } from "../src/gameDesign.js";
+import { activePersonaSwitch, characterGameDesign, routeEndings, sceneCoaching } from "../src/gameDesign.js";
 import { storyFor } from "../src/story.js";
 
 const characters = [
@@ -108,8 +108,9 @@ for (const character of characters) {
   lines.push("### Extra route / heart memo assets");
   lines.push("");
   lines.push(`- **Heart memo reveal cut-in**: ${character.fixedLook} 「${design.innerLayer.privateWish}」という内面が静かに伝わる、恋愛シミュレーション結果画面用のカットイン。${design.visualFormula} 画面内に文字、番号、ロゴを入れない。恋愛相手は映さず、視線、手元、余白、二人分の小物で関係性を示す。`);
-  lines.push(`- **Repair route ending CG**: ${character.fixedLook} 怖さ「${design.innerLayer.fear}」を乗り越えた直後。まだ少し緊張が残るが、関係が切れていない表情。柔らかい映画的光、浅い被写界深度、上質でリアル。画像内文字なし。`);
-  lines.push(`- **Trust route ending CG**: ${character.fixedLook} 「${design.innerLayer.opensWhen}」という安心が表情に出る余韻シーン。二人分の飲み物、空いた席、スマホ通知などで相手の存在を示す。画像内文字なし。`);
+  for (const route of Object.values(routeEndings)) {
+    lines.push(`- **Route ending CG / ${route.key}**: ${character.fixedLook} ${route.cgCue}。${design.visualFormula} 画面内に文字、番号、ロゴなし。恋愛相手は映さず、二人分の小物、視線、余白で関係性を示す。`);
+  }
   for (const item of design.psychologicalSwitches) {
     lines.push(`- **Psychological switch cut-in / ${item.label}**: ${character.fixedLook} 「${item.tell}」という変化が、表情・視線・手元・余白だけで伝わる一枚。テーマは「${item.opens}」。失敗差分では「${item.hurts}」が起きた直後の少し距離が出た表情にする。UI合成前提、文字・番号・ロゴなし、恋愛相手は映さない。`);
   }

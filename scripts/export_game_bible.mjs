@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { activePersonaSwitch, characterGameDesign, researchBasis, sceneCoaching, sceneDramaturgy } from "../src/gameDesign.js";
+import { activePersonaSwitch, characterGameDesign, researchBasis, routeEndings, sceneCoaching, sceneDramaturgy } from "../src/gameDesign.js";
 import { personaCatalog } from "../src/personas.js";
 import { storyFor } from "../src/story.js";
 
@@ -38,6 +38,19 @@ const lines = [
   "- The final report should explain not only compatibility, but the player's recurring habit and next practice target.",
   "- Psychological switches should work as a readable character-understanding loop: the player sees what opens, what hurts, and which switches they learned to handle.",
   "",
+  "## Route Endings",
+  "",
+  "These endings are selected by the player's pattern, not by a single final answer. Each ending should feel like a playable route with a next-run mission.",
+  "",
+  ...Object.values(routeEndings).flatMap((route) => [
+    `### ${route.badge || route.key.toUpperCase()} / ${route.epilogueTitle}`,
+    "",
+    `- Key: ${route.key}`,
+    `- Epilogue: ${route.epilogue}`,
+    `- Next-run mission: ${route.replayMission}`,
+    `- Ending CG cue: ${route.cgCue}`,
+    "",
+  ]),
 ];
 
 for (const [id, type, name] of characters) {

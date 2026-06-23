@@ -386,6 +386,49 @@ export function relationshipPulse(characterId, scores, flags) {
   return `安心は育っている。次は${design.lens.focus}をもう一段深く拾うと、キャラの本音に近づける。`;
 }
 
+export const routeEndings = {
+  repair: {
+    key: "repair",
+    epilogueTitle: "少し離れて、もう一度見つめ直す",
+    epilogue:
+      "帰り道、会話は少し少なくなる。それでも完全に途切れたわけではなく、相手は最後に一度だけ振り返る。次に会うなら、謝ることより先に、何を大切にしていたのかを言葉にできるかが試される。",
+    replayMission: "次回は最初の5シーンでstrainを1回以下に抑え、相手の心理スイッチを1つ以上「接近」まで進める。",
+    cgCue: "少し距離を置いて歩く帰り道、振り返る表情、まだ関係が切れていない余白",
+  },
+  reconnect: {
+    key: "reconnect",
+    epilogueTitle: "すれ違ったから、扱い方がわかった",
+    epilogue:
+      "一度だけ空気が止まったあと、二人は言葉を選び直す。完璧なデートではないけれど、関係を雑に終わらせなかったことが、相手の中に強く残る。",
+    replayMission: "次回はあえて火花の選択も混ぜながら、衝突後2シーン以内にsafeで修復する流れを狙う。",
+    cgCue: "小さな衝突のあと、同じ席に戻って話し直す、緊張が残るが目線は切れていない",
+  },
+  spark: {
+    key: "spark",
+    epilogueTitle: "火花は強い。だから約束に変える",
+    epilogue:
+      "相手は今日の会話を何度か思い出す。楽しかった、だけで終わらせないためには、次の一言で自由や熱量をちゃんと大事にする必要がある。",
+    replayMission: "次回はsparkを活かしながら、終盤3シーンでtrustかcomfortを伸ばす選択を最低2回入れる。",
+    cgCue: "夜の街やカフェの余韻、笑いの直後に少し真剣な目になる、火花と約束のあいだ",
+  },
+  trust: {
+    key: "trust",
+    epilogueTitle: "安心の先に、もう一歩だけ踏み出す",
+    epilogue:
+      "相手はあなたといる時間を安全だと感じている。ただ、恋として進めるには、受け止めるだけでなく、あなた自身の望みを少し見せる必要がある。",
+    replayMission: "次回はsafeを土台にしつつ、各デートの最後に自分の希望を置く選択を1回ずつ狙う。",
+    cgCue: "穏やかな席、二人分の飲み物、安心した表情の中に次を待つ小さな期待",
+  },
+  balance: {
+    key: "balance",
+    epilogueTitle: "読み合いが、恋の形になりはじめる",
+    epilogue:
+      "安心と火花のどちらにも偏りすぎず、場面ごとに距離を調整できた。相手は、あなたが自分を攻略対象ではなく一人の人として見ていることを感じている。",
+    replayMission: "次回は3つの心理スイッチをすべて「解放」し、最後の告白前にpressureとmisreadを低く保つ。",
+    cgCue: "告白前後の静かな余韻、安心と高揚が同時にある表情、二人の未来を示す小物",
+  },
+};
+
 export function relationshipRoute(characterId, scores, flags, history = []) {
   const design = characterGameDesign[characterId] || characterGameDesign.mina;
   const safe = flags.safe || 0;
@@ -395,6 +438,7 @@ export function relationshipRoute(characterId, scores, flags, history = []) {
   const totalRisk = scores.pressure + scores.misread;
   if (totalRisk >= 90 || strain >= 5) {
     return {
+      ...routeEndings.repair,
       name: "距離を取り直すルート",
       badge: "REPAIR",
       summary: `${design.lens.risk}。相手はまだ完全には閉じていないが、次は踏み込む前に受け取り直す必要がある。`,
@@ -403,6 +447,7 @@ export function relationshipRoute(characterId, scores, flags, history = []) {
   }
   if (recovered) {
     return {
+      ...routeEndings.reconnect,
       name: "すれ違い修復ルート",
       badge: "RECONNECT",
       summary: "一度空気が揺れたあと、関係の扱い方を学び直せた。恋愛ゲームとして一番ドラマが出る進み方。",
@@ -411,6 +456,7 @@ export function relationshipRoute(characterId, scores, flags, history = []) {
   }
   if (spark > safe + 2) {
     return {
+      ...routeEndings.spark,
       name: "火花先行ルート",
       badge: "SPARK",
       summary: "会話の熱量と駆け引きで距離を縮めた。魅力は強いが、遊びだけに見せない誠実さが次の鍵。",
@@ -419,6 +465,7 @@ export function relationshipRoute(characterId, scores, flags, history = []) {
   }
   if (safe >= spark) {
     return {
+      ...routeEndings.trust,
       name: "安心積み上げルート",
       badge: "TRUST",
       summary: "相手のペースを尊重しながら信頼を育てた。静かな強さがあり、終盤で好意を出せるとさらに刺さる。",
@@ -426,6 +473,7 @@ export function relationshipRoute(characterId, scores, flags, history = []) {
     };
   }
   return {
+    ...routeEndings.balance,
     name: "バランス接近ルート",
     badge: "BALANCE",
     summary: "安心と火花の両方を使い分けた。場面ごとに攻め方を変えられている。",
