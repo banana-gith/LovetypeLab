@@ -84,6 +84,26 @@ const characters = [
     caution: "作り込みすぎた空気。ひらめきをすぐ否定されること。",
   },
   {
+    id: "nagi",
+    type: "INFP",
+    name: "ナギ",
+    roman: "NAGI",
+    style: "INFP風・価値観ドリーマー型",
+    theme: "創作、価値観、やわらかな本音",
+    age: "25歳",
+    job: "イラストレーター",
+    pace: "ゆっくり",
+    difficulty: "中級",
+    color: "#b26fb0",
+    light: "#f5def4",
+    hair: "#4f344d",
+    emoji: "☾",
+    best: "empathize",
+    bio: "静かに見えて、内側には強い理想と物語を持つタイプ。好きなものを否定されない安心感と、少しずつ現実にしてくれる誠実さに惹かれる。",
+    likes: ["小さなギャラリー", "夜の散歩", "手紙とスケッチ"],
+    caution: "理想を笑われること。早い結論や強い批判で心を閉じやすい。",
+  },
+  {
     id: "haruka",
     type: "ISTJ",
     name: "ハルカ",
@@ -385,7 +405,7 @@ function home() {
       <div class="hero-copy">
         <div class="eyebrow">✦ 3回のデートで学ぶ、恋愛会話トレーニング</div>
         <h1>「いい人」で終わらない<br><span>会話の距離感</span>を<br>ゲームで身につける。</h1>
-        <p>同じ言葉でも、相手の会話スタイルによって受け取られ方は変わります。<br class="desktop">5人とのデートを通して、自分らしい伝え方を見つけましょう。</p>
+        <p>同じ言葉でも、相手の会話スタイルによって受け取られ方は変わります。<br class="desktop">${characters.length}人とのデートを通して、自分らしい伝え方を見つけましょう。</p>
         <div class="hero-actions"><button class="primary" data-go="characters">デートをはじめる →</button><button class="text-button" data-scroll="how"><span>▶</span>遊び方を見る</button></div>
         <div class="safe-note"><span>18+</span><p>これは診断・攻略ではなく、相手の同意と境界線を大切にする会話練習です。</p></div>
       </div>
@@ -405,8 +425,8 @@ function home() {
       <div class="section-head"><span>HOW IT WORKS</span><h2>選ぶ。気づく。次に活かす。</h2><p>選択肢ごとの相手視点、理由、改善フレーズをすぐ確認できます。</p></div>
       <div class="steps">
         ${[
-          ["01", "相手を選ぶ", "5つの会話スタイルから、練習したい相手を選びます。", "♥"],
-          ["02", "会話を選ぶ", "3回のデート、全15シーンで返答を選びます。", "●"],
+          ["01", "相手を選ぶ", `${characters.length}つの会話スタイルから、練習したい相手を選びます。`, "♥"],
+          ["02", "会話を選ぶ", "3回のデートで、場面ごとの返答を選びます。", "●"],
           ["03", "相手視点で学ぶ", "なぜ響いたか、なぜすれ違ったかを確認します。", "✦"],
         ].map((step, index) => `<div class="step"><div class="step-icon icon-${index}">${step[3]}<b>${step[0]}</b></div><h3>${step[1]}</h3><p>${step[2]}</p>${index < 2 ? `<span class="step-arrow">›</span>` : ""}</div>`).join("")}
       </div>
@@ -414,7 +434,7 @@ function home() {
     <section class="cast">
       <div class="section-head"><span>MEET THE CAST</span><h2>誰との会話を練習しますか？</h2></div>
       <div class="cast-grid">${characters.map((c) => castCard(c)).join("")}</div>
-      <button class="secondary" data-go="characters">5人のプロフィールを見る →</button>
+      <button class="secondary" data-go="characters">${characters.length}人のプロフィールを見る →</button>
     </section>
     <section class="lab" id="about"><div><span class="eyebrow">ABOUT THIS LAB</span><h2>タイプは、人を決めつけるためではありません。</h2></div><div><p>16タイプ風の表現は、会話傾向を理解するためのヒントです。心理診断、医療助言、恋愛成功の保証ではありません。</p><ul><li>✓ 相手の同意と境界線を尊重します</li><li>✓ 断られた時の態度も評価します</li><li>✓ 強引な誘い、返答の強要、感情の否定は低評価です</li></ul></div></section>
     <section class="bottom-cta"><span>READY?</span><h2>次の会話を、少しだけ<br>自分らしく。</h2><button class="primary light" data-go="characters">無料でデートをはじめる →</button></section>
@@ -600,10 +620,10 @@ function choiceGrade(choice) {
   const positive = (choice.effect.trust || 0) + (choice.effect.interest || 0) + (choice.effect.comfort || 0);
   const negative = (choice.effect.pressure || 0) + (choice.effect.misread || 0);
   const score = positive - negative * 1.2;
-  if (score >= 15) return { rank: "Great", phrase: "\u3050\u3063\u3068\u523a\u3055\u3063\u305f", className: "great", cue: "\u4e00\u6c17\u306b\u8ddd\u96e2\u304c\u7e2e\u307e\u308b\u8fd4\u3057" };
-  if (score >= 9) return { rank: "Good", phrase: "\u3044\u3044\u6e29\u5ea6", className: "good", cue: "\u5b89\u5fc3\u3057\u3066\u6b21\u306b\u9032\u3081\u308b\u8fd4\u3057" };
-  if (score >= 2) return { rank: "Close", phrase: "\u304a\u3057\u3044", className: "close", cue: "\u60aa\u304f\u306a\u3044\u304c\u3001\u3082\u3046\u5c11\u3057\u5408\u308f\u305b\u305f\u3044\u8fd4\u3057" };
-  return { rank: "Miss", phrase: "\u7a7a\u6c17\u304c\u63fa\u308c\u305f", className: "miss", cue: "\u76f8\u624b\u304c\u5c11\u3057\u8eab\u69cb\u3048\u308b\u8fd4\u3057" };
+  if (score >= 15) return { rank: "Great!", phrase: "刺さった！", className: "great", cue: "一気に距離が縮まる返し" };
+  if (score >= 9) return { rank: "Good", phrase: "いい温度", className: "good", cue: "安心して次に進める返し" };
+  if (score >= 2) return { rank: "Close", phrase: "あと一歩", className: "close", cue: "悪くないけど、もう少し場面に合わせたい返し" };
+  return { rank: "Miss", phrase: "すれ違い", className: "miss", cue: "相手が少し身構える返し" };
 }
 
 function choiceAftertaste(choice) {
@@ -627,13 +647,23 @@ function choiceIntentLabel(choice) {
   return labels[choice.kind] || "\u63a2\u308b";
 }
 
+function choiceDirection(choice) {
+  const label = choiceIntentLabel(choice);
+  const branchCopy = {
+    safe: "受け止める",
+    spark: "温度を上げる",
+    strain: choice.kind === "pushy" ? "踏み込む" : "流す",
+  };
+  return label || branchCopy[choice.branch] || "探る";
+}
+
 function sceneArtwork(c, scene, sceneIndex) {
   const image = scene.image || (c.assetSet ? `/assets/${c.assetSet}/scene-${String(sceneIndex + 1).padStart(2, "0")}.${c.assetExt || "jpg"}` : "");
   if (!image) return avatar(c, "avatar-large");
   return `<img class="scene-photo" src="${image}" alt="${c.name} - ${scene.title}">`;
 }
 
-function sceneContextParts(date, scene) {
+function sceneContextParts(date, scene, line) {
   const previousProgress = state.sceneIndex > 0 ? sceneAt(state.sceneIndex - 1) : null;
   const previous = previousProgress?.scene || null;
   const previousChoice = state.history.find((item) => item.sceneIndex === state.sceneIndex - 1);
@@ -647,22 +677,22 @@ function sceneContextParts(date, scene) {
   if (previous) {
     const bridge = previousProgress.date.title === date.title ? "\u305d\u306e\u307e\u307e\u5834\u9762\u304c\u9032\u307f" : "\u65e5\u3092\u6539\u3081\u3066";
     return [
-      ["前の会話", `「${previous.title}」で、${state.char.name}は「${previousLine}」と反応した。`],
-      ["あなたの余韻", choiceMemory || "まだ前の返しの余韻を探っている。"],
-      ["この一枚", `${bridge}、いまは「${scene.location}」。`],
-      ["今回の鍵", `${scene.goal}こと。`],
+      ["直前の会話", `さっきの「${previous.title}」で、${state.char.name}は「${previousLine}」と反応した。`],
+      ["残っている空気", choiceMemory || "まだ前の返しの余韻を探っている。"],
+      ["この一枚", `${bridge}、${scene.location}へ。いま${state.char.name}は「${line}」と切り出している。`],
+      ["今回読むこと", `ここでは、${scene.goal}かどうかを見られている。`],
     ];
   }
   return [
-    ["場面の入口", `${date.title}の始まり。${date.purpose}ために向き合っている。`],
-    ["この一枚", `場所は「${scene.location}」。まだ会話の温度は探り合い。`],
-    ["相手の空気", `${state.char.name}は第一声で、こちらの距離感と反応の軽さを見ている。`],
-    ["今回の鍵", `${scene.goal}こと。`],
+    ["直前の流れ", `${date.title}の始まり。今日は${date.purpose}ために会っている。`],
+    ["この一枚", `${scene.location}で合流。まだお互い、踏み込み方を探っている。`],
+    ["最初の一言", `${state.char.name}は「${line}」と切り出し、あなたの反応を見ている。`],
+    ["今回読むこと", `ここでは、${scene.goal}かどうかを見られている。`],
   ];
 }
 
-function sceneContext(date, scene) {
-  return `<div class="scene-context-flow">${sceneContextParts(date, scene).map(([label, copy]) => `<article><span>${label}</span><p>${copy}</p></article>`).join("")}</div>`;
+function sceneContext(date, scene, line) {
+  return `<div class="scene-context-flow">${sceneContextParts(date, scene, line).map(([label, copy]) => `<article><span>${label}</span><p>${copy}</p></article>`).join("")}</div>`;
 }
 
 function game() {
@@ -684,7 +714,7 @@ function game() {
   return `<div class="game-shell">
     <header class="game-header"><button class="icon-button" data-go="profile">×</button><div class="game-person">${avatar(c)}<div><b>${c.name}</b><span>${c.style}</span></div></div><div class="game-progress"><span>DATE ${dateIndex + 1} <b>${state.sceneIndex + 1} / ${count}</b></span><i><em style="width:${((state.sceneIndex + 1) / count) * 100}%;background:${c.color}"></em></i></div></header>
     <main class="game-main"><aside class="score-strip"><div class="score-hero" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>\u7dcf\u5408\u8a55\u4fa1</span><b>${tier.label}</b><p>${tier.sub}</p></div></div>${meters()}<div class="relationship-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div><div class="meter-help">\u30bf\u30a4\u30d7\u3054\u3068\u306b\u91cd\u304f\u898b\u308b\u30dd\u30a4\u30f3\u30c8\u304c\u5c11\u3057\u9055\u3044\u307e\u3059\u3002</div></aside>
-      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context"><b>今の状況</b>${sceneContext(date, scene)}<div class="scene-insight"><span>${dramatic.beat}</span><b>${dramatic.focus}</b></div><div class="scene-coach"><span>${coaching.badge}</span><p><b>${coaching.skill}</b>${coaching.watch}</p></div><div class="scene-read"><span>READ THE ROOM</span><p><b>${reading.signal}</b>${reading.playerQuestion}</p></div><div class="scene-tactic"><span>${tactic.badge} TACTIC</span><p><b>${tactic.title}</b>${tactic.read}</p><small>刺さりやすい: ${tactic.prefer || "場面次第"} / 危ない: ${tactic.avoid || "読み違い"}</small></div><div class="scene-memory memory-${memory.tone}"><span>MEMORY</span><p><b>${memory.label}</b>${memory.copy}</p></div></div>${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent">${choiceIntentLabel(choice)}</em><p>${choice.label}</p></button>`).join("")}</div></section>
+      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context"><b>今の状況</b>${sceneContext(date, scene, line)}<div class="scene-insight"><span>${dramatic.beat}</span><b>${dramatic.focus}</b></div><div class="scene-coach"><span>${coaching.badge}</span><p><b>${coaching.skill}</b>${coaching.watch}</p></div><div class="scene-read"><span>READ THE ROOM</span><p><b>${reading.signal}</b>${reading.playerQuestion}</p></div><div class="scene-tactic"><span>${tactic.badge} TACTIC</span><p><b>${tactic.title}</b>${tactic.read}</p><small>刺さりやすい: ${tactic.prefer || "場面次第"} / 危ない: ${tactic.avoid || "読み違い"}</small></div><div class="scene-memory memory-${memory.tone}"><span>MEMORY</span><p><b>${memory.label}</b>${memory.copy}</p></div></div>${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent"><small>方向性</small>${choiceDirection(choice)}</em><p>${choice.label}</p></button>`).join("")}</div></section>
     </main>${state.picked ? feedback() : ""}
   </div>`;
 }
@@ -695,30 +725,19 @@ function feedback() {
   const c = state.char;
   const { scene } = currentScene();
   const coaching = sceneCoaching(c.id, scene, state.sceneIndex, totalScenes(c));
-  const reading = sceneReadingCue(c.id, state.sceneIndex, totalScenes(c));
-  const mission = dateMissionReport(c, currentScene().dateIndex);
-  const memory = characterMemoryReport(c);
   const tactic = picked.tactic || sceneTacticalRead(c.id, state.sceneIndex, totalScenes(c), picked);
   const momentum = picked.momentum || momentumRead(picked);
   const combo = currentCombo();
-  const style = playStyleReport();
   return `<div class="feedback-overlay"><div class="feedback-modal chat-modal feedback-stamp-modal grade-${grade.className}">
-    <div class="grade-stamp"><small>4段階評価</small><span>${grade.rank}</span><b>${grade.phrase}</b><p>${grade.cue}</p></div>
-    <div class="chat-head" style="--c:${c.color};--light:${c.light}">${avatar(c)}<div><span>${grade.rank} RESPONSE</span><h3>${c.name}\u306e\u53cd\u5fdc</h3><p>${grade.cue}</p></div></div>
-    <div class="chat-thread">
-      <div class="chat-bubble you"><b>\u3042\u306a\u305f\u306e\u8fd4\u3057 / ${choiceIntentLabel(picked)}</b><p>${picked.label}</p></div>
-      <div class="chat-bubble them" style="--c:${c.color};--light:${c.light}"><b>${c.name}</b><p>\u300c${picked.reaction}\u300d</p></div>
-      <div class="chat-bubble inner"><b>\u4f55\u304c\u8d77\u304d\u305f\uff1f</b><p>${picked.why}</p></div>
-      <div class="chat-bubble tactic"><b>${tactic.verdict} / ${tactic.title}</b><p>${tactic.choiceFits ? tactic.payoff : tactic.choiceRisks ? tactic.trap : tactic.read}</p></div>
-      <div class="chat-bubble momentum"><b>${momentum.label}</b><p>${momentum.copy}</p></div>
-      <div class="chat-bubble switch"><b>心理スイッチ / ${coaching.switch.label}</b><p>${personaSwitchFeedback(c.id, state.sceneIndex, totalScenes(c), picked.branch)}</p></div>
-      <div class="chat-bubble read"><b>読み筋</b><p>良い読み: ${reading.goodRead} / 危ない誤読: ${reading.misread}</p></div>
-      <div class="chat-bubble mission"><b>${mission.badge} / ${mission.status}</b><p>${mission.title}: ${mission.next}</p></div>
-      <div class="chat-bubble memory"><b>${memory.label}</b><p>${memory.copy}</p></div>
-      <div class="chat-bubble pulse"><b>いまの関係の読み筋</b><p>${relationshipPulse(c.id, state.scores, state.flags)}</p></div>
-      <div class="chat-bubble coach"><b>攻略ノート / ${coaching.skill}</b><p>${coaching.payoff} ${coaching.trap}</p></div>
-      <div class="chat-bubble combo"><b>${combo.label} / ${style.title}</b><p>${style.copy}</p></div>
-      <div class="chat-bubble better"><b>\u6b21\u306b\u3082\u3063\u3068\u81ea\u7136\u306b\u3059\u308b\u306a\u3089</b><p>${picked.better}</p></div>
+    <div class="grade-stamp"><small>4段階スタンプ</small><span>${grade.rank}</span><b>${grade.phrase}</b><p>${grade.cue}</p></div>
+    <div class="chat-head" style="--c:${c.color};--light:${c.light}">${avatar(c)}<div><span>${grade.rank} / ${choiceDirection(picked)}</span><h3>${c.name}\u306e反応</h3><p>${grade.cue}</p></div></div>
+    <div class="chat-thread feedback-simple">
+      <div class="chat-bubble you"><b>あなた / ${choiceDirection(picked)}</b><p>${picked.label}</p></div>
+      <div class="chat-bubble them" style="--c:${c.color};--light:${c.light}"><b>${c.name}</b><p>「${picked.reaction}」</p></div>
+      <div class="chat-bubble tactic"><b>${tactic.verdict}</b><p>${tactic.choiceFits ? tactic.payoff : tactic.choiceRisks ? tactic.trap : picked.why}</p></div>
+      <div class="chat-bubble switch"><b>${coaching.switch.label}</b><p>${personaSwitchFeedback(c.id, state.sceneIndex, totalScenes(c), picked.branch)}</p></div>
+      <div class="chat-bubble momentum"><b>${momentum.label} / ${combo.label}</b><p>${momentum.copy}</p></div>
+      <div class="chat-bubble better"><b>次にもっと自然にするなら</b><p>${picked.better}</p></div>
     </div>
     <div class="delta-row">${Object.entries(picked.effect).filter(([, value]) => value !== 0).map(([key, value]) => `<span class="${value > 0 ? "plus" : "minus"}">${scoreIcon(scoreDecor[key]?.icon || "gauge")} ${scoreDecor[key]?.short || scoreLabels[key]} ${value > 0 ? "+" : ""}${value}</span>`).join("")}</div>
     <button class="primary full" data-next>${state.sceneIndex === totalScenes() - 1 ? "\u7d50\u679c\u3092\u898b\u308b" : "\u6b21\u306e\u4f1a\u8a71\u3078"} \u2192</button>

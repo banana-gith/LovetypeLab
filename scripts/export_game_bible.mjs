@@ -7,6 +7,7 @@ import { storyFor } from "../src/story.js";
 const characters = [
   ["mina", "INFJ", "ミナ"],
   ["rio", "ENFP", "リオ"],
+  ["nagi", "INFP", "ナギ"],
   ["haruka", "ISTJ", "ハルカ"],
   ["yu", "ESTP", "ユウ"],
   ["reina", "ENTJ", "レイナ"],
