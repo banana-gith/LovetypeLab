@@ -1,5 +1,5 @@
 import { personaCatalog } from "./personas.js";
-import { characterGameDesign, personaSwitchFeedback, relationshipPulse, relationshipRoute, sceneCoaching, sceneDramaturgy } from "./gameDesign.js";
+import { characterGameDesign, personaSwitchFeedback, relationshipPulse, relationshipRoute, routeEndings, sceneCoaching, sceneDramaturgy } from "./gameDesign.js";
 import { branchTone, storyFor } from "./story.js";
 
 const $ = (selector) => document.querySelector(selector);
@@ -225,6 +225,40 @@ let state = {
   history: [],
   flags: { safe: 0, spark: 0, strain: 0 },
 };
+
+const ROUTE_ALBUM_KEY = "love-type-lab-route-album-v1";
+
+function readRouteAlbum() {
+  try {
+    return JSON.parse(localStorage.getItem(ROUTE_ALBUM_KEY) || "{}") || {};
+  } catch {
+    return {};
+  }
+}
+
+function writeRouteAlbum(album) {
+  try {
+    localStorage.setItem(ROUTE_ALBUM_KEY, JSON.stringify(album));
+  } catch {
+    // Private browsing or locked storage should not block the game result.
+  }
+}
+
+function unlockRouteEnding(character, route, total) {
+  const album = readRouteAlbum();
+  const characterAlbum = album[character.id] || {};
+  const previous = characterAlbum[route.key];
+  characterAlbum[route.key] = {
+    badge: route.badge,
+    name: route.name,
+    score: Math.max(previous?.score || 0, total),
+    unlockedAt: previous?.unlockedAt || new Date().toISOString(),
+    lastPlayedAt: new Date().toISOString(),
+  };
+  album[character.id] = characterAlbum;
+  writeRouteAlbum(album);
+  return characterAlbum;
+}
 
 function clamp(value) {
   return Math.max(0, Math.min(100, value));
@@ -688,6 +722,17 @@ function switchProgressPanel(character = state.char, compact = false) {
   return `<div class="switch-progress-panel ${compact ? "compact" : ""}"><h3>${character.name}の心理スイッチ <span>${report.filter((item) => item.tone === "open").length}/${report.length} 解放</span></h3><div>${report.map((item) => `<article class="switch-${item.tone}"><b>${item.label}</b><strong>${item.status}</strong><i><em style="width:${item.score}%"></em></i><p>${item.next}</p></article>`).join("")}</div></div>`;
 }
 
+function routeAlbumPanel(character = state.char, currentRoute) {
+  const album = readRouteAlbum()[character.id] || {};
+  const routes = Object.values(routeEndings);
+  const unlockedCount = routes.filter((route) => album[route.key] || route.key === currentRoute.key).length;
+  return `<div class="route-album" style="--c:${character.color}"><h3>エンディングアルバム <span>${unlockedCount}/${routes.length}</span></h3><div>${routes.map((route) => {
+    const record = album[route.key];
+    const unlocked = Boolean(record) || route.key === currentRoute.key;
+    return `<article class="${unlocked ? "unlocked" : "locked"} ${route.key === currentRoute.key ? "current" : ""}"><span>${unlocked ? route.badge : "LOCKED"}</span><b>${unlocked ? route.albumName : "未解放ルート"}</b><p>${unlocked ? route.playerPattern : route.unlockHint}</p>${record?.score ? `<small>BEST ${record.score}</small>` : route.key === currentRoute.key ? "<small>今回解放</small>" : ""}</article>`;
+  }).join("")}</div></div>`;
+}
+
 function checkpoint() {
   const c = state.char;
   const { date, dateIndex, local } = currentScene();
@@ -807,10 +852,11 @@ function result() {
   const style = playStyleReport();
   const learned = learnedSkillLog();
   const heart = heartMemoUnlocks(c);
+  unlockRouteEnding(c, route, total);
   const type = total >= 78 ? "\u304b\u306a\u308a\u76f8\u6027\u304c\u3044\u3044\u4f1a\u8a71" : total >= 62 ? "\u3058\u308f\u3063\u3068\u523a\u3055\u308b\u4f1a\u8a71" : total >= 48 ? "\u3042\u3068\u4e00\u6b69\u3067\u5c4a\u304f\u4f1a\u8a71" : "\u4f5c\u6226\u3092\u5909\u3048\u308b\u3068\u4f38\u3073\u308b\u4f1a\u8a71";
   return `${header(true)}<main class="result-page"><span class="result-kicker">YOUR DATE RESULT</span><div class="ending-icon">${end[0]}</div><h1>${end[1]}</h1><p>${end[2]}</p>
     <div class="report-grid"><div class="share-card" style="--c:${c.color};--light:${c.light}"><div class="share-brand">Love Type Lab ✦</div>${avatar(c)}<span>${c.type}風デート完走</span><h2>${type}</h2><div class="route-card"><small>${route.badge}</small><b>${route.name}</b><p>${route.summary}</p></div><div class="epilogue-card"><span>ENDING SCENE</span><b>${route.epilogueTitle}</b><p>${route.epilogue}</p><small>次回ミッション: ${route.replayMission}</small></div><p>${c.name}との${story(c).dates.length}回のデートで、${gd.mastery}</p><div class="share-tags"><span>#LoveTypeLab</span><span>#${c.type}風</span><span>#会話練習</span></div><small>TYPE DATE TRAINER</small></div>
-    <div class="score-report"><div class="total-score-card" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>\u30e1\u30a4\u30f3\u8a55\u4fa1</span><b>${tier.label}</b><p>${tier.sub}</p></div></div><div class="relationship-stage result-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div><div class="playstyle-card"><span>${style.badge}</span><b>${style.title}</b><p>${style.copy}</p></div><div class="heart-memo-panel"><h3>${c.name}の本音メモ <span>${heart.unlocked.length}/5</span></h3>${heart.unlocked.map((memo) => `<article><b>${memo.title}</b><p>${memo.text}</p></article>`).join("")}${heart.locked ? `<small>未解放メモ: ${heart.locked} / 次の鍵は「${heart.nextHint}」</small>` : `<small>すべての本音メモを解放しました。</small>`}</div>${switchProgressPanel(c)}<h2>5\u3064\u306e\u7a7a\u6c17\u30e1\u30fc\u30bf\u30fc</h2>${meters()}<div class="skill-panel"><h3>今回身についた会話スキル</h3><div>${playerSkillBadges().map((badge) => `<article><span>${badge.icon}</span><b>${badge.title}</b><p>${badge.text}</p></article>`).join("")}</div></div><div class="learned-strip"><h3>解放した会話レッスン</h3><p>${learned.slice(0, 8).map((item) => `<span>${item.badge} ${item.skill}</span>`).join("")}</p></div><div class="moment-log"><h3>印象に残る選択</h3>${decisiveMoments().map((moment) => `<article class="moment-${moment.branch}"><span>${moment.intent}</span><b>${moment.scene}</b><p>${moment.text}</p></article>`).join("")}</div><div class="insight"><span>✦</span><div><b>あなたの勝ち筋</b><p>${strongestInsight()} ${gd.winningMindset}</p></div></div><div class="insight"><span>→</span><div><b>次の一手</b><p>${route.nextMove}</p></div></div><div class="insight warn"><span>!</span><div><b>次に伸びるポイント</b><p>${growthInsight()} ${gd.temptationTrap}</p></div></div><button class="primary full" data-share>結果をコピーする</button><button class="outline full" data-restart>もう一度デートする</button></div></div>
+    <div class="score-report"><div class="total-score-card" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>\u30e1\u30a4\u30f3\u8a55\u4fa1</span><b>${tier.label}</b><p>${tier.sub}</p></div></div><div class="relationship-stage result-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div><div class="playstyle-card"><span>${style.badge}</span><b>${style.title}</b><p>${style.copy}</p></div><div class="heart-memo-panel"><h3>${c.name}の本音メモ <span>${heart.unlocked.length}/5</span></h3>${heart.unlocked.map((memo) => `<article><b>${memo.title}</b><p>${memo.text}</p></article>`).join("")}${heart.locked ? `<small>未解放メモ: ${heart.locked} / 次の鍵は「${heart.nextHint}」</small>` : `<small>すべての本音メモを解放しました。</small>`}</div>${switchProgressPanel(c)}${routeAlbumPanel(c, route)}<h2>5\u3064\u306e\u7a7a\u6c17\u30e1\u30fc\u30bf\u30fc</h2>${meters()}<div class="skill-panel"><h3>今回身についた会話スキル</h3><div>${playerSkillBadges().map((badge) => `<article><span>${badge.icon}</span><b>${badge.title}</b><p>${badge.text}</p></article>`).join("")}</div></div><div class="learned-strip"><h3>解放した会話レッスン</h3><p>${learned.slice(0, 8).map((item) => `<span>${item.badge} ${item.skill}</span>`).join("")}</p></div><div class="moment-log"><h3>印象に残る選択</h3>${decisiveMoments().map((moment) => `<article class="moment-${moment.branch}"><span>${moment.intent}</span><b>${moment.scene}</b><p>${moment.text}</p></article>`).join("")}</div><div class="insight"><span>✦</span><div><b>あなたの勝ち筋</b><p>${strongestInsight()} ${gd.winningMindset}</p></div></div><div class="insight"><span>→</span><div><b>次の一手</b><p>${route.nextMove}</p></div></div><div class="insight warn"><span>!</span><div><b>次に伸びるポイント</b><p>${growthInsight()} ${gd.temptationTrap}</p></div></div><button class="primary full" data-share>結果をコピーする</button><button class="outline full" data-restart>もう一度デートする</button></div></div>
   </main>`;
 }
 

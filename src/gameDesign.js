@@ -389,6 +389,10 @@ export function relationshipPulse(characterId, scores, flags) {
 export const routeEndings = {
   repair: {
     key: "repair",
+    badge: "REPAIR",
+    albumName: "距離を取り直すルート",
+    unlockHint: "ミスや押しすぎが重なった時に到達。次は受け取り直しの練習になる。",
+    playerPattern: "踏み込みすぎ、または相手の反応を読み違えたまま進めた",
     epilogueTitle: "少し離れて、もう一度見つめ直す",
     epilogue:
       "帰り道、会話は少し少なくなる。それでも完全に途切れたわけではなく、相手は最後に一度だけ振り返る。次に会うなら、謝ることより先に、何を大切にしていたのかを言葉にできるかが試される。",
@@ -397,6 +401,10 @@ export const routeEndings = {
   },
   reconnect: {
     key: "reconnect",
+    badge: "RECONNECT",
+    albumName: "すれ違い修復ルート",
+    unlockHint: "一度ズレたあと、2シーン以内に安全な返しで戻すと近づく。",
+    playerPattern: "衝突をなかったことにせず、関係の扱い方を学び直した",
     epilogueTitle: "すれ違ったから、扱い方がわかった",
     epilogue:
       "一度だけ空気が止まったあと、二人は言葉を選び直す。完璧なデートではないけれど、関係を雑に終わらせなかったことが、相手の中に強く残る。",
@@ -405,6 +413,10 @@ export const routeEndings = {
   },
   spark: {
     key: "spark",
+    badge: "SPARK",
+    albumName: "火花先行ルート",
+    unlockHint: "safeよりsparkを多く選び、会話の熱量で距離を縮める。",
+    playerPattern: "楽しい駆け引きや勢いで惹きつけたが、誠実な着地が次の鍵になった",
     epilogueTitle: "火花は強い。だから約束に変える",
     epilogue:
       "相手は今日の会話を何度か思い出す。楽しかった、だけで終わらせないためには、次の一言で自由や熱量をちゃんと大事にする必要がある。",
@@ -413,6 +425,10 @@ export const routeEndings = {
   },
   trust: {
     key: "trust",
+    badge: "TRUST",
+    albumName: "安心積み上げルート",
+    unlockHint: "safeを軸にして、相手のペースと心理スイッチを丁寧に守る。",
+    playerPattern: "受け止める力で信頼を育てたが、自分の望みを出す余地が残った",
     epilogueTitle: "安心の先に、もう一歩だけ踏み出す",
     epilogue:
       "相手はあなたといる時間を安全だと感じている。ただ、恋として進めるには、受け止めるだけでなく、あなた自身の望みを少し見せる必要がある。",
@@ -421,6 +437,10 @@ export const routeEndings = {
   },
   balance: {
     key: "balance",
+    badge: "BALANCE",
+    albumName: "バランス接近ルート",
+    unlockHint: "safeとsparkを場面ごとに使い分け、リスクを低く保つ。",
+    playerPattern: "安心と火花を読み分け、相手を攻略対象ではなく一人の人として扱えた",
     epilogueTitle: "読み合いが、恋の形になりはじめる",
     epilogue:
       "安心と火花のどちらにも偏りすぎず、場面ごとに距離を調整できた。相手は、あなたが自分を攻略対象ではなく一人の人として見ていることを感じている。",

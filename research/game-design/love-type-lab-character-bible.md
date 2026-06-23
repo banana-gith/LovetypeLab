@@ -35,6 +35,9 @@ These endings are selected by the player's pattern, not by a single final answer
 ### REPAIR / 少し離れて、もう一度見つめ直す
 
 - Key: repair
+- Album name: 距離を取り直すルート
+- Unlock hint: ミスや押しすぎが重なった時に到達。次は受け取り直しの練習になる。
+- Player pattern: 踏み込みすぎ、または相手の反応を読み違えたまま進めた
 - Epilogue: 帰り道、会話は少し少なくなる。それでも完全に途切れたわけではなく、相手は最後に一度だけ振り返る。次に会うなら、謝ることより先に、何を大切にしていたのかを言葉にできるかが試される。
 - Next-run mission: 次回は最初の5シーンでstrainを1回以下に抑え、相手の心理スイッチを1つ以上「接近」まで進める。
 - Ending CG cue: 少し距離を置いて歩く帰り道、振り返る表情、まだ関係が切れていない余白
@@ -42,6 +45,9 @@ These endings are selected by the player's pattern, not by a single final answer
 ### RECONNECT / すれ違ったから、扱い方がわかった
 
 - Key: reconnect
+- Album name: すれ違い修復ルート
+- Unlock hint: 一度ズレたあと、2シーン以内に安全な返しで戻すと近づく。
+- Player pattern: 衝突をなかったことにせず、関係の扱い方を学び直した
 - Epilogue: 一度だけ空気が止まったあと、二人は言葉を選び直す。完璧なデートではないけれど、関係を雑に終わらせなかったことが、相手の中に強く残る。
 - Next-run mission: 次回はあえて火花の選択も混ぜながら、衝突後2シーン以内にsafeで修復する流れを狙う。
 - Ending CG cue: 小さな衝突のあと、同じ席に戻って話し直す、緊張が残るが目線は切れていない
@@ -49,6 +55,9 @@ These endings are selected by the player's pattern, not by a single final answer
 ### SPARK / 火花は強い。だから約束に変える
 
 - Key: spark
+- Album name: 火花先行ルート
+- Unlock hint: safeよりsparkを多く選び、会話の熱量で距離を縮める。
+- Player pattern: 楽しい駆け引きや勢いで惹きつけたが、誠実な着地が次の鍵になった
 - Epilogue: 相手は今日の会話を何度か思い出す。楽しかった、だけで終わらせないためには、次の一言で自由や熱量をちゃんと大事にする必要がある。
 - Next-run mission: 次回はsparkを活かしながら、終盤3シーンでtrustかcomfortを伸ばす選択を最低2回入れる。
 - Ending CG cue: 夜の街やカフェの余韻、笑いの直後に少し真剣な目になる、火花と約束のあいだ
@@ -56,6 +65,9 @@ These endings are selected by the player's pattern, not by a single final answer
 ### TRUST / 安心の先に、もう一歩だけ踏み出す
 
 - Key: trust
+- Album name: 安心積み上げルート
+- Unlock hint: safeを軸にして、相手のペースと心理スイッチを丁寧に守る。
+- Player pattern: 受け止める力で信頼を育てたが、自分の望みを出す余地が残った
 - Epilogue: 相手はあなたといる時間を安全だと感じている。ただ、恋として進めるには、受け止めるだけでなく、あなた自身の望みを少し見せる必要がある。
 - Next-run mission: 次回はsafeを土台にしつつ、各デートの最後に自分の希望を置く選択を1回ずつ狙う。
 - Ending CG cue: 穏やかな席、二人分の飲み物、安心した表情の中に次を待つ小さな期待
@@ -63,6 +75,9 @@ These endings are selected by the player's pattern, not by a single final answer
 ### BALANCE / 読み合いが、恋の形になりはじめる
 
 - Key: balance
+- Album name: バランス接近ルート
+- Unlock hint: safeとsparkを場面ごとに使い分け、リスクを低く保つ。
+- Player pattern: 安心と火花を読み分け、相手を攻略対象ではなく一人の人として扱えた
 - Epilogue: 安心と火花のどちらにも偏りすぎず、場面ごとに距離を調整できた。相手は、あなたが自分を攻略対象ではなく一人の人として見ていることを感じている。
 - Next-run mission: 次回は3つの心理スイッチをすべて「解放」し、最後の告白前にpressureとmisreadを低く保つ。
 - Ending CG cue: 告白前後の静かな余韻、安心と高揚が同時にある表情、二人の未来を示す小物
