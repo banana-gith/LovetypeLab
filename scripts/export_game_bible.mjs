@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { characterGameDesign, researchBasis, sceneDramaturgy } from "../src/gameDesign.js";
+import { characterGameDesign, researchBasis, sceneCoaching, sceneDramaturgy } from "../src/gameDesign.js";
 import { personaCatalog } from "../src/personas.js";
 import { storyFor } from "../src/story.js";
 
@@ -53,6 +53,14 @@ for (const [id, type, name] of characters) {
   lines.push("");
   lines.push(`**Visual formula:** ${design.visualFormula}`);
   lines.push("");
+  lines.push(`**Player fantasy:** ${design.playerFantasy}`);
+  lines.push("");
+  lines.push(`**Signature dilemma:** ${design.signatureDilemma}`);
+  lines.push("");
+  lines.push(`**Attraction switches:** ${design.attractionSwitches.join(" / ")}`);
+  lines.push("");
+  lines.push(`**Turn-offs:** ${design.turnOffs.join(" / ")}`);
+  lines.push("");
   lines.push("### Persona");
   lines.push("");
   lines.push(`- Summary: ${persona.summary}`);
@@ -72,11 +80,16 @@ for (const [id, type, name] of characters) {
     lines.push("");
     for (const scene of date.scenes) {
       const beat = sceneDramaturgy(id, scene, index, total);
+      const coach = sceneCoaching(id, scene, index, total);
       lines.push(`${index + 1}. **${scene.title}**`);
       lines.push(`   - Location: ${scene.location}`);
       lines.push(`   - Scene goal: ${scene.goal}`);
       lines.push(`   - Dramaturgy: ${beat.beat} / ${beat.focus}`);
       lines.push(`   - Player move: ${beat.playerMove}`);
+      lines.push(`   - Skill: ${coach.badge} / ${coach.skill}`);
+      lines.push(`   - Player lesson: ${coach.lesson}`);
+      lines.push(`   - Payoff: ${coach.payoff}`);
+      lines.push(`   - Trap: ${coach.trap}`);
       lines.push("");
       index += 1;
     }

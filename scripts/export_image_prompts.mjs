@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { characterGameDesign } from "../src/gameDesign.js";
+import { characterGameDesign, sceneCoaching } from "../src/gameDesign.js";
 import { storyFor } from "../src/story.js";
 
 const characters = [
@@ -62,11 +62,14 @@ function assetPath(character, index) {
 
 function promptFor(character, scene, index) {
   const design = characterGameDesign[character.id];
+  const story = storyFor(character.id);
+  const total = story.dates.reduce((sum, date) => sum + date.scenes.length, 0);
+  const coach = sceneCoaching(character.id, scene, index, total);
   return [
     `恋愛シミュレーションゲームのデートシーン用、縦長スマホUIで使う正方形寄りの写真素材。`,
     character.fixedLook,
     `場面: ${scene.title}。場所/小物: ${scene.location}。`,
-    `心理: ${scene.goal}。${design?.visualFormula || ""}`,
+    `心理: ${scene.goal}。会話スキルは「${coach.skill}」、見るべきサインは「${coach.watch}」。${design?.visualFormula || ""}`,
     `恋愛相手本人は画面に出さず、視線、2人分の飲み物、空いた席、スマホ通知、差し出された小物、余白で相手の存在を示す。`,
     `自然光または映画的な夜の光、浅い被写界深度、上質でリアル、過度な加工なし。画像内に文字、番号、字幕、ロゴを入れない。`,
     `scene-${String(index + 1).padStart(2, "0")}`,
