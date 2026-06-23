@@ -1031,6 +1031,36 @@ function sceneContext(date, scene, line) {
   return `<div class="scene-context-flow">${sceneContextParts(date, scene, line).map(([label, copy, kind = ""]) => `<article class="${kind}"><span>${label}</span><p>${copy}</p></article>`).join("")}</div>`;
 }
 
+function kindLabelList(value = "") {
+  const labels = {
+    empathize: "寄り添う",
+    playful: "乗る",
+    concrete: "具体化",
+    action: "誘う",
+    neutral: "様子見",
+    dismiss: "流す",
+    pushy: "押す",
+  };
+  return String(value)
+    .split("/")
+    .map((item) => labels[item.trim()] || item.trim())
+    .filter(Boolean)
+    .join("・") || "場面次第";
+}
+
+function sceneFocusPanel({ date, scene, line, reading, tactic, heartKey, needCompass, connectionBid }) {
+  const parts = sceneContextParts(date, scene, line);
+  const lead = parts.find(([label]) => ["直前の会話", "直前の流れ"].includes(label)) || parts[0];
+  const photo = parts.find(([label]) => label === "この一枚") || parts[1];
+  const echo = parts.find(([label]) => label === "覚えている一手");
+  const status = `${lead?.[1] || ""} ${photo?.[1] || ""}`.trim();
+  return `<div class="scene-focus-grid">
+    <article class="focus-now"><span>状況</span><b>${scene.title}</b><p>${echo ? echo[1] : status}</p></article>
+    <article class="focus-read"><span>読むサイン</span><b>${reading.signal}</b><p>${heartKey.title}: ${reading.playerQuestion}</p></article>
+    <article class="focus-strategy"><span>勝ち筋</span><b>${tactic.title}</b><p>${needCompass.ask}</p><small>拾う: ${kindLabelList(tactic.prefer)} / 注意: ${kindLabelList(tactic.avoid)} / サイン: ${connectionBid.title}</small></article>
+  </div>`;
+}
+
 function heartKeyCard(key) {
   return `<div class="heart-key-card key-${key.tone}"><span>${key.badge}</span><b>${key.title}</b><p>${key.clue}</p><small>読むサイン: ${key.sign}</small></div>`;
 }
@@ -1057,22 +1087,18 @@ function game() {
   const total = compatibilityScore(c);
   const tier = compatibilityTier(total);
   const dramatic = sceneDramaturgy(c.id, scene, state.sceneIndex, count);
-  const coaching = sceneCoaching(c.id, scene, state.sceneIndex, count);
   const reading = sceneReadingCue(c.id, state.sceneIndex, count);
   const tactic = sceneTacticalRead(c.id, state.sceneIndex, count);
-  const contract = sceneEmotionalContract(c.id, scene, state.sceneIndex, count);
   const heartKey = heartKeyRead(c, state.sceneIndex);
-  const decoder = decoderRead(c, state.sceneIndex);
   const needCompass = needCompassRead(c, state.sceneIndex);
   const connectionBid = connectionBidRead(c, state.sceneIndex);
   const mission = dateMissionReport(c, dateIndex);
-  const memory = characterMemoryReport(c);
   const stage = relationshipStage(c);
   const compass = routeCompassReport(c);
   return `<div class="game-shell">
     <header class="game-header"><button class="icon-button" data-go="profile">×</button><div class="game-person">${avatar(c)}<div><b>${c.name}</b><span>${c.style}</span></div></div><div class="game-progress"><span>DATE ${dateIndex + 1} <b>${state.sceneIndex + 1} / ${count}</b></span><i><em style="width:${((state.sceneIndex + 1) / count) * 100}%;background:${c.color}"></em></i></div></header>
     <main class="game-main"><aside class="score-strip"><div class="score-hero" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>\u7dcf\u5408\u8a55\u4fa1</span><b>${tier.label}</b><p>${tier.sub}</p></div></div>${meters()}<div class="relationship-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div>${routeCompassCard(compass, true)}<div class="meter-help">\u30bf\u30a4\u30d7\u3054\u3068\u306b\u91cd\u304f\u898b\u308b\u30dd\u30a4\u30f3\u30c8\u304c\u5c11\u3057\u9055\u3044\u307e\u3059\u3002</div></aside>
-      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context"><b>今の状況</b>${sceneContext(date, scene, line)}<div class="scene-insight"><span>${dramatic.beat}</span><b>${dramatic.focus}</b></div><div class="scene-coach"><span>${coaching.badge}</span><p><b>${coaching.skill}</b>${coaching.watch}</p></div>${heartKeyCard(heartKey)}${decoderCard(decoder)}${needCompassCard(needCompass)}${connectionBidCard(connectionBid)}<div class="scene-contract"><span>${contract.badge}</span><b>${contract.mode}場面</b><p>${contract.surface}</p><small>隠れた願い: ${contract.hiddenAsk}</small></div><div class="scene-read"><span>READ THE ROOM</span><p><b>${reading.signal}</b>${reading.playerQuestion}</p></div><div class="scene-tactic"><span>${tactic.badge} TACTIC</span><p><b>${tactic.title}</b>${tactic.read}</p><small>刺さりやすい: ${tactic.prefer || "場面次第"} / 危ない: ${tactic.avoid || "読み違い"}</small></div><div class="scene-memory memory-${memory.tone}"><span>MEMORY</span><p><b>${memory.label}</b>${memory.copy}</p></div></div>${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent"><small>方向性</small>${choiceDirection(choice)}</em><p>${choice.label}</p></button>`).join("")}</div></section>
+      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context compact"><b>今の読みどころ</b>${sceneFocusPanel({ date, scene, line, reading, tactic, heartKey, needCompass, connectionBid })}</div>${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent"><small>方向性</small>${choiceDirection(choice)}</em><p>${choice.label}</p></button>`).join("")}</div></section>
     </main>${state.picked ? feedback() : ""}
   </div>`;
 }
@@ -1082,27 +1108,17 @@ function feedback() {
   const grade = choiceGrade(picked);
   const c = state.char;
   const { scene } = currentScene();
-  const coaching = sceneCoaching(c.id, scene, state.sceneIndex, totalScenes(c));
-  const contract = sceneEmotionalContract(c.id, scene, state.sceneIndex, totalScenes(c));
   const subtext = sceneCharacterSubtext(c.id, state.sceneIndex, totalScenes(c), picked.branch);
   const tactic = picked.tactic || sceneTacticalRead(c.id, state.sceneIndex, totalScenes(c), picked);
   const momentum = picked.momentum || momentumRead(picked);
-  const combo = currentCombo();
   return `<div class="feedback-overlay"><div class="feedback-modal chat-modal feedback-stamp-modal grade-${grade.className}">
     <div class="grade-stamp"><small>4段階スタンプ</small><span>${grade.rank}</span><b>${grade.phrase}</b><p>${grade.cue}</p></div>
     <div class="chat-head" style="--c:${c.color};--light:${c.light}">${avatar(c)}<div><span>${grade.rank} / ${choiceDirection(picked)}</span><h3>${c.name}\u306e反応</h3><p>${grade.cue}</p></div></div>
     <div class="chat-thread feedback-simple">
       <div class="chat-bubble you"><b>あなた / ${choiceDirection(picked)}</b><p>${picked.label}</p></div>
       <div class="chat-bubble them" style="--c:${c.color};--light:${c.light}"><b>${c.name}</b><p>「${picked.reaction}」</p></div>
-      <div class="chat-bubble subtext"><b>${subtext.badge} / ${subtext.title}</b><p>${subtext.copy}</p></div>
-      <div class="chat-bubble key key-${picked.heartKey?.tone || "near"}"><b>${picked.heartKey?.phrase || "KEY"} / ${picked.heartKey?.status || "鍵の読み"}</b><p>${picked.heartKey?.copy || "相手の本音の鍵を読み直す場面。"}</p></div>
-      <div class="chat-bubble decoder decoder-${picked.decoder?.tone || "near"}"><b>${picked.decoder?.badge || "DECODER"} / ${picked.decoder?.title || "キャラ理解"}</b><p>${picked.decoder?.copy || "相手の刺さるサインを読み直す場面。"}</p></div>
-      <div class="chat-bubble need need-${picked.needCompass?.tone || "near"}"><b>${picked.needCompass?.badge || "NEED"} / ${picked.needCompass?.status || "関係欲求"}</b><p>${picked.needCompass?.copy || "この場面で満たしたい欲求を読み直す場面。"}</p><small>${picked.needCompass?.next || ""}</small></div>
-      <div class="chat-bubble bid bid-${picked.connectionBid?.tone || "toward"}"><b>${picked.connectionBid?.badge || "BID"} / ${picked.connectionBid?.status || "接続サイン"}</b><p>${picked.connectionBid?.copy || "相手の小さな接続サインを読み直す場面。"}</p><small>${picked.connectionBid?.next || ""}</small></div>
-      <div class="chat-bubble contract"><b>${contract.mode}場面の読み</b><p>${picked.branch === "strain" ? contract.temptingMove : contract.winningMove}</p></div>
-      <div class="chat-bubble tactic"><b>${tactic.verdict}</b><p>${tactic.choiceFits ? tactic.payoff : tactic.choiceRisks ? tactic.trap : picked.why}</p></div>
-      <div class="chat-bubble switch"><b>${coaching.switch.label}</b><p>${personaSwitchFeedback(c.id, state.sceneIndex, totalScenes(c), picked.branch)}</p></div>
-      <div class="chat-bubble momentum"><b>${momentum.label} / ${combo.label}</b><p>${momentum.copy}</p></div>
+      <div class="chat-bubble subtext"><b>${subtext.title}</b><p>${subtext.copy}</p></div>
+      <div class="chat-bubble read-summary key-${picked.heartKey?.tone || "near"}"><b>${picked.heartKey?.status || "鍵の読み"} / ${picked.needCompass?.status || "関係欲求"} / ${picked.connectionBid?.status || "接続サイン"}</b><p>${tactic.choiceFits ? tactic.payoff : tactic.choiceRisks ? tactic.trap : picked.why}</p><small>${momentum.label}: ${momentum.copy}</small></div>
       <div class="chat-bubble better"><b>次にもっと自然にするなら</b><p>${picked.better}</p></div>
     </div>
     <div class="delta-row">${Object.entries(picked.effect).filter(([, value]) => value !== 0).map(([key, value]) => `<span class="${value > 0 ? "plus" : "minus"}">${scoreIcon(scoreDecor[key]?.icon || "gauge")} ${scoreDecor[key]?.short || scoreLabels[key]} ${value > 0 ? "+" : ""}${value}</span>`).join("")}</div>
