@@ -91,6 +91,7 @@ const lines = [
   "- **Route and combo cards**: Compact card backgrounds for Trust, Spark, Repair, Balance, and Love routes, glassy cream surface, soft shadows, faint gradient accents, no readable text baked into image, optimized for 390px wide smartphone UI.",
   "- **Ending album route cards**: Five collectible ending album card backgrounds for Repair / Reconnect / Spark / Trust / Balance, premium dark chocolate UI, warm cream foil accents, one locked-state variant with soft blur, no readable text baked into image, optimized for compact Japanese mobile game result screens.",
   "- **Character understanding cards**: Three small progress-card backgrounds for psychological switches, open / near / risk states, warm cream paper, subtle coral-gold accent line, thin progress bar space, no readable text baked into image, transparent background option for UI composition.",
+  "- **Read-the-room cue cards**: Compact dark premium UI cards for pre-choice observation hints, warm cream foil label area, tiny icon space for eye / breath / clock / spark / compass, no readable text baked into image, optimized for 390px smartphone scenes.",
   "",
 ];
 
@@ -115,6 +116,9 @@ for (const character of characters) {
   }
   for (const item of design.psychologicalSwitches) {
     lines.push(`- **Psychological switch cut-in / ${item.label}**: ${character.fixedLook} 「${item.tell}」という変化が、表情・視線・手元・余白だけで伝わる一枚。テーマは「${item.opens}」。失敗差分では「${item.hurts}」が起きた直後の少し距離が出た表情にする。UI合成前提、文字・番号・ロゴなし、恋愛相手は映さない。`);
+  }
+  for (const item of design.readingCues || []) {
+    lines.push(`- **Read-the-room cue visual**: ${character.fixedLook} 「${item.signal}」が一目で伝わる観察用カット。良い読みは「${item.goodRead}」、誤読差分は「${item.misread}」。画面内文字なし、視線・手元・二人分の小物・余白で表現。`);
   }
   lines.push("");
   let cursor = 0;

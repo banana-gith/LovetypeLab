@@ -111,6 +111,26 @@ export const characterGameDesign = {
         tell: "質問があなた自身に向き、距離の近い沈黙が生まれる",
       },
     ],
+    readingCues: [
+      {
+        signal: "返事の前に視線が少し落ち、言葉を探す間が長くなる",
+        goodRead: "沈黙は拒絶ではなく、安心できる言葉を選んでいる時間として待つ",
+        misread: "間を気まずさとして処理し、質問や冗談で急いで埋める",
+        playerQuestion: "いま急がせずに待てているか？",
+      },
+      {
+        signal: "理想や未来の話になると声が小さくなるが、話は切らない",
+        goodRead: "重い話ではなく、大事にしたい世界を少し預けてくれていると読む",
+        misread: "考えすぎ、きれいごと、と現実論で小さくする",
+        playerQuestion: "彼女の理想を守る言葉を一つ返せるか？",
+      },
+      {
+        signal: "質問があなた自身に向き、聞き役だけでは終われない空気になる",
+        goodRead: "ミナだけを開かせず、自分の弱さや好意も静かに差し出す",
+        misread: "安全な聞き役に逃げて、彼女だけを深く話させる",
+        playerQuestion: "自分の本音も同じ温度で置けているか？",
+      },
+    ],
     innerLayer: {
       mask: "静かで聞き上手に見えるが、本当は自分の理想や寂しさを重いと思われるのが怖い。",
       fear: "本音を出したあと、相手が急に軽い言葉でまとめてしまうこと。",
@@ -155,6 +175,26 @@ export const characterGameDesign = {
         opens: "自由を奪わず、次も会う具体性を一緒に置く",
         hurts: "束縛か放置のどちらかに寄る",
         tell: "予定外の寄り道を、二人の思い出として言い直す",
+      },
+    ],
+    readingCues: [
+      {
+        signal: "目線がよく動き、思いついた瞬間に表情が一気に明るくなる",
+        goodRead: "まず一緒に面白がり、正しさより熱量を止めない",
+        misread: "現実的かどうかを先に判定して、勢いをしぼませる",
+        playerQuestion: "いま否定より先に乗れているか？",
+      },
+      {
+        signal: "笑った直後に少し視線が外れ、反応を待つような間がある",
+        goodRead: "明るさの裏にある不安も軽く扱わず、ちゃんと大事にする",
+        misread: "明るいから平気だと決めつけ、静かな気持ちを見落とす",
+        playerQuestion: "楽しさの奥にある寂しさも拾えているか？",
+      },
+      {
+        signal: "次の予定を話しながら、自由が残っているかを確かめてくる",
+        goodRead: "会う具体性を置きつつ、寄り道できる余白も残す",
+        misread: "束縛か放置のどちらかに寄って、自由を雑に扱う",
+        playerQuestion: "約束と自由を同時に守れているか？",
       },
     ],
     innerLayer: {
@@ -203,6 +243,26 @@ export const characterGameDesign = {
         tell: "堅い言い方の中に、次も会いたいニュアンスが混ざる",
       },
     ],
+    readingCues: [
+      {
+        signal: "返事の前に予定や時間を一度確認し、言葉を選んでいる",
+        goodRead: "迷いではなく、信頼できる約束にできるかを見ていると読む",
+        misread: "慎重さをノリが悪いと受け取り、曖昧な誘いで押す",
+        playerQuestion: "日時・場所・代案まで見える言葉になっているか？",
+      },
+      {
+        signal: "持ち物や段取りの話から、生活ペースを少し見せてくる",
+        goodRead: "準備や気遣いに具体的に気づき、当然扱いしない",
+        misread: "細かいね、と冗談にして努力を軽くする",
+        playerQuestion: "彼女の準備を一つ具体的に褒められるか？",
+      },
+      {
+        signal: "丁寧な言い方の中に、次も会いたい含みが混ざる",
+        goodRead: "信頼を壊さず、好意の温度を一段だけ上げる",
+        misread: "安全に寄りすぎて友達のまま終わる、または急に押す",
+        playerQuestion: "誠実さの上に甘さを少し乗せられるか？",
+      },
+    ],
     innerLayer: {
       mask: "落ち着いていて堅実に見えるが、実は自分が退屈だと思われていないか気にしている。",
       fear: "約束や準備を当たり前にされ、自分だけが関係を大切にしているように感じること。",
@@ -247,6 +307,26 @@ export const characterGameDesign = {
         opens: "縛らず疑わず、行動で伝えた好意を見逃さない",
         hurts: "確認・義務・束縛の言葉で自由を奪う",
         tell: "次の予定を軽く言いながら、あなたの反応を見る",
+      },
+    ],
+    readingCues: [
+      {
+        signal: "座ったままの説明より、立ち上がる・移動する提案が増える",
+        goodRead: "言葉を詰めるより、一緒に動ける選択肢で距離を縮める",
+        misread: "逃げていると決めつけ、座ったまま感情確認を続ける",
+        playerQuestion: "会話を体験に逃がす余白を作れているか？",
+      },
+      {
+        signal: "軽口のあとに一瞬だけ真顔が混ざる",
+        goodRead: "短く意味のある本音を置けば受け取れるタイミングだと読む",
+        misread: "軽い人だと決めつける、または長文で詰める",
+        playerQuestion: "短く率直に言えているか？",
+      },
+      {
+        signal: "次の予定を軽く言いながら、縛られないか反応を見る",
+        goodRead: "自由を疑わず、行動で出した好意を見逃さない",
+        misread: "確認や義務の言葉で、楽しい時間を重くする",
+        playerQuestion: "自由を残したまま次へ誘えているか？",
       },
     ],
     innerLayer: {
@@ -295,6 +375,26 @@ export const characterGameDesign = {
         tell: "言い切ったあとに沈黙があり、本当に見ているかを測る",
       },
     ],
+    readingCues: [
+      {
+        signal: "試すような質問が増え、あなたの判断理由を見てくる",
+        goodRead: "任せきりにせず、自分の希望や判断を対等に出す",
+        misread: "全部任せる、なんでもいい、と主導権を丸投げする",
+        playerQuestion: "自分の意思を短く出せているか？",
+      },
+      {
+        signal: "表情は控えめでも、具体的に認められると会話のテンポが柔らかくなる",
+        goodRead: "強さを雑にラベル化せず、どこを尊敬したか具体化する",
+        misread: "強いね、怖いね、で一言にまとめる",
+        playerQuestion: "成果ではなく判断のどこを見ているか言えるか？",
+      },
+      {
+        signal: "言い切ったあとに沈黙があり、正しさ以外を見ているか測っている",
+        goodRead: "解決だけ急がず、強さの裏の緊張にも気づく",
+        misread: "勝ち負けや正論で感情を処理する",
+        playerQuestion: "正しさの前に感情の置き場所を作れているか？",
+      },
+    ],
     innerLayer: {
       mask: "強くて迷いがないように見えるが、実は弱さを見せた瞬間に雑に扱われることを警戒している。",
       fear: "正しさや勝ち負けで感情を処理され、自分の緊張が見落とされること。",
@@ -324,6 +424,19 @@ export function activePersonaSwitch(characterId, sceneIndex, totalScenes = 15) {
   }
   const phaseSize = Math.max(1, Math.ceil(totalScenes / switches.length));
   return switches[Math.min(switches.length - 1, Math.floor(sceneIndex / phaseSize))];
+}
+
+export function sceneReadingCue(characterId, sceneIndex, totalScenes = 15) {
+  const design = characterGameDesign[characterId] || characterGameDesign.mina;
+  const phaseSize = Math.max(1, Math.ceil(totalScenes / Math.max(1, (design.psychologicalSwitches || []).length || 1)));
+  const index = Math.min((design.readingCues || []).length - 1, Math.floor(sceneIndex / phaseSize));
+  const activeSwitch = activePersonaSwitch(characterId, sceneIndex, totalScenes);
+  return (design.readingCues || [])[index] || {
+    signal: activeSwitch.tell,
+    goodRead: activeSwitch.opens,
+    misread: activeSwitch.hurts,
+    playerQuestion: `${design.lens.focus}を読めているか？`,
+  };
 }
 
 export function personaSwitchFeedback(characterId, sceneIndex, totalScenes, branch) {

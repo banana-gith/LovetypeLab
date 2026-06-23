@@ -101,6 +101,15 @@ for (const [id, type, name] of characters) {
     lines.push(`  - Tell: ${item.tell}`);
   }
   lines.push("");
+  lines.push("### Reading Cues");
+  lines.push("");
+  for (const item of design.readingCues || []) {
+    lines.push(`- Signal: ${item.signal}`);
+    lines.push(`  - Good read: ${item.goodRead}`);
+    lines.push(`  - Misread: ${item.misread}`);
+    lines.push(`  - Player question: ${item.playerQuestion}`);
+  }
+  lines.push("");
   lines.push("### Inner Layer");
   lines.push("");
   lines.push(`- Public mask: ${design.innerLayer.mask}`);

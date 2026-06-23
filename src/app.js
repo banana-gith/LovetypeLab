@@ -1,5 +1,5 @@
 import { personaCatalog } from "./personas.js";
-import { characterGameDesign, characterRouteEnding, personaSwitchFeedback, relationshipPulse, relationshipRoute, routeEndings, sceneCoaching, sceneDramaturgy } from "./gameDesign.js";
+import { characterGameDesign, characterRouteEnding, personaSwitchFeedback, relationshipPulse, relationshipRoute, routeEndings, sceneCoaching, sceneDramaturgy, sceneReadingCue } from "./gameDesign.js";
 import { branchTone, storyFor } from "./story.js";
 
 const $ = (selector) => document.querySelector(selector);
@@ -587,11 +587,12 @@ function game() {
   const tier = compatibilityTier(total);
   const dramatic = sceneDramaturgy(c.id, scene, state.sceneIndex, count);
   const coaching = sceneCoaching(c.id, scene, state.sceneIndex, count);
+  const reading = sceneReadingCue(c.id, state.sceneIndex, count);
   const stage = relationshipStage(c);
   return `<div class="game-shell">
     <header class="game-header"><button class="icon-button" data-go="profile">×</button><div class="game-person">${avatar(c)}<div><b>${c.name}</b><span>${c.style}</span></div></div><div class="game-progress"><span>DATE ${dateIndex + 1} <b>${state.sceneIndex + 1} / ${count}</b></span><i><em style="width:${((state.sceneIndex + 1) / count) * 100}%;background:${c.color}"></em></i></div></header>
     <main class="game-main"><aside class="score-strip"><div class="score-hero" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>\u7dcf\u5408\u8a55\u4fa1</span><b>${tier.label}</b><p>${tier.sub}</p></div></div>${meters()}<div class="relationship-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div><div class="meter-help">\u30bf\u30a4\u30d7\u3054\u3068\u306b\u91cd\u304f\u898b\u308b\u30dd\u30a4\u30f3\u30c8\u304c\u5c11\u3057\u9055\u3044\u307e\u3059\u3002</div></aside>
-      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context"><b>今の状況</b><p>${sceneContext(date, scene, local)}</p><div class="scene-insight"><span>${dramatic.beat}</span><b>${dramatic.focus}</b></div><div class="scene-coach"><span>${coaching.badge}</span><p><b>${coaching.skill}</b>${coaching.watch}</p></div></div><div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent">${choiceIntentLabel(choice)}</em><p>${choice.label}</p></button>`).join("")}</div></section>
+      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context"><b>今の状況</b><p>${sceneContext(date, scene, local)}</p><div class="scene-insight"><span>${dramatic.beat}</span><b>${dramatic.focus}</b></div><div class="scene-coach"><span>${coaching.badge}</span><p><b>${coaching.skill}</b>${coaching.watch}</p></div><div class="scene-read"><span>READ THE ROOM</span><p><b>${reading.signal}</b>${reading.playerQuestion}</p></div></div><div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent">${choiceIntentLabel(choice)}</em><p>${choice.label}</p></button>`).join("")}</div></section>
     </main>${state.picked ? feedback() : ""}
   </div>`;
 }
@@ -602,6 +603,7 @@ function feedback() {
   const c = state.char;
   const { scene } = currentScene();
   const coaching = sceneCoaching(c.id, scene, state.sceneIndex, totalScenes(c));
+  const reading = sceneReadingCue(c.id, state.sceneIndex, totalScenes(c));
   const combo = currentCombo();
   const style = playStyleReport();
   return `<div class="feedback-overlay"><div class="feedback-modal chat-modal feedback-stamp-modal grade-${grade.className}">
@@ -612,6 +614,7 @@ function feedback() {
       <div class="chat-bubble them" style="--c:${c.color};--light:${c.light}"><b>${c.name}</b><p>\u300c${picked.reaction}\u300d</p></div>
       <div class="chat-bubble inner"><b>\u4f55\u304c\u8d77\u304d\u305f\uff1f</b><p>${picked.why}</p></div>
       <div class="chat-bubble switch"><b>心理スイッチ / ${coaching.switch.label}</b><p>${personaSwitchFeedback(c.id, state.sceneIndex, totalScenes(c), picked.branch)}</p></div>
+      <div class="chat-bubble read"><b>読み筋</b><p>良い読み: ${reading.goodRead} / 危ない誤読: ${reading.misread}</p></div>
       <div class="chat-bubble pulse"><b>いまの関係の読み筋</b><p>${relationshipPulse(c.id, state.scores, state.flags)}</p></div>
       <div class="chat-bubble coach"><b>攻略ノート / ${coaching.skill}</b><p>${coaching.payoff} ${coaching.trap}</p></div>
       <div class="chat-bubble combo"><b>${combo.label} / ${style.title}</b><p>${style.copy}</p></div>
@@ -745,6 +748,7 @@ function checkpoint() {
   const style = playStyleReport();
   const next = state.sceneIndex + 1 < totalScenes(c) ? sceneAt(state.sceneIndex + 1, c) : null;
   const nextGuide = next ? sceneCoaching(c.id, next.scene, state.sceneIndex + 1, totalScenes(c)) : null;
+  const nextRead = next ? sceneReadingCue(c.id, state.sceneIndex + 1, totalScenes(c)) : null;
   const stage = relationshipStage(c);
   const route = relationshipRoute(c.id, state.scores, state.flags, state.history);
   const heart = heartMemoUnlocks(c);
@@ -752,6 +756,7 @@ function checkpoint() {
   const nextCopy = next
     ? `${next.date.title}は「${next.scene.location}」から。次は${nextGuide.skill}。${nextGuide.lesson}`
     : "この先は最終結果で、ふたりの関係の着地を見ます。";
+  const nextReadCopy = nextRead ? `読むサイン: ${nextRead.signal} / 合言葉: ${nextRead.playerQuestion}` : "最終結果で、今回の読み筋を振り返ります。";
   return `<div class="game-shell checkpoint-shell">
     <header class="game-header"><button class="icon-button" data-go="profile">×</button><div class="game-person">${avatar(c)}<div><b>${c.name}</b><span>${c.style}</span></div></div><div class="game-progress"><span>DATE ${dateIndex + 1} CLEAR <b>${state.sceneIndex + 1} / ${totalScenes(c)}</b></span><i><em style="width:${((state.sceneIndex + 1) / totalScenes(c)) * 100}%;background:${c.color}"></em></i></div></header>
     <main class="checkpoint-main" style="--c:${c.color};--light:${c.light}">
@@ -772,7 +777,7 @@ function checkpoint() {
         <div class="checkpoint-next">
           <span>NEXT SCENE</span>
           <b>${next ? `${next.date.title} / ${next.scene.title}` : "最終結果"}</b>
-          <p>${nextCopy}</p>
+          <p>${nextCopy} ${nextReadCopy}</p>
         </div>
         <div class="heart-progress"><span>HEART MEMO</span><b>${heart.unlocked.length}/5 解放</b><p>次に見えそうな内面: ${heart.nextHint}</p></div>
         ${switchProgressPanel(c, true)}
