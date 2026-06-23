@@ -36,6 +36,7 @@ const lines = [
   "- The game now returns player-facing mastery signals: branch combo, play style, and unlocked conversation lessons.",
   "- Combo labels should make the player feel a readable flow: trust streak, spark streak, or repair chance.",
   "- The final report should explain not only compatibility, but the player's recurring habit and next practice target.",
+  "- Psychological switches should work as a readable character-understanding loop: the player sees what opens, what hurts, and which switches they learned to handle.",
   "",
 ];
 

@@ -8,6 +8,7 @@ All prompts assume: no text in image, no visible dating partner, adult-looking c
 - **Feedback stamp set**: Four premium sticker-like UI stamps for a Japanese mobile dating simulation, labels Great / Good / Close / Miss, soft cream paper texture, coral, teal, amber, muted gray variants, rounded rectangle stamp border, no character faces, transparent background, high contrast for mobile.
 - **Conversation lesson badges**: Sixteen small pill badges for conversation skills such as OBSERVE, OPEN, SYNC, VALUE, REPAIR, CORE, SPACE, MOVE, REMEMBER, CLOSER, CONFLICT, TRUTH, RESET, READY, COMMIT, AFTER. Luxury minimal style, dark ink and warm cream, subtle colored accent, transparent background.
 - **Route and combo cards**: Compact card backgrounds for Trust, Spark, Repair, Balance, and Love routes, glassy cream surface, soft shadows, faint gradient accents, no readable text baked into image, optimized for 390px wide smartphone UI.
+- **Character understanding cards**: Three small progress-card backgrounds for psychological switches, open / near / risk states, warm cream paper, subtle coral-gold accent line, thin progress bar space, no readable text baked into image, transparent background option for UI composition.
 
 ## ミナ / INFJ
 
