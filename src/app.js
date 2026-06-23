@@ -904,6 +904,73 @@ function playStyleReport(history = state.history) {
   return { title: "バランス型", badge: "BALANCE", copy: "安心と火花を場面で切り替えられている。相手の変化を見て次を選べている。" };
 }
 
+function arcModeMeta(mode, design) {
+  const meta = {
+    入る: {
+      label: "入口の距離",
+      cue: "最初の安心",
+      advice: `最初は盛り上げるより、${design.lens.focus}がどこに出るかを見る。`,
+    },
+    近づく: {
+      label: "接近の温度",
+      cue: "甘さと余白",
+      advice: `${design.lens.playerMove}。楽しいだけ、優しいだけで止めない。`,
+    },
+    戻す: {
+      label: "すれ違い修復",
+      cue: "揺れの扱い",
+      advice: `${design.lens.risk}前に、相手の言葉を一度正確に受け取り直す。`,
+    },
+    決める: {
+      label: "関係の定義",
+      cue: "告白の一手",
+      advice: design.innerLayer?.confessionNeed || "曖昧にせず、主語つきで関係の意思を置く。",
+    },
+  };
+  return meta[mode] || meta["近づく"];
+}
+
+function relationshipArcReport(character = state.char, history = state.history) {
+  const design = gameDesign(character);
+  const modes = ["入る", "近づく", "戻す", "決める"];
+  const rows = new Map(modes.map((mode) => [mode, { mode, ...arcModeMeta(mode, design), safe: 0, spark: 0, strain: 0, total: 0, scenes: [] }]));
+  const total = totalScenes(character);
+  for (const item of history) {
+    const progress = sceneAt(item.sceneIndex, character);
+    const contract = sceneEmotionalContract(character.id, progress.scene, item.sceneIndex, total);
+    const row = rows.get(contract.mode) || rows.get("近づく");
+    row.total += 1;
+    row[item.branch] = (row[item.branch] || 0) + 1;
+    row.scenes.push({ ...item, contract, title: `${progress.date.title} / ${progress.scene.title}` });
+  }
+  const reports = [...rows.values()].map((row) => {
+    const raw = row.safe * 34 + row.spark * 28 - row.strain * 32 + row.total * 10;
+    const score = row.total ? clamp(Math.round(raw / Math.max(1, row.total))) : 0;
+    const status = row.total === 0 ? "未到達" : score >= 76 ? "得意" : score >= 52 ? "育成中" : "要修復";
+    const tone = row.total === 0 ? "blank" : score >= 76 ? "open" : score >= 52 ? "near" : "risk";
+    const last = row.scenes.at(-1);
+    const copy = row.total === 0
+      ? `${row.cue}はまだこれから。`
+      : last?.branch === "strain"
+        ? last.contract.temptingMove
+        : last?.contract.winningMove || row.advice;
+    return { ...row, score, status, tone, copy };
+  });
+  const next = reports
+    .filter((row) => row.total > 0)
+    .sort((a, b) => a.score - b.score)[0] || reports[0];
+  return {
+    reports,
+    next,
+    summary: `${design.playerPromise} そのために、${next.label}では「${next.advice}」が次の練習ポイントになる。`,
+  };
+}
+
+function relationshipArcPanel(character = state.char) {
+  const arc = relationshipArcReport(character);
+  return `<div class="arc-panel" style="--c:${character.color};--light:${character.light}"><h3>恋愛ルート読解 <span>${arc.next.label}</span></h3><p>${arc.summary}</p><div>${arc.reports.map((row) => `<article class="arc-${row.tone}"><span>${row.mode}</span><b>${row.label}</b><strong>${row.status} ${row.score}%</strong><i><em style="width:${row.score}%"></em></i><p>${row.copy}</p><small>安心${row.safe} / 火花${row.spark} / 揺れ${row.strain}</small></article>`).join("")}</div></div>`;
+}
+
 function learnedSkillLog(history = state.history) {
   const seen = new Map();
   for (const item of history) {
@@ -996,6 +1063,7 @@ function checkpoint() {
   const heart = heartMemoUnlocks(c);
   const mission = dateMissionReport(c, dateIndex);
   const memory = characterMemoryReport(c);
+  const arc = relationshipArcReport(c);
   const total = compatibilityScore(c);
   const nextCopy = next
     ? `${next.date.title}は「${next.scene.location}」から。次は${nextGuide.skill}。${nextGuide.lesson}`
@@ -1019,6 +1087,7 @@ function checkpoint() {
           <article class="stage-${combo.tone}"><span>${style.badge}</span><b>${style.title}</b><p>${combo.label}。${style.copy}</p></article>
           <article class="mission-${mission.tone}"><span>${mission.badge}</span><b>${mission.title} ${mission.progress}%</b><p>${mission.complete ? mission.success : mission.next}</p></article>
           <article class="memory-${memory.tone}"><span>MEMORY</span><b>${memory.label}</b><p>${memory.copy}</p></article>
+          <article class="arc-${arc.next.tone}"><span>LOVE ARC</span><b>${arc.next.label}</b><p>${arc.next.advice}</p></article>
         </div>
         <div class="checkpoint-next">
           <span>NEXT SCENE</span>
@@ -1110,7 +1179,7 @@ function result() {
   const type = total >= 78 ? "\u304b\u306a\u308a\u76f8\u6027\u304c\u3044\u3044\u4f1a\u8a71" : total >= 62 ? "\u3058\u308f\u3063\u3068\u523a\u3055\u308b\u4f1a\u8a71" : total >= 48 ? "\u3042\u3068\u4e00\u6b69\u3067\u5c4a\u304f\u4f1a\u8a71" : "\u4f5c\u6226\u3092\u5909\u3048\u308b\u3068\u4f38\u3073\u308b\u4f1a\u8a71";
   return `${header(true)}<main class="result-page"><span class="result-kicker">YOUR DATE RESULT</span><div class="ending-icon">${end[0]}</div><h1>${end[1]}</h1><p>${end[2]}</p>
     <div class="report-grid"><div class="share-card" style="--c:${c.color};--light:${c.light}"><div class="share-brand">Love Type Lab ✦</div>${avatar(c)}<span>${c.type}風デート完走</span><h2>${type}</h2><div class="route-card"><small>${route.badge}</small><b>${route.name}</b><p>${route.summary}</p></div><div class="epilogue-card"><span>ENDING SCENE</span><b>${route.epilogueTitle}</b><p>${route.epilogue}</p><small>次回ミッション: ${route.replayMission}</small></div><p>${c.name}との${story(c).dates.length}回のデートで、${gd.mastery}</p><div class="share-tags"><span>#LoveTypeLab</span><span>#${c.type}風</span><span>#会話練習</span></div><small>TYPE DATE TRAINER</small></div>
-    <div class="score-report"><div class="total-score-card" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>\u30e1\u30a4\u30f3\u8a55\u4fa1</span><b>${tier.label}</b><p>${tier.sub}</p></div></div><div class="relationship-stage result-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div><div class="playstyle-card"><span>${style.badge}</span><b>${style.title}</b><p>${style.copy}</p></div><div class="memory-card memory-${memory.tone}"><span>${c.name}に残った記憶</span><b>${memory.label}</b><p>${memory.copy}</p></div><div class="finale-scene-card" style="--c:${c.color};--light:${c.light}"><span>${finale.badge} FINALE</span><b>${c.name}が最後に残した一言</b><p>「${finale.line}」</p><small>${finale.memoryBridge}</small><em>${finale.nextBeat}</em></div>${missionBoardPanel(c)}<div class="heart-memo-panel"><h3>${c.name}の本音メモ <span>${heart.unlocked.length}/5</span></h3>${heart.unlocked.map((memo) => `<article><b>${memo.title}</b><p>${memo.text}</p></article>`).join("")}${heart.locked ? `<small>未解放メモ: ${heart.locked} / 次の鍵は「${heart.nextHint}」</small>` : `<small>すべての本音メモを解放しました。</small>`}</div>${switchProgressPanel(c)}${routeAlbumPanel(c, route)}<h2>5\u3064\u306e\u7a7a\u6c17\u30e1\u30fc\u30bf\u30fc</h2>${meters()}<div class="skill-panel"><h3>今回身についた会話スキル</h3><div>${playerSkillBadges().map((badge) => `<article><span>${badge.icon}</span><b>${badge.title}</b><p>${badge.text}</p></article>`).join("")}</div></div><div class="learned-strip"><h3>解放した会話レッスン</h3><p>${learned.slice(0, 8).map((item) => `<span>${item.badge} ${item.skill}</span>`).join("")}</p></div><div class="moment-log"><h3>印象に残る選択</h3>${decisiveMoments().map((moment) => `<article class="moment-${moment.branch}"><span>${moment.intent}</span><b>${moment.scene}</b><p>${moment.text}</p></article>`).join("")}</div><div class="insight"><span>✦</span><div><b>あなたの勝ち筋</b><p>${strongestInsight()} ${gd.winningMindset}</p></div></div><div class="insight"><span>→</span><div><b>次の一手</b><p>${route.nextMove}</p></div></div><div class="insight warn"><span>!</span><div><b>次に伸びるポイント</b><p>${growthInsight()} ${gd.temptationTrap}</p></div></div><button class="primary full" data-share>結果をコピーする</button><button class="outline full" data-restart>もう一度デートする</button></div></div>
+    <div class="score-report"><div class="total-score-card" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>\u30e1\u30a4\u30f3\u8a55\u4fa1</span><b>${tier.label}</b><p>${tier.sub}</p></div></div><div class="relationship-stage result-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div><div class="playstyle-card"><span>${style.badge}</span><b>${style.title}</b><p>${style.copy}</p></div>${relationshipArcPanel(c)}<div class="memory-card memory-${memory.tone}"><span>${c.name}に残った記憶</span><b>${memory.label}</b><p>${memory.copy}</p></div><div class="finale-scene-card" style="--c:${c.color};--light:${c.light}"><span>${finale.badge} FINALE</span><b>${c.name}が最後に残した一言</b><p>「${finale.line}」</p><small>${finale.memoryBridge}</small><em>${finale.nextBeat}</em></div>${missionBoardPanel(c)}<div class="heart-memo-panel"><h3>${c.name}の本音メモ <span>${heart.unlocked.length}/5</span></h3>${heart.unlocked.map((memo) => `<article><b>${memo.title}</b><p>${memo.text}</p></article>`).join("")}${heart.locked ? `<small>未解放メモ: ${heart.locked} / 次の鍵は「${heart.nextHint}」</small>` : `<small>すべての本音メモを解放しました。</small>`}</div>${switchProgressPanel(c)}${routeAlbumPanel(c, route)}<h2>5\u3064\u306e\u7a7a\u6c17\u30e1\u30fc\u30bf\u30fc</h2>${meters()}<div class="skill-panel"><h3>今回身についた会話スキル</h3><div>${playerSkillBadges().map((badge) => `<article><span>${badge.icon}</span><b>${badge.title}</b><p>${badge.text}</p></article>`).join("")}</div></div><div class="learned-strip"><h3>解放した会話レッスン</h3><p>${learned.slice(0, 8).map((item) => `<span>${item.badge} ${item.skill}</span>`).join("")}</p></div><div class="moment-log"><h3>印象に残る選択</h3>${decisiveMoments().map((moment) => `<article class="moment-${moment.branch}"><span>${moment.intent}</span><b>${moment.scene}</b><p>${moment.text}</p></article>`).join("")}</div><div class="insight"><span>✦</span><div><b>あなたの勝ち筋</b><p>${strongestInsight()} ${gd.winningMindset}</p></div></div><div class="insight"><span>→</span><div><b>次の一手</b><p>${route.nextMove}</p></div></div><div class="insight warn"><span>!</span><div><b>次に伸びるポイント</b><p>${growthInsight()} ${gd.temptationTrap}</p></div></div><button class="primary full" data-share>結果をコピーする</button><button class="outline full" data-restart>もう一度デートする</button></div></div>
   </main>`;
 }
 

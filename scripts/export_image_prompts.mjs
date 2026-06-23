@@ -114,6 +114,7 @@ const lines = [
   "- **Read-the-room cue cards**: Compact dark premium UI cards for pre-choice observation hints, warm cream foil label area, tiny icon space for eye / breath / clock / spark / compass, no readable text baked into image, optimized for 390px smartphone scenes.",
   "- **Date mission cards**: Three compact mobile mission card backgrounds for Date 1 / Date 2 / Date 3 progress, premium warm cream and dark chocolate variants, small progress bar space, tiny trophy / compass / heart-line icon slots, no readable text baked into image, optimized for 390px smartphone game UI.",
   "- **Love contract cards**: Compact mobile UI card backgrounds for scene-specific romance tactics, four mode variants named enter / approach / repair / commit, premium cream paper and dark chocolate foil accents, tiny contract seal icon space, no readable text baked into image, optimized for 390px smartphone game UI.",
+  "- **Relationship arc report cards**: Four compact result-screen UI cards for a dating simulation, representing entrance distance, approach temperature, repair after conflict, and commitment moment. Premium cream paper, dark chocolate ink, soft coral and character-color accents, tiny progress bar and small seal icon spaces, no readable text baked into image, optimized for 390px smartphone result screens.",
   "",
 ];
 

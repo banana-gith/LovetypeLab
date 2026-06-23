@@ -90,6 +90,23 @@ for (const [id, type, name] of characters) {
     lines.push(`  - Mission image cue: ${mission.imageCue}`);
   }
   lines.push("");
+  lines.push("### Relationship Arc Modes");
+  lines.push("");
+  const modeBuckets = new Map();
+  let contractIndex = 0;
+  for (const date of story.dates) {
+    for (const scene of date.scenes) {
+      const contract = sceneEmotionalContract(id, scene, contractIndex, total);
+      if (!modeBuckets.has(contract.mode)) modeBuckets.set(contract.mode, []);
+      modeBuckets.get(contract.mode).push(`${String(contractIndex + 1).padStart(2, "0")} ${scene.title}: ${contract.hiddenAsk}`);
+      contractIndex += 1;
+    }
+  }
+  for (const [mode, items] of modeBuckets) {
+    lines.push(`- **${mode}**`);
+    for (const item of items) lines.push(`  - ${item}`);
+  }
+  lines.push("");
   lines.push("### Character Memory Echoes");
   lines.push("");
   for (const key of ["safe", "spark", "strain", "repair", "mixed"]) {
