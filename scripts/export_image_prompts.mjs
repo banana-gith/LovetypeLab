@@ -152,6 +152,7 @@ for (const character of characters) {
     const contract = sceneEmotionalContract(character.id, story.dates.flatMap((date) => date.scenes)[index], index, total);
     const subtexts = ["safe", "spark", "strain"].map((branch) => sceneCharacterSubtext(character.id, index, total, branch));
     lines.push(`- **Tactical read UI cut-in / ${String(index + 1).padStart(2, "0")} ${tactic.title}**: ${character.fixedLook} 場面別タクティック「${tactic.title}」が表情と余白で伝わる補助カット。刺さる動きは「${tactic.prefer || "場面次第"}」、危ない動きは「${tactic.avoid || "読み違い"}」。${tactic.read} 画面内文字なし、UI合成前提、恋愛相手は映さない。`);
+    lines.push(`- **Heart key unlock cut-in / ${String(index + 1).padStart(2, "0")} ${contract.mode}**: ${character.fixedLook} 「${contract.hiddenAsk}」を読めた瞬間の補助カット。成功差分は緊張がほどけて視線が少し近づき、失敗差分は言葉にしない警戒が手元や姿勢に出る。${tactic.read} 画面内文字なし、UI合成前提、恋愛相手は映さない。`);
     lines.push(`- **Love contract UI cut-in / ${String(index + 1).padStart(2, "0")} ${contract.mode}**: ${character.fixedLook} 「${contract.surface}」と「${contract.hiddenAsk}」が、表情・小物・余白だけで伝わる補助カット。勝ち筋は「${contract.winningMove}」、罠差分は「${contract.temptingMove}」。画面内文字なし、UI合成前提、恋愛相手は映さない。`);
     for (const subtext of subtexts) {
       lines.push(`- **Unsaid subtext cut-in / ${String(index + 1).padStart(2, "0")} ${subtext.badge}**: ${character.fixedLook} ${subtext.imageCue} 内面コピーは「${subtext.title}: ${subtext.copy}」。画面内文字なし、UI合成前提、恋愛相手は映さない。`);

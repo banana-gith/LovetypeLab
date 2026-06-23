@@ -201,6 +201,7 @@ for (const [id, type, name] of characters) {
       lines.push(`   - Player move: ${beat.playerMove}`);
       lines.push(`   - Love contract: ${contract.mode} / ${contract.surface}`);
       lines.push(`   - Hidden ask: ${contract.hiddenAsk}`);
+      lines.push(`   - Heart key: ${activeSwitch.label} / clue ${activeSwitch.tell} / unlock by ${activeSwitch.opens}`);
       lines.push(`   - Tempting wrong move: ${contract.temptingMove}`);
       lines.push(`   - Winning move: ${contract.winningMove}`);
       lines.push(`   - Unsaid safe subtext: ${safeSubtext.title} / ${safeSubtext.copy}`);
