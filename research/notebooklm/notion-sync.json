@@ -1,0 +1,17 @@
+{
+  "records": [
+    {
+      "topic": "MBTI/16タイプ恋愛デート版ペルソナ",
+      "status": "synced",
+      "synced_at": "2026-06-11",
+      "notion_page_id": "37b0f14f-60e0-8159-b396-e24bd01f4cfd",
+      "notion_url": "https://app.notion.com/p/MBTI-16-NotebookLM-37b0f14f60e08159b396e24bd01f4cfd",
+      "local_markdown": "research/notebooklm/mbti-16-personas-notion-page.md",
+      "local_response_json": "research/notebooklm/mbti-16-personas-notebooklm-response.json",
+      "local_sources_json": "research/notebooklm/mbti-16-personas-sources.json",
+      "notebooklm_notebook_id": "ad8f13f4-2e03-475f-9b79-efc63d174e85",
+      "notebooklm_conversation_id": "61fe053c-32c6-4ef8-b39c-47e1cf738f57",
+      "source_count": 20
+    }
+  ]
+}

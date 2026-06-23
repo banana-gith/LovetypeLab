@@ -1,0 +1,13 @@
+{
+  "name": "love-type-lab",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "python scripts/serve.py",
+    "check": "node --check src/app.js && node --check src/gameDesign.js && node --check scripts/export_image_prompts.mjs && node --check scripts/export_game_bible.mjs && python -m py_compile scripts/serve.py scripts/build_pages.py",
+    "build:pages": "python scripts/build_pages.py",
+    "export:image-prompts": "node scripts/export_image_prompts.mjs",
+    "export:game-bible": "node scripts/export_game_bible.mjs"
+  }
+}
