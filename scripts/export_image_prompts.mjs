@@ -134,6 +134,7 @@ for (const character of characters) {
   lines.push("### Extra route / heart memo assets");
   lines.push("");
   lines.push(`- **Heart memo reveal cut-in**: ${character.fixedLook} 「${design.innerLayer.privateWish}」という内面が静かに伝わる、恋愛シミュレーション結果画面用のカットイン。${design.visualFormula} 画面内に文字、番号、ロゴを入れない。恋愛相手は映さず、視線、手元、余白、二人分の小物で関係性を示す。`);
+  lines.push(`- **Route compass UI background set**: ${character.fixedLook} 安心・火花・修復・バランスの4方向に分岐しそうな恋愛シミュレーションUI背景。成功ルートは距離が少し近く、修復ルートは同じ席に戻る余白、火花ルートは笑いの直後の視線、安心ルートは穏やかな手元で表す。${design.visualFormula} 画面内文字なし、UI合成前提、恋愛相手は映さない。`);
   for (const route of Object.values(routeEndings)) {
     const flavoredRoute = characterRouteEnding(character.id, route.key);
     const finale = characterFinaleScene(character.id, route.key, "mixed");

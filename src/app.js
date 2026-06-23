@@ -859,9 +859,10 @@ function game() {
   const mission = dateMissionReport(c, dateIndex);
   const memory = characterMemoryReport(c);
   const stage = relationshipStage(c);
+  const compass = routeCompassReport(c);
   return `<div class="game-shell">
     <header class="game-header"><button class="icon-button" data-go="profile">×</button><div class="game-person">${avatar(c)}<div><b>${c.name}</b><span>${c.style}</span></div></div><div class="game-progress"><span>DATE ${dateIndex + 1} <b>${state.sceneIndex + 1} / ${count}</b></span><i><em style="width:${((state.sceneIndex + 1) / count) * 100}%;background:${c.color}"></em></i></div></header>
-    <main class="game-main"><aside class="score-strip"><div class="score-hero" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>\u7dcf\u5408\u8a55\u4fa1</span><b>${tier.label}</b><p>${tier.sub}</p></div></div>${meters()}<div class="relationship-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div><div class="meter-help">\u30bf\u30a4\u30d7\u3054\u3068\u306b\u91cd\u304f\u898b\u308b\u30dd\u30a4\u30f3\u30c8\u304c\u5c11\u3057\u9055\u3044\u307e\u3059\u3002</div></aside>
+    <main class="game-main"><aside class="score-strip"><div class="score-hero" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>\u7dcf\u5408\u8a55\u4fa1</span><b>${tier.label}</b><p>${tier.sub}</p></div></div>${meters()}<div class="relationship-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div>${routeCompassCard(compass, true)}<div class="meter-help">\u30bf\u30a4\u30d7\u3054\u3068\u306b\u91cd\u304f\u898b\u308b\u30dd\u30a4\u30f3\u30c8\u304c\u5c11\u3057\u9055\u3044\u307e\u3059\u3002</div></aside>
       <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context"><b>今の状況</b>${sceneContext(date, scene, line)}<div class="scene-insight"><span>${dramatic.beat}</span><b>${dramatic.focus}</b></div><div class="scene-coach"><span>${coaching.badge}</span><p><b>${coaching.skill}</b>${coaching.watch}</p></div>${heartKeyCard(heartKey)}<div class="scene-contract"><span>${contract.badge}</span><b>${contract.mode}場面</b><p>${contract.surface}</p><small>隠れた願い: ${contract.hiddenAsk}</small></div><div class="scene-read"><span>READ THE ROOM</span><p><b>${reading.signal}</b>${reading.playerQuestion}</p></div><div class="scene-tactic"><span>${tactic.badge} TACTIC</span><p><b>${tactic.title}</b>${tactic.read}</p><small>刺さりやすい: ${tactic.prefer || "場面次第"} / 危ない: ${tactic.avoid || "読み違い"}</small></div><div class="scene-memory memory-${memory.tone}"><span>MEMORY</span><p><b>${memory.label}</b>${memory.copy}</p></div></div>${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent"><small>方向性</small>${choiceDirection(choice)}</em><p>${choice.label}</p></button>`).join("")}</div></section>
     </main>${state.picked ? feedback() : ""}
   </div>`;
@@ -1098,7 +1099,51 @@ function relationshipArcReport(character = state.char, history = state.history) 
 
 function relationshipArcPanel(character = state.char) {
   const arc = relationshipArcReport(character);
-  return `<div class="arc-panel" style="--c:${character.color};--light:${character.light}"><h3>恋愛ルート読解 <span>${arc.next.label}</span></h3><p>${arc.summary}</p><div>${arc.reports.map((row) => `<article class="arc-${row.tone}"><span>${row.mode}</span><b>${row.label}</b><strong>${row.status} ${row.score}%</strong><i><em style="width:${row.score}%"></em></i><p>${row.copy}</p><small>安心${row.safe} / 火花${row.spark} / 揺れ${row.strain}</small></article>`).join("")}</div></div>${heartKeyPanel(character)}${continuityEchoPanel(character)}`;
+  return `${routeCompassPanel(character)}<div class="arc-panel" style="--c:${character.color};--light:${character.light}"><h3>恋愛ルート読解 <span>${arc.next.label}</span></h3><p>${arc.summary}</p><div>${arc.reports.map((row) => `<article class="arc-${row.tone}"><span>${row.mode}</span><b>${row.label}</b><strong>${row.status} ${row.score}%</strong><i><em style="width:${row.score}%"></em></i><p>${row.copy}</p><small>安心${row.safe} / 火花${row.spark} / 揺れ${row.strain}</small></article>`).join("")}</div></div>${heartKeyPanel(character)}${continuityEchoPanel(character)}`;
+}
+
+function routeCompassReport(character = state.char, history = state.history) {
+  const design = gameDesign(character);
+  const route = relationshipRoute(character.id, state.scores, state.flags, history);
+  const counts = branchSummary(history).counts;
+  const heart = heartKeySummary(character, history);
+  const recovered = hasRecovery(history);
+  const distance = Math.abs((counts.safe || 0) - (counts.spark || 0));
+  const progress = history.length / Math.max(1, totalScenes(character));
+  const confidence = history.length
+    ? clamp(Math.round(progress * 44 + distance * 8 + (recovered ? 18 : 0) + (heart.open * 4) - (heart.locked * 5) + 34))
+    : 0;
+  const routeTone = route.key === "repair" ? "risk" : route.key === "reconnect" ? "repair" : route.key === "spark" ? "spark" : route.key === "trust" ? "trust" : "balance";
+  const forkMap = {
+    repair: "次は結論より受け取り直し。相手が守りたかったものを一文で言い直すと、修復ルートへ戻せる。",
+    reconnect: "このルートは揺れを物語に変えられる。次の会話で同じズレをどう扱うかを決めると強い。",
+    spark: `火花は十分。次は${design.lens.playerMove}ことで、遊びではなく恋に変わる。`,
+    trust: "安心は届いている。次は聞き役だけで止まらず、自分の希望を少し置くと別ルートも開く。",
+    balance: "場面ごとの読み分けができている。次は本音の鍵を開ける選択でエンディングの質が上がる。",
+  };
+  const factors = [
+    `安心${counts.safe || 0}`,
+    `火花${counts.spark || 0}`,
+    `揺れ${counts.strain || 0}`,
+    `鍵解放${heart.open}`,
+  ];
+  return {
+    route,
+    tone: routeTone,
+    confidence,
+    label: history.length ? route.name : "まだ未分岐",
+    fork: history.length ? (forkMap[route.key] || route.nextMove) : "最初の数シーンは、相手のテンポと本音の鍵を読むほど分岐の色が決まる。",
+    factors,
+  };
+}
+
+function routeCompassCard(report, compact = false) {
+  return `<div class="route-compass route-${report.tone} ${compact ? "compact" : ""}"><span>ROUTE COMPASS</span><b>${report.label}</b><strong>${report.confidence}%</strong><i><em style="width:${report.confidence}%"></em></i><p>${report.fork}</p>${compact ? "" : `<small>${report.factors.join(" / ")}</small>`}</div>`;
+}
+
+function routeCompassPanel(character = state.char) {
+  const report = routeCompassReport(character);
+  return `<div class="route-compass-panel" style="--c:${character.color};--light:${character.light}"><h3>ルートコンパス <span>${report.route.badge || "ROUTE"}</span></h3>${routeCompassCard(report)}<p>選択は一本道ではなく、安心・火花・修復・本音の鍵の積み重ねでエンディングの色が変わります。</p></div>`;
 }
 
 function continuityEchoPanel(character = state.char) {
@@ -1222,6 +1267,7 @@ function checkpoint() {
   const mission = dateMissionReport(c, dateIndex);
   const memory = characterMemoryReport(c);
   const arc = relationshipArcReport(c);
+  const compass = routeCompassReport(c);
   const total = compatibilityScore(c);
   const nextCopy = next
     ? `${next.date.title}は「${next.scene.location}」から。次は${nextGuide.skill}。${nextGuide.lesson}`
@@ -1246,6 +1292,7 @@ function checkpoint() {
           <article class="mission-${mission.tone}"><span>${mission.badge}</span><b>${mission.title} ${mission.progress}%</b><p>${mission.complete ? mission.success : mission.next}</p></article>
           <article class="memory-${memory.tone}"><span>MEMORY</span><b>${memory.label}</b><p>${memory.copy}</p></article>
           <article class="arc-${arc.next.tone}"><span>LOVE ARC</span><b>${arc.next.label}</b><p>${arc.next.advice}</p></article>
+          <article class="route-${compass.tone}"><span>ROUTE</span><b>${compass.label} ${compass.confidence}%</b><p>${compass.fork}</p></article>
         </div>
         <div class="checkpoint-next">
           <span>NEXT SCENE</span>

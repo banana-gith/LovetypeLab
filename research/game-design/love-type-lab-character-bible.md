@@ -163,6 +163,8 @@ Use these echoes as continuity callbacks: later scene context should name the ea
 
 ### Character Route Endings
 
+Route compass rule: during play, show the likely route tendency without locking the player in. The forecast should make choices feel consequential while still allowing rerouting through repair, heart-key unlocks, and late-scene clarity.
+
 - **REPAIR / 振り返った沈黙が、まだ終わりじゃない**
   - Player pattern: 深さに触れたが、少し結論や安心の言葉を急ぎすぎた
   - Epilogue: ミナは改札前で少しだけ足を止める。怒っているというより、言葉にしきれなかった理想を軽く扱われたかもしれないと確かめている。次に会うなら、沈黙を埋めるより先に、彼女が守りたかった気持ちを一つだけ言い直したい。
@@ -727,6 +729,8 @@ Use these echoes as continuity callbacks: later scene context should name the ea
 **Turn-offs:** 冷たい現実論 / テンションの否定 / 自由を軽さと決めつける
 
 ### Character Route Endings
+
+Route compass rule: during play, show the likely route tendency without locking the player in. The forecast should make choices feel consequential while still allowing rerouting through repair, heart-key unlocks, and late-scene clarity.
 
 - **REPAIR / 笑ったあと、少しだけ風が止まる**
   - Player pattern: 楽しさに乗りきれず、自由を軽さとして扱ったように見えた
@@ -1318,6 +1322,8 @@ Use these echoes as continuity callbacks: later scene context should name the ea
 
 ### Character Route Endings
 
+Route compass rule: during play, show the likely route tendency without locking the player in. The forecast should make choices feel consequential while still allowing rerouting through repair, heart-key unlocks, and late-scene clarity.
+
 - **REPAIR / しまいかけた手紙が、まだ手元にある**
   - Player pattern: 優しさはあったが、理想や創作を外側の評価でまとめてしまった
   - Epilogue: ナギは笑って別れるけれど、封筒を紙袋の奥へしまう。完全に拒絶したわけではない。ただ、見せたかったものを急いで評価された痛みが残っている。次に会うなら、作品や理想より先に、見せてくれた勇気を受け取り直したい。
@@ -1908,6 +1914,8 @@ Use these echoes as continuity callbacks: later scene context should name the ea
 
 ### Character Route Endings
 
+Route compass rule: during play, show the likely route tendency without locking the player in. The forecast should make choices feel consequential while still allowing rerouting through repair, heart-key unlocks, and late-scene clarity.
+
 - **REPAIR / 閉じたノートに、まだ余白が残っている**
   - Player pattern: 好意はあったが、形式や最適解を急ぎすぎてアオイの思考の自由を狭めた
   - Epilogue: アオイは穏やかに別れるけれど、帰り際にノートを開かない。感情を急いで定義されたり、正解探しで近づかれた違和感が残っている。次に会うなら、まず彼女を攻略対象ではなく、一緒に考える相手として扱い直したい。
@@ -2497,6 +2505,8 @@ Use these echoes as continuity callbacks: later scene context should name the ea
 
 ### Character Route Endings
 
+Route compass rule: during play, show the likely route tendency without locking the player in. The forecast should make choices feel consequential while still allowing rerouting through repair, heart-key unlocks, and late-scene clarity.
+
 - **REPAIR / 約束の輪郭を、もう一度描き直す**
   - Player pattern: 気持ちはあったが、ハルカが安心できる具体性が足りなかった
   - Epilogue: ハルカは怒るより先に、今日の会話を静かに整理している。曖昧な言葉や勢いが、彼女には関係を軽く扱われたように響いた。次は謝るだけでなく、日時・理由・代案まで見える形で信頼を戻したい。
@@ -3060,6 +3070,8 @@ Use these echoes as continuity callbacks: later scene context should name the ea
 **Turn-offs:** 長い詰問 / 重すぎる関係定義 / 疑いから入る確認
 
 ### Character Route Endings
+
+Route compass rule: during play, show the likely route tendency without locking the player in. The forecast should make choices feel consequential while still allowing rerouting through repair, heart-key unlocks, and late-scene clarity.
 
 - **REPAIR / 重くなった空気から、一度外へ出る**
   - Player pattern: 関係を確かめようとして、ユウのテンポを止めすぎた
@@ -3625,6 +3637,8 @@ Use these echoes as continuity callbacks: later scene context should name the ea
 **Turn-offs:** 受け身すぎる態度 / 勝ち負け化 / 雑な保留や所有感
 
 ### Character Route Endings
+
+Route compass rule: during play, show the likely route tendency without locking the player in. The forecast should make choices feel consequential while still allowing rerouting through repair, heart-key unlocks, and late-scene clarity.
 
 - **REPAIR / 正しさでは、緊張はほどけない**
   - Player pattern: 明確さは出したが、レイナの感情の置き場所を見落とした

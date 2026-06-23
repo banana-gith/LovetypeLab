@@ -125,6 +125,8 @@ for (const [id, type, name] of characters) {
   lines.push("");
   lines.push("### Character Route Endings");
   lines.push("");
+  lines.push("Route compass rule: during play, show the likely route tendency without locking the player in. The forecast should make choices feel consequential while still allowing rerouting through repair, heart-key unlocks, and late-scene clarity.");
+  lines.push("");
   for (const route of Object.values(routeEndings)) {
     const flavoredRoute = characterRouteEnding(id, route.key);
     const finale = characterFinaleScene(id, route.key, "mixed");
