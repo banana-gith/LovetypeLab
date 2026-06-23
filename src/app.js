@@ -1,5 +1,5 @@
 import { personaCatalog } from "./personas.js";
-import { characterFinaleScene, characterGameDesign, characterRouteEnding, personaSwitchFeedback, relationshipPulse, relationshipRoute, routeEndings, sceneCoaching, sceneDramaturgy, sceneEmotionalContract, sceneReadingCue, sceneTacticalRead } from "./gameDesign.js";
+import { characterFinaleScene, characterGameDesign, characterRouteEnding, personaSwitchFeedback, relationshipPulse, relationshipRoute, routeEndings, sceneCharacterSubtext, sceneCoaching, sceneDramaturgy, sceneEmotionalContract, sceneReadingCue, sceneTacticalRead } from "./gameDesign.js";
 import { branchTone, storyFor } from "./story.js";
 
 const $ = (selector) => document.querySelector(selector);
@@ -747,6 +747,7 @@ function feedback() {
   const { scene } = currentScene();
   const coaching = sceneCoaching(c.id, scene, state.sceneIndex, totalScenes(c));
   const contract = sceneEmotionalContract(c.id, scene, state.sceneIndex, totalScenes(c));
+  const subtext = sceneCharacterSubtext(c.id, state.sceneIndex, totalScenes(c), picked.branch);
   const tactic = picked.tactic || sceneTacticalRead(c.id, state.sceneIndex, totalScenes(c), picked);
   const momentum = picked.momentum || momentumRead(picked);
   const combo = currentCombo();
@@ -756,6 +757,7 @@ function feedback() {
     <div class="chat-thread feedback-simple">
       <div class="chat-bubble you"><b>あなた / ${choiceDirection(picked)}</b><p>${picked.label}</p></div>
       <div class="chat-bubble them" style="--c:${c.color};--light:${c.light}"><b>${c.name}</b><p>「${picked.reaction}」</p></div>
+      <div class="chat-bubble subtext"><b>${subtext.badge} / ${subtext.title}</b><p>${subtext.copy}</p></div>
       <div class="chat-bubble contract"><b>${contract.mode}場面の読み</b><p>${picked.branch === "strain" ? contract.temptingMove : contract.winningMove}</p></div>
       <div class="chat-bubble tactic"><b>${tactic.verdict}</b><p>${tactic.choiceFits ? tactic.payoff : tactic.choiceRisks ? tactic.trap : picked.why}</p></div>
       <div class="chat-bubble switch"><b>${coaching.switch.label}</b><p>${personaSwitchFeedback(c.id, state.sceneIndex, totalScenes(c), picked.branch)}</p></div>

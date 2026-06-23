@@ -967,6 +967,38 @@ export function personaSwitchFeedback(characterId, sceneIndex, totalScenes, bran
   return `「${active.label}」が少し閉じた。${active.hurts}ように聞こえた可能性がある。`;
 }
 
+function sentenceCore(text = "") {
+  return String(text).replace(/[。.!！?？]+$/u, "");
+}
+
+export function sceneCharacterSubtext(characterId, sceneIndex, totalScenes, branch) {
+  const design = characterGameDesign[characterId] || characterGameDesign.mina;
+  const active = activePersonaSwitch(characterId, sceneIndex, totalScenes);
+  const layer = design.innerLayer || {};
+  if (branch === "safe") {
+    return {
+      badge: "UNSAID TRUST",
+      title: "口にしない安心",
+      copy: `${active.tell}。「${sentenceCore(layer.privateWish || design.playerFantasy)}」という願いに、少し近い相手として残った。`,
+      imageCue: `${design.visualFormula} ${active.tell}が、言葉ではなく視線や手元に出る。`,
+    };
+  }
+  if (branch === "spark") {
+    return {
+      badge: "UNSAID SPARK",
+      title: "口にしない期待",
+      copy: `${active.tell}。楽しい温度は届いている。次は「${sentenceCore(layer.confessionNeed || design.winningMindset)}」へ着地すると、火花が恋の輪郭になる。`,
+      imageCue: `${design.visualFormula} 笑った直後の余韻と、まだ言っていない期待を表情で見せる。`,
+    };
+  }
+  return {
+    badge: "UNSAID RISK",
+    title: "飲み込んだ違和感",
+    copy: `${active.hurts}ように響き、「${sentenceCore(layer.fear || design.temptationTrap)}」という怖さが少し顔を出した。次は言い訳より先に受け取り直したい。`,
+    imageCue: `${design.visualFormula} 少し視線が外れ、言葉にしない違和感が距離と手元に残る。`,
+  };
+}
+
 export function sceneDramaturgy(characterId, scene, sceneIndex, totalScenes) {
   const design = characterGameDesign[characterId] || characterGameDesign.mina;
   const beat = sceneBeats[Math.min(sceneIndex, sceneBeats.length - 1)];

@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { activePersonaSwitch, characterFinaleScene, characterGameDesign, characterRouteEnding, routeEndings, sceneCoaching, sceneEmotionalContract, sceneTacticalRead } from "../src/gameDesign.js";
+import { activePersonaSwitch, characterFinaleScene, characterGameDesign, characterRouteEnding, routeEndings, sceneCharacterSubtext, sceneCoaching, sceneEmotionalContract, sceneTacticalRead } from "../src/gameDesign.js";
 import { storyFor } from "../src/story.js";
 
 const characters = [
@@ -115,6 +115,7 @@ const lines = [
   "- **Date mission cards**: Three compact mobile mission card backgrounds for Date 1 / Date 2 / Date 3 progress, premium warm cream and dark chocolate variants, small progress bar space, tiny trophy / compass / heart-line icon slots, no readable text baked into image, optimized for 390px smartphone game UI.",
   "- **Love contract cards**: Compact mobile UI card backgrounds for scene-specific romance tactics, four mode variants named enter / approach / repair / commit, premium cream paper and dark chocolate foil accents, tiny contract seal icon space, no readable text baked into image, optimized for 390px smartphone game UI.",
   "- **Relationship arc report cards**: Four compact result-screen UI cards for a dating simulation, representing entrance distance, approach temperature, repair after conflict, and commitment moment. Premium cream paper, dark chocolate ink, soft coral and character-color accents, tiny progress bar and small seal icon spaces, no readable text baked into image, optimized for 390px smartphone result screens.",
+  "- **Unsaid subtext chat cards**: Compact chat-bubble UI cards for character inner subtext after a player choice, three emotional variants trust / spark / risk, premium cream paper, soft shadow, character-color accent line, no readable text baked into image, optimized for immersive Japanese mobile dating-sim feedback overlays.",
   "",
 ];
 
@@ -148,8 +149,12 @@ for (const character of characters) {
   for (let index = 0; index < total; index += 1) {
     const tactic = sceneTacticalRead(character.id, index, total);
     const contract = sceneEmotionalContract(character.id, story.dates.flatMap((date) => date.scenes)[index], index, total);
+    const subtexts = ["safe", "spark", "strain"].map((branch) => sceneCharacterSubtext(character.id, index, total, branch));
     lines.push(`- **Tactical read UI cut-in / ${String(index + 1).padStart(2, "0")} ${tactic.title}**: ${character.fixedLook} 場面別タクティック「${tactic.title}」が表情と余白で伝わる補助カット。刺さる動きは「${tactic.prefer || "場面次第"}」、危ない動きは「${tactic.avoid || "読み違い"}」。${tactic.read} 画面内文字なし、UI合成前提、恋愛相手は映さない。`);
     lines.push(`- **Love contract UI cut-in / ${String(index + 1).padStart(2, "0")} ${contract.mode}**: ${character.fixedLook} 「${contract.surface}」と「${contract.hiddenAsk}」が、表情・小物・余白だけで伝わる補助カット。勝ち筋は「${contract.winningMove}」、罠差分は「${contract.temptingMove}」。画面内文字なし、UI合成前提、恋愛相手は映さない。`);
+    for (const subtext of subtexts) {
+      lines.push(`- **Unsaid subtext cut-in / ${String(index + 1).padStart(2, "0")} ${subtext.badge}**: ${character.fixedLook} ${subtext.imageCue} 内面コピーは「${subtext.title}: ${subtext.copy}」。画面内文字なし、UI合成前提、恋愛相手は映さない。`);
+    }
   }
   for (const [missionIndex, mission] of (design.dateMissions || []).entries()) {
     lines.push(`- **Date mission clear cut-in / Date ${missionIndex + 1} ${mission.badge}**: ${character.fixedLook} 「${mission.title}」を達成した余韻が伝わる一枚。${mission.imageCue}。成功感は「${mission.success}」、失敗差分では「${mission.risk}」が表情と距離に出る。画面内文字なし、UI合成前提、恋愛相手は映さない。`);

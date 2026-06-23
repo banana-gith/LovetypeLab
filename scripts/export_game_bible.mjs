@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { activePersonaSwitch, characterFinaleScene, characterGameDesign, characterRouteEnding, researchBasis, routeEndings, sceneCoaching, sceneDramaturgy, sceneEmotionalContract, sceneTacticalRead } from "../src/gameDesign.js";
+import { activePersonaSwitch, characterFinaleScene, characterGameDesign, characterRouteEnding, researchBasis, routeEndings, sceneCharacterSubtext, sceneCoaching, sceneDramaturgy, sceneEmotionalContract, sceneTacticalRead } from "../src/gameDesign.js";
 import { personaCatalog } from "../src/personas.js";
 import { storyFor } from "../src/story.js";
 
@@ -186,6 +186,9 @@ for (const [id, type, name] of characters) {
       const coach = sceneCoaching(id, scene, index, total);
       const tactic = sceneTacticalRead(id, index, total);
       const contract = sceneEmotionalContract(id, scene, index, total);
+      const safeSubtext = sceneCharacterSubtext(id, index, total, "safe");
+      const sparkSubtext = sceneCharacterSubtext(id, index, total, "spark");
+      const strainSubtext = sceneCharacterSubtext(id, index, total, "strain");
       const activeSwitch = activePersonaSwitch(id, index, total);
       lines.push(`${index + 1}. **${scene.title}**`);
       lines.push(`   - Location: ${scene.location}`);
@@ -198,6 +201,9 @@ for (const [id, type, name] of characters) {
       lines.push(`   - Hidden ask: ${contract.hiddenAsk}`);
       lines.push(`   - Tempting wrong move: ${contract.temptingMove}`);
       lines.push(`   - Winning move: ${contract.winningMove}`);
+      lines.push(`   - Unsaid safe subtext: ${safeSubtext.title} / ${safeSubtext.copy}`);
+      lines.push(`   - Unsaid spark subtext: ${sparkSubtext.title} / ${sparkSubtext.copy}`);
+      lines.push(`   - Unsaid strain subtext: ${strainSubtext.title} / ${strainSubtext.copy}`);
       lines.push(`   - Skill: ${coach.badge} / ${coach.skill}`);
       lines.push(`   - Player lesson: ${coach.lesson}`);
       lines.push(`   - Tactical read: ${tactic.badge} / ${tactic.title}`);
