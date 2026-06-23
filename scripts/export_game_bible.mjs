@@ -8,6 +8,7 @@ const characters = [
   ["mina", "INFJ", "ミナ"],
   ["rio", "ENFP", "リオ"],
   ["nagi", "INFP", "ナギ"],
+  ["aoi", "INTP", "アオイ"],
   ["haruka", "ISTJ", "ハルカ"],
   ["yu", "ESTP", "ユウ"],
   ["reina", "ENTJ", "レイナ"],
