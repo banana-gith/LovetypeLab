@@ -88,6 +88,16 @@ for (const [id, type, name] of characters) {
     lines.push(`  - Mission image cue: ${mission.imageCue}`);
   }
   lines.push("");
+  lines.push("### Character Memory Echoes");
+  lines.push("");
+  for (const key of ["safe", "spark", "strain", "repair", "mixed"]) {
+    const memory = design.memoryEcho?.[key];
+    if (!memory) continue;
+    lines.push(`- **${key}: ${memory.label}**`);
+    lines.push(`  - ${memory.copy}`);
+  }
+  if (design.memoryEcho?.imageCue) lines.push(`- Memory image cue: ${design.memoryEcho.imageCue}`);
+  lines.push("");
   lines.push(`**Attraction switches:** ${design.attractionSwitches.join(" / ")}`);
   lines.push("");
   lines.push(`**Turn-offs:** ${design.turnOffs.join(" / ")}`);

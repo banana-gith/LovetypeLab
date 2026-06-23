@@ -124,6 +124,11 @@ for (const character of characters) {
   for (const [missionIndex, mission] of (design.dateMissions || []).entries()) {
     lines.push(`- **Date mission clear cut-in / Date ${missionIndex + 1} ${mission.badge}**: ${character.fixedLook} 「${mission.title}」を達成した余韻が伝わる一枚。${mission.imageCue}。成功感は「${mission.success}」、失敗差分では「${mission.risk}」が表情と距離に出る。画面内文字なし、UI合成前提、恋愛相手は映さない。`);
   }
+  for (const key of ["safe", "spark", "strain", "repair", "mixed"]) {
+    const memory = design.memoryEcho?.[key];
+    if (!memory) continue;
+    lines.push(`- **Character memory echo / ${key} ${memory.label}**: ${character.fixedLook} プレイヤーの接し方が「${memory.label}」として残っていることが表情・距離・手元で伝わる一枚。${design.memoryEcho.imageCue}。記憶の意味は「${memory.copy}」。画面内文字なし、UI合成前提、恋愛相手は映さず二人分の小物で存在を示す。`);
+  }
   lines.push("");
   let cursor = 0;
   for (const date of story.dates) {
