@@ -33,6 +33,9 @@ const lines = [
   "- Strong answers combine respect, consent, and character-specific timing.",
   "- Bad answers should be plausible enough to tempt the player, but fail because they ignore the scene's emotional logic.",
   "- Every route should teach a reusable communication insight, not just punish the player.",
+  "- The game now returns player-facing mastery signals: branch combo, play style, and unlocked conversation lessons.",
+  "- Combo labels should make the player feel a readable flow: trust streak, spark streak, or repair chance.",
+  "- The final report should explain not only compatibility, but the player's recurring habit and next practice target.",
   "",
 ];
 

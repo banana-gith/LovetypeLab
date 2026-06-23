@@ -563,6 +563,8 @@ function feedback() {
   const c = state.char;
   const { scene } = currentScene();
   const coaching = sceneCoaching(c.id, scene, state.sceneIndex, totalScenes(c));
+  const combo = currentCombo();
+  const style = playStyleReport();
   return `<div class="feedback-overlay"><div class="feedback-modal chat-modal feedback-stamp-modal grade-${grade.className}">
     <div class="grade-stamp"><span>${grade.rank}</span><b>${grade.phrase}</b></div>
     <div class="chat-head" style="--c:${c.color};--light:${c.light}">${avatar(c)}<div><span>${grade.rank} RESPONSE</span><h3>${c.name}\u306e\u53cd\u5fdc</h3></div></div>
@@ -572,6 +574,7 @@ function feedback() {
       <div class="chat-bubble inner"><b>\u4f55\u304c\u8d77\u304d\u305f\uff1f</b><p>${picked.why}</p></div>
       <div class="chat-bubble pulse"><b>いまの関係の読み筋</b><p>${relationshipPulse(c.id, state.scores, state.flags)}</p></div>
       <div class="chat-bubble coach"><b>攻略ノート / ${coaching.skill}</b><p>${coaching.payoff} ${coaching.trap}</p></div>
+      <div class="chat-bubble combo"><b>${combo.label} / ${style.title}</b><p>${style.copy}</p></div>
       <div class="chat-bubble better"><b>\u6b21\u306b\u3082\u3063\u3068\u81ea\u7136\u306b\u3059\u308b\u306a\u3089</b><p>${picked.better}</p></div>
     </div>
     <div class="delta-row">${Object.entries(picked.effect).filter(([, value]) => value !== 0).map(([key, value]) => `<span class="${value > 0 ? "plus" : "minus"}">${scoreIcon(scoreDecor[key]?.icon || "gauge")} ${scoreDecor[key]?.short || scoreLabels[key]} ${value > 0 ? "+" : ""}${value}</span>`).join("")}</div>
@@ -593,6 +596,47 @@ function branchSummary(items) {
   return { key: top, label: labels[top][0], copy: labels[top][1], counts };
 }
 
+function currentCombo(history = state.history) {
+  const last = history.at(-1);
+  if (!last) return { label: "初手待ち", tone: "balance", copy: "まずは相手の反応を一つ読むところから。" };
+  let count = 0;
+  for (let index = history.length - 1; index >= 0; index -= 1) {
+    if (history[index].branch !== last.branch) break;
+    count += 1;
+  }
+  const meta = {
+    safe: ["安心コンボ", "trust", "信頼を積めている。次は少しだけ好意を見せると恋愛温度が上がる。"],
+    spark: ["火花コンボ", "spark", "楽しい勢いが出ている。軽さだけに見えない一言が次の鍵。"],
+    strain: ["修復チャンス", "risk", "空気が揺れている。次の一手で受け取り直せるとドラマになる。"],
+  }[last.branch] || ["読み直し中", "balance", "次の反応で流れが変わる。"];
+  return { label: `${meta[0]} x${count}`, tone: meta[1], copy: meta[2] };
+}
+
+function playStyleReport(history = state.history) {
+  const summary = branchSummary(history);
+  const recovered = history.some((item, index) => item.branch === "strain" && history.slice(index + 1, index + 3).some((next) => next.branch === "safe"));
+  const safe = summary.counts.safe || 0;
+  const spark = summary.counts.spark || 0;
+  const strain = summary.counts.strain || 0;
+  if (recovered) return { title: "リカバリー上手", badge: "RECOVER", copy: "一度揺れた空気を放置せず、関係を戻す選択ができている。" };
+  if (strain >= Math.max(safe, spark) && strain >= 2) return { title: "攻めすぎ注意", badge: "CHECK", copy: "踏み込みは魅力になるが、相手の主導権を残すともっと刺さる。" };
+  if (safe >= spark + 2) return { title: "信頼ビルダー", badge: "TRUST", copy: "安心感を作るのが得意。終盤は自分の好意も少し強めに出したい。" };
+  if (spark >= safe + 2) return { title: "火花メーカー", badge: "SPARK", copy: "会話の温度を上げるのが上手。次は誠実な着地で深さを足す。" };
+  return { title: "バランス型", badge: "BALANCE", copy: "安心と火花を場面で切り替えられている。相手の変化を見て次を選べている。" };
+}
+
+function learnedSkillLog(history = state.history) {
+  const seen = new Map();
+  for (const item of history) {
+    const { scene } = sceneAt(item.sceneIndex);
+    const coach = sceneCoaching(state.char.id, scene, item.sceneIndex, totalScenes());
+    if (!seen.has(coach.badge)) {
+      seen.set(coach.badge, { badge: coach.badge, skill: coach.skill, branch: item.branch, intent: item.intent });
+    }
+  }
+  return [...seen.values()];
+}
+
 function checkpoint() {
   const c = state.char;
   const { date, dateIndex, local } = currentScene();
@@ -600,6 +644,8 @@ function checkpoint() {
   const picks = state.history.filter((item) => item.sceneIndex >= start && item.sceneIndex <= state.sceneIndex);
   const summary = branchSummary(picks);
   const last = picks.at(-1);
+  const combo = currentCombo();
+  const style = playStyleReport();
   const next = state.sceneIndex + 1 < totalScenes(c) ? sceneAt(state.sceneIndex + 1, c) : null;
   const nextGuide = next ? sceneCoaching(c.id, next.scene, state.sceneIndex + 1, totalScenes(c)) : null;
   const stage = relationshipStage(c);
@@ -623,6 +669,7 @@ function checkpoint() {
           <article class="branch-${summary.key}"><span>多かった返し</span><b>${summary.label}</b><p>${summary.copy}</p></article>
           <article><span>今の読み筋</span><b>${route.badge}</b><p>${relationshipPulse(c.id, state.scores, state.flags)}</p></article>
           <article><span>直近の余韻</span><b>${last?.intent || "様子を見る"}</b><p>${last?.aftertaste || "まだ相手の反応を探っている。"}</p></article>
+          <article class="stage-${combo.tone}"><span>${style.badge}</span><b>${style.title}</b><p>${combo.label}。${style.copy}</p></article>
         </div>
         <div class="checkpoint-next">
           <span>NEXT SCENE</span>
@@ -662,6 +709,7 @@ function playerSkillBadges() {
   const s = state.scores;
   const strongest = Object.entries({ trust: s.trust, interest: s.interest, comfort: s.comfort }).sort((a, b) => b[1] - a[1])[0][0];
   const recovered = state.history.some((item, index) => item.branch === "strain" && state.history.slice(index + 1, index + 3).some((next) => next.branch === "safe"));
+  const style = playStyleReport();
   const badges = [];
   const strongestMap = {
     trust: ["誠実な観察者", "相手の価値観や準備を見落とさず、信頼の土台を作れた。"],
@@ -669,6 +717,7 @@ function playerSkillBadges() {
     comfort: ["空気を整える人", "相手が自分らしく話せる余白を作れた。"],
   };
   badges.push({ icon: "✦", title: strongestMap[strongest][0], text: strongestMap[strongest][1] });
+  badges.push({ icon: "◆", title: style.title, text: style.copy });
   if (recovered) badges.push({ icon: "↺", title: "修復できる人", text: "一度揺れた空気を、受け取り直して戻す力が見えた。" });
   if (s.pressure < 30) badges.push({ icon: "○", title: "余白を残せた", text: "答えを急がず、相手が選べる余地を守れた。" });
   if (s.misread < 30) badges.push({ icon: "◇", title: "読み取り上手", text: "言葉の表面だけでなく、奥のニーズまで拾えている。" });
@@ -701,10 +750,12 @@ function result() {
   const tier = compatibilityTier(total);
   const route = relationshipRoute(c.id, state.scores, state.flags, state.history);
   const stage = relationshipStage(c);
+  const style = playStyleReport();
+  const learned = learnedSkillLog();
   const type = total >= 78 ? "\u304b\u306a\u308a\u76f8\u6027\u304c\u3044\u3044\u4f1a\u8a71" : total >= 62 ? "\u3058\u308f\u3063\u3068\u523a\u3055\u308b\u4f1a\u8a71" : total >= 48 ? "\u3042\u3068\u4e00\u6b69\u3067\u5c4a\u304f\u4f1a\u8a71" : "\u4f5c\u6226\u3092\u5909\u3048\u308b\u3068\u4f38\u3073\u308b\u4f1a\u8a71";
   return `${header(true)}<main class="result-page"><span class="result-kicker">YOUR DATE RESULT</span><div class="ending-icon">${end[0]}</div><h1>${end[1]}</h1><p>${end[2]}</p>
     <div class="report-grid"><div class="share-card" style="--c:${c.color};--light:${c.light}"><div class="share-brand">Love Type Lab ✦</div>${avatar(c)}<span>${c.type}風デート完走</span><h2>${type}</h2><div class="route-card"><small>${route.badge}</small><b>${route.name}</b><p>${route.summary}</p></div><p>${c.name}との${story(c).dates.length}回のデートで、${gd.mastery}</p><div class="share-tags"><span>#LoveTypeLab</span><span>#${c.type}風</span><span>#会話練習</span></div><small>TYPE DATE TRAINER</small></div>
-    <div class="score-report"><div class="total-score-card" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>\u30e1\u30a4\u30f3\u8a55\u4fa1</span><b>${tier.label}</b><p>${tier.sub}</p></div></div><div class="relationship-stage result-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div><h2>5\u3064\u306e\u7a7a\u6c17\u30e1\u30fc\u30bf\u30fc</h2>${meters()}<div class="skill-panel"><h3>今回身についた会話スキル</h3><div>${playerSkillBadges().map((badge) => `<article><span>${badge.icon}</span><b>${badge.title}</b><p>${badge.text}</p></article>`).join("")}</div></div><div class="moment-log"><h3>印象に残る選択</h3>${decisiveMoments().map((moment) => `<article class="moment-${moment.branch}"><span>${moment.intent}</span><b>${moment.scene}</b><p>${moment.text}</p></article>`).join("")}</div><div class="insight"><span>✦</span><div><b>あなたの勝ち筋</b><p>${strongestInsight()} ${gd.winningMindset}</p></div></div><div class="insight"><span>→</span><div><b>次の一手</b><p>${route.nextMove}</p></div></div><div class="insight warn"><span>!</span><div><b>次に伸びるポイント</b><p>${growthInsight()} ${gd.temptationTrap}</p></div></div><button class="primary full" data-share>結果をコピーする</button><button class="outline full" data-restart>もう一度デートする</button></div></div>
+    <div class="score-report"><div class="total-score-card" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>\u30e1\u30a4\u30f3\u8a55\u4fa1</span><b>${tier.label}</b><p>${tier.sub}</p></div></div><div class="relationship-stage result-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div><div class="playstyle-card"><span>${style.badge}</span><b>${style.title}</b><p>${style.copy}</p></div><h2>5\u3064\u306e\u7a7a\u6c17\u30e1\u30fc\u30bf\u30fc</h2>${meters()}<div class="skill-panel"><h3>今回身についた会話スキル</h3><div>${playerSkillBadges().map((badge) => `<article><span>${badge.icon}</span><b>${badge.title}</b><p>${badge.text}</p></article>`).join("")}</div></div><div class="learned-strip"><h3>解放した会話レッスン</h3><p>${learned.slice(0, 8).map((item) => `<span>${item.badge} ${item.skill}</span>`).join("")}</p></div><div class="moment-log"><h3>印象に残る選択</h3>${decisiveMoments().map((moment) => `<article class="moment-${moment.branch}"><span>${moment.intent}</span><b>${moment.scene}</b><p>${moment.text}</p></article>`).join("")}</div><div class="insight"><span>✦</span><div><b>あなたの勝ち筋</b><p>${strongestInsight()} ${gd.winningMindset}</p></div></div><div class="insight"><span>→</span><div><b>次の一手</b><p>${route.nextMove}</p></div></div><div class="insight warn"><span>!</span><div><b>次に伸びるポイント</b><p>${growthInsight()} ${gd.temptationTrap}</p></div></div><button class="primary full" data-share>結果をコピーする</button><button class="outline full" data-restart>もう一度デートする</button></div></div>
   </main>`;
 }
 
@@ -775,6 +826,9 @@ document.addEventListener("click", async (event) => {
   const choice = event.target.closest("[data-choice]");
   if (choice && !state.picked) {
     state.picked = sceneChoices()[Number(choice.dataset.choice)];
+    const current = currentScene();
+    const grade = choiceGrade(state.picked);
+    const coaching = sceneCoaching(state.char.id, current.scene, state.sceneIndex, totalScenes());
     for (const [key, value] of Object.entries(state.picked.effect)) {
       state.scores[key] = clamp(state.scores[key] + value);
     }
@@ -785,6 +839,9 @@ document.addEventListener("click", async (event) => {
       branch: state.picked.branch,
       intent: choiceIntentLabel(state.picked),
       aftertaste: choiceAftertaste(state.picked),
+      grade: grade.rank,
+      skill: coaching.skill,
+      skillBadge: coaching.badge,
       scores: { ...state.scores },
     });
     render();
