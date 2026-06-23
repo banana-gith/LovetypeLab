@@ -1000,6 +1000,35 @@ export function sceneCoaching(characterId, scene, sceneIndex, totalScenes) {
   };
 }
 
+export function sceneEmotionalContract(characterId, scene, sceneIndex, totalScenes) {
+  const design = characterGameDesign[characterId] || characterGameDesign.mina;
+  const skill = skillLadder[Math.min(sceneIndex, skillLadder.length - 1)];
+  const beat = sceneBeats[Math.min(sceneIndex, sceneBeats.length - 1)];
+  const activeSwitch = activePersonaSwitch(characterId, sceneIndex, totalScenes);
+  const rule = tacticRuleFor(characterId, skill[1]);
+  const isOpening = sceneIndex <= 2;
+  const isConflict = ["CONFLICT", "TRUTH", "RESET"].includes(skill[1]);
+  const isCommit = ["READY", "COMMIT", "AFTER"].includes(skill[1]) || sceneIndex >= totalScenes - 3;
+  const mode = isCommit ? "決める" : isConflict ? "戻す" : isOpening ? "入る" : "近づく";
+  const hiddenAsk = isCommit
+    ? design.innerLayer?.confessionNeed || "好意を曖昧にせず、相手のペースも守ること"
+    : isConflict
+      ? `ズレた時に、${activeSwitch.hurts}で済ませず関係の扱い方を直すこと`
+      : `${activeSwitch.opens}ことで、${design.lens.focus}を大切にすること`;
+  const temptingMove = rule.trap || `${activeSwitch.hurts}と、表面上は自然でも相手の核心から外れる。`;
+  const winningMove = rule.payoff || `${activeSwitch.opens}と、次の本音に進みやすくなる。`;
+  return {
+    badge: `LOVE CONTRACT ${String(sceneIndex + 1).padStart(2, "0")}`,
+    mode,
+    surface: `表面は「${scene.title}」の会話。でも本当は、${beat[1]}を通して${activeSwitch.label}を見られている。`,
+    hiddenAsk,
+    temptingMove,
+    winningMove,
+    playerQuestion: rule.read || skill[2],
+    promise: design.playerPromise,
+  };
+}
+
 const tacticProfiles = {
   mina: {
     default: {

@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { activePersonaSwitch, characterFinaleScene, characterGameDesign, characterRouteEnding, researchBasis, routeEndings, sceneCoaching, sceneDramaturgy, sceneTacticalRead } from "../src/gameDesign.js";
+import { activePersonaSwitch, characterFinaleScene, characterGameDesign, characterRouteEnding, researchBasis, routeEndings, sceneCoaching, sceneDramaturgy, sceneEmotionalContract, sceneTacticalRead } from "../src/gameDesign.js";
 import { personaCatalog } from "../src/personas.js";
 import { storyFor } from "../src/story.js";
 
@@ -168,6 +168,7 @@ for (const [id, type, name] of characters) {
       const beat = sceneDramaturgy(id, scene, index, total);
       const coach = sceneCoaching(id, scene, index, total);
       const tactic = sceneTacticalRead(id, index, total);
+      const contract = sceneEmotionalContract(id, scene, index, total);
       const activeSwitch = activePersonaSwitch(id, index, total);
       lines.push(`${index + 1}. **${scene.title}**`);
       lines.push(`   - Location: ${scene.location}`);
@@ -176,6 +177,10 @@ for (const [id, type, name] of characters) {
       lines.push(`   - Switch tell: ${activeSwitch.tell}`);
       lines.push(`   - Dramaturgy: ${beat.beat} / ${beat.focus}`);
       lines.push(`   - Player move: ${beat.playerMove}`);
+      lines.push(`   - Love contract: ${contract.mode} / ${contract.surface}`);
+      lines.push(`   - Hidden ask: ${contract.hiddenAsk}`);
+      lines.push(`   - Tempting wrong move: ${contract.temptingMove}`);
+      lines.push(`   - Winning move: ${contract.winningMove}`);
       lines.push(`   - Skill: ${coach.badge} / ${coach.skill}`);
       lines.push(`   - Player lesson: ${coach.lesson}`);
       lines.push(`   - Tactical read: ${tactic.badge} / ${tactic.title}`);
