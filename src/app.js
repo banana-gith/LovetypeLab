@@ -1,5 +1,5 @@
 import { personaCatalog } from "./personas.js";
-import { characterGameDesign, relationshipPulse, relationshipRoute, sceneCoaching, sceneDramaturgy } from "./gameDesign.js";
+import { characterGameDesign, personaSwitchFeedback, relationshipPulse, relationshipRoute, sceneCoaching, sceneDramaturgy } from "./gameDesign.js";
 import { branchTone, storyFor } from "./story.js";
 
 const $ = (selector) => document.querySelector(selector);
@@ -577,6 +577,7 @@ function feedback() {
       <div class="chat-bubble you"><b>\u3042\u306a\u305f\u306e\u8fd4\u3057 / ${choiceIntentLabel(picked)}</b><p>${picked.label}</p></div>
       <div class="chat-bubble them" style="--c:${c.color};--light:${c.light}"><b>${c.name}</b><p>\u300c${picked.reaction}\u300d</p></div>
       <div class="chat-bubble inner"><b>\u4f55\u304c\u8d77\u304d\u305f\uff1f</b><p>${picked.why}</p></div>
+      <div class="chat-bubble switch"><b>心理スイッチ / ${coaching.switch.label}</b><p>${personaSwitchFeedback(c.id, state.sceneIndex, totalScenes(c), picked.branch)}</p></div>
       <div class="chat-bubble pulse"><b>いまの関係の読み筋</b><p>${relationshipPulse(c.id, state.scores, state.flags)}</p></div>
       <div class="chat-bubble coach"><b>攻略ノート / ${coaching.skill}</b><p>${coaching.payoff} ${coaching.trap}</p></div>
       <div class="chat-bubble combo"><b>${combo.label} / ${style.title}</b><p>${style.copy}</p></div>

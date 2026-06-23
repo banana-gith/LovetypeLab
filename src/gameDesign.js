@@ -32,6 +32,12 @@ export const researchBasis = [
     takeaway:
       "恋愛の失敗は相手タイプだけでなく、拒絶不安・信頼不安・自己否定など内的バリアでも起きる。ゲームでは良い返しだけでなく、怖さの扱いも評価する。",
   },
+  {
+    title: "16Personalities: How personality types handle relationship conflict",
+    url: "https://www.16personalities.com/articles/how-personality-types-handle-relationship-conflict-a-study",
+    takeaway:
+      "衝突時の反応はタイプ差だけでなく自己防衛の普遍性も強い。ゲームではT/FやE/Iを固定的に扱わず、場面ごとの防衛反応と修復の余地を描く。",
+  },
 ];
 
 const sceneBeats = [
@@ -85,6 +91,26 @@ export const characterGameDesign = {
     attractionSwitches: ["沈黙を怖がらない", "言葉の奥の願いを拾う", "未来の話を軽く扱わない"],
     turnOffs: ["感情の矮小化", "質問攻め", "結論急ぎ"],
     signatureDilemma: "安心だけだと友達止まり。深さを守りながら、自分の好意も少し差し出す必要がある。",
+    psychologicalSwitches: [
+      {
+        label: "沈黙の安全",
+        opens: "沈黙や迷いを急かさず、そこにいていい空気を作る",
+        hurts: "間を失敗扱いして質問や冗談で埋める",
+        tell: "視線が少し長く残り、言葉の数より呼吸が落ち着く",
+      },
+      {
+        label: "理想の保護",
+        opens: "現実論で切らず、理想を関係の設計図として一緒に持つ",
+        hurts: "重い・考えすぎ・きれいごととして片づける",
+        tell: "声が少し小さくなり、比喩や未来の話が増える",
+      },
+      {
+        label: "相互の本音",
+        opens: "聞き役だけでなく、自分の弱さや好意も静かに差し出す",
+        hurts: "ミナだけを開かせ、自分は安全圏に残る",
+        tell: "質問があなた自身に向き、距離の近い沈黙が生まれる",
+      },
+    ],
     innerLayer: {
       mask: "静かで聞き上手に見えるが、本当は自分の理想や寂しさを重いと思われるのが怖い。",
       fear: "本音を出したあと、相手が急に軽い言葉でまとめてしまうこと。",
@@ -111,6 +137,26 @@ export const characterGameDesign = {
     attractionSwitches: ["ひらめきに乗る", "明るさの裏の傷つきやすさに気づく", "自由を約束として守る"],
     turnOffs: ["冷たい現実論", "テンションの否定", "自由を軽さと決めつける"],
     signatureDilemma: "楽しく乗るだけだと浅く見える。場面によって、自由を大事にする言葉へ着地させる。",
+    psychologicalSwitches: [
+      {
+        label: "ひらめきの共犯",
+        opens: "思いつきを否定せず、まず一緒に面白がる",
+        hurts: "現実的な正しさで熱量を止める",
+        tell: "表情が一気に動き、次の案をあなたに預けてくる",
+      },
+      {
+        label: "明るさの裏側",
+        opens: "楽しさの奥にある不安や寂しさも軽く扱わない",
+        hurts: "明るい役割だけを求め、静かな気持ちを面倒にする",
+        tell: "笑ったあとに少しだけ視線が外れ、反応を待つ",
+      },
+      {
+        label: "自由の約束",
+        opens: "自由を奪わず、次も会う具体性を一緒に置く",
+        hurts: "束縛か放置のどちらかに寄る",
+        tell: "予定外の寄り道を、二人の思い出として言い直す",
+      },
+    ],
     innerLayer: {
       mask: "明るくて勢いのある人に見えるが、否定されると想像以上に傷つきやすい。",
       fear: "楽しい自分だけを求められて、静かな不安や寂しさを面倒だと思われること。",
@@ -137,6 +183,26 @@ export const characterGameDesign = {
     attractionSwitches: ["具体的な約束", "準備への感謝", "穏やかな継続意思"],
     turnOffs: ["曖昧な誘い", "時間へのルーズさ", "段取りを退屈扱いする"],
     signatureDilemma: "誠実すぎると安全圏に寄る。信頼の上に、少しだけ好意の温度を乗せる。",
+    psychologicalSwitches: [
+      {
+        label: "約束の見える化",
+        opens: "日時・場所・代案を具体的にして、考えていることを行動にする",
+        hurts: "いつか・適当に・任せるで関係をぼかす",
+        tell: "返事の前に予定を確認し、安心したように表情が緩む",
+      },
+      {
+        label: "準備への敬意",
+        opens: "小さな段取りや気遣いに気づき、具体的に感謝する",
+        hurts: "準備を当然扱いし、慎重さを細かいと片づける",
+        tell: "持ち物や時間の話から、自分の生活ペースを少し見せる",
+      },
+      {
+        label: "安定の中の甘さ",
+        opens: "信頼を守りながら、好意の温度を一段だけ上げる",
+        hurts: "安全すぎて友達のように終わる、または急に押す",
+        tell: "堅い言い方の中に、次も会いたいニュアンスが混ざる",
+      },
+    ],
     innerLayer: {
       mask: "落ち着いていて堅実に見えるが、実は自分が退屈だと思われていないか気にしている。",
       fear: "約束や準備を当たり前にされ、自分だけが関係を大切にしているように感じること。",
@@ -163,6 +229,26 @@ export const characterGameDesign = {
     attractionSwitches: ["短く率直な誘い", "体験を一緒に楽しむ", "必要な時だけ意味を添える"],
     turnOffs: ["長い詰問", "重すぎる関係定義", "疑いから入る確認"],
     signatureDilemma: "軽さだけだと逃げに見える。真剣な場面では短くても言葉を足す。",
+    psychologicalSwitches: [
+      {
+        label: "体験で近づく",
+        opens: "長い説明より、一緒に動ける提案で距離を縮める",
+        hurts: "座ったまま感情確認を続け、テンポを止める",
+        tell: "すぐ立ち上がる、次の動きを提案する、笑いながら試す",
+      },
+      {
+        label: "短い本音",
+        opens: "重くしすぎず、短く意味のある言葉を置く",
+        hurts: "軽口だけで逃げる、または長文で詰める",
+        tell: "ふざけたあとに一瞬だけ真顔が混ざる",
+      },
+      {
+        label: "自由の信頼",
+        opens: "縛らず疑わず、行動で伝えた好意を見逃さない",
+        hurts: "確認・義務・束縛の言葉で自由を奪う",
+        tell: "次の予定を軽く言いながら、あなたの反応を見る",
+      },
+    ],
     innerLayer: {
       mask: "軽くて余裕があるように見えるが、縛られる前提で近づかれるとすぐ身構える。",
       fear: "楽しい時間を、すぐ義務や確認の連続に変えられること。",
@@ -189,6 +275,26 @@ export const characterGameDesign = {
     attractionSwitches: ["自分の軸を示す", "具体的に尊敬する", "曖昧にせず進める"],
     turnOffs: ["受け身すぎる態度", "勝ち負け化", "雑な保留や所有感"],
     signatureDilemma: "明確さは必要。でも解決だけ急ぐと感情を置き去りにする。",
+    psychologicalSwitches: [
+      {
+        label: "対等な意思",
+        opens: "任せきりにせず、自分の希望や判断をまっすぐ出す",
+        hurts: "全部決めて、なんでもいい、で主導権を丸投げする",
+        tell: "試すような質問が増え、あなたの判断理由を見てくる",
+      },
+      {
+        label: "尊敬の具体性",
+        opens: "強さや成果を、どこがすごいのか具体的に認める",
+        hurts: "強いね・怖いねで雑にラベル化する",
+        tell: "表情は控えめでも、会話のテンポが少し柔らかくなる",
+      },
+      {
+        label: "感情の置き場所",
+        opens: "解決だけ急がず、強さの裏の緊張にも気づく",
+        hurts: "正しさや勝ち負けで感情を処理する",
+        tell: "言い切ったあとに沈黙があり、本当に見ているかを測る",
+      },
+    ],
     innerLayer: {
       mask: "強くて迷いがないように見えるが、実は弱さを見せた瞬間に雑に扱われることを警戒している。",
       fear: "正しさや勝ち負けで感情を処理され、自分の緊張が見落とされること。",
@@ -205,15 +311,43 @@ export const characterGameDesign = {
   },
 };
 
+export function activePersonaSwitch(characterId, sceneIndex, totalScenes = 15) {
+  const design = characterGameDesign[characterId] || characterGameDesign.mina;
+  const switches = design.psychologicalSwitches || [];
+  if (!switches.length) {
+    return {
+      label: design.lens.focus,
+      opens: design.lens.playerMove,
+      hurts: design.lens.risk,
+      tell: "表情・沈黙・言葉選びに出る",
+    };
+  }
+  const phaseSize = Math.max(1, Math.ceil(totalScenes / switches.length));
+  return switches[Math.min(switches.length - 1, Math.floor(sceneIndex / phaseSize))];
+}
+
+export function personaSwitchFeedback(characterId, sceneIndex, totalScenes, branch) {
+  const active = activePersonaSwitch(characterId, sceneIndex, totalScenes);
+  if (branch === "safe") {
+    return `「${active.label}」が少し開いた。${active.opens}返しとして受け取られている。`;
+  }
+  if (branch === "spark") {
+    return `「${active.label}」に火花が入った。${active.opens}だけでなく、次は大事にする言葉も置きたい。`;
+  }
+  return `「${active.label}」が少し閉じた。${active.hurts}ように聞こえた可能性がある。`;
+}
+
 export function sceneDramaturgy(characterId, scene, sceneIndex, totalScenes) {
   const design = characterGameDesign[characterId] || characterGameDesign.mina;
   const beat = sceneBeats[Math.min(sceneIndex, sceneBeats.length - 1)];
+  const activeSwitch = activePersonaSwitch(characterId, sceneIndex, totalScenes);
   const finalScene = sceneIndex >= totalScenes - 1;
   return {
     beat: finalScene ? "余韻" : beat[0],
-    focus: finalScene ? "成立した関係を雑に扱わない" : `${design.lens.focus}: ${beat[1]}`,
-    playerMove: finalScene ? "次の約束まで丁寧に置く" : `${design.lens.playerMove}。${beat[2]}`,
+    focus: finalScene ? "成立した関係を雑に扱わない" : `${activeSwitch.label}: ${beat[1]}`,
+    playerMove: finalScene ? "次の約束まで丁寧に置く" : `${activeSwitch.opens}。${beat[2]}`,
     risk: design.lens.risk,
+    switch: activeSwitch,
   };
 }
 
@@ -221,16 +355,18 @@ export function sceneCoaching(characterId, scene, sceneIndex, totalScenes) {
   const design = characterGameDesign[characterId] || characterGameDesign.mina;
   const skill = skillLadder[Math.min(sceneIndex, skillLadder.length - 1)];
   const beat = sceneBeats[Math.min(sceneIndex, sceneBeats.length - 1)];
+  const activeSwitch = activePersonaSwitch(characterId, sceneIndex, totalScenes);
   const finalScene = sceneIndex >= totalScenes - 1;
   const activeSkill = finalScene ? skillLadder.at(-1) : skill;
   return {
     badge: activeSkill[1],
     skill: activeSkill[0],
     lesson: activeSkill[2],
-    watch: `${design.lens.focus}が表情・沈黙・言葉選びのどこに出るかを見る。`,
-    payoff: `${design.attractionSwitches[sceneIndex % design.attractionSwitches.length]}が刺さると、次の本音に進みやすい。`,
-    trap: `${design.turnOffs[sceneIndex % design.turnOffs.length]}に寄ると、場面の目的「${scene.goal}」から外れる。`,
+    watch: `${activeSwitch.tell}。${design.lens.focus}が表情・沈黙・言葉選びのどこに出るかを見る。`,
+    payoff: `心理スイッチ「${activeSwitch.label}」が開くと、次の本音に進みやすい。${activeSwitch.opens}こと。`,
+    trap: `${activeSwitch.hurts}と、場面の目的「${scene.goal}」から外れる。`,
     dilemma: `${beat[1]}。${design.signatureDilemma}`,
+    switch: activeSwitch,
   };
 }
 

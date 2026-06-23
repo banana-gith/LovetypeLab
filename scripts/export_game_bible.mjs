@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { characterGameDesign, researchBasis, sceneCoaching, sceneDramaturgy } from "../src/gameDesign.js";
+import { activePersonaSwitch, characterGameDesign, researchBasis, sceneCoaching, sceneDramaturgy } from "../src/gameDesign.js";
 import { personaCatalog } from "../src/personas.js";
 import { storyFor } from "../src/story.js";
 
@@ -64,6 +64,15 @@ for (const [id, type, name] of characters) {
   lines.push("");
   lines.push(`**Turn-offs:** ${design.turnOffs.join(" / ")}`);
   lines.push("");
+  lines.push("### Psychological Switches");
+  lines.push("");
+  for (const item of design.psychologicalSwitches) {
+    lines.push(`- **${item.label}**`);
+    lines.push(`  - Opens: ${item.opens}`);
+    lines.push(`  - Hurts: ${item.hurts}`);
+    lines.push(`  - Tell: ${item.tell}`);
+  }
+  lines.push("");
   lines.push("### Inner Layer");
   lines.push("");
   lines.push(`- Public mask: ${design.innerLayer.mask}`);
@@ -93,9 +102,12 @@ for (const [id, type, name] of characters) {
     for (const scene of date.scenes) {
       const beat = sceneDramaturgy(id, scene, index, total);
       const coach = sceneCoaching(id, scene, index, total);
+      const activeSwitch = activePersonaSwitch(id, index, total);
       lines.push(`${index + 1}. **${scene.title}**`);
       lines.push(`   - Location: ${scene.location}`);
       lines.push(`   - Scene goal: ${scene.goal}`);
+      lines.push(`   - Active switch: ${activeSwitch.label} / opens when ${activeSwitch.opens}`);
+      lines.push(`   - Switch tell: ${activeSwitch.tell}`);
       lines.push(`   - Dramaturgy: ${beat.beat} / ${beat.focus}`);
       lines.push(`   - Player move: ${beat.playerMove}`);
       lines.push(`   - Skill: ${coach.badge} / ${coach.skill}`);

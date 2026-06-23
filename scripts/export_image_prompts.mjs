@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { characterGameDesign, sceneCoaching } from "../src/gameDesign.js";
+import { activePersonaSwitch, characterGameDesign, sceneCoaching } from "../src/gameDesign.js";
 import { storyFor } from "../src/story.js";
 
 const characters = [
@@ -65,11 +65,13 @@ function promptFor(character, scene, index) {
   const story = storyFor(character.id);
   const total = story.dates.reduce((sum, date) => sum + date.scenes.length, 0);
   const coach = sceneCoaching(character.id, scene, index, total);
+  const activeSwitch = activePersonaSwitch(character.id, index, total);
   return [
     `恋愛シミュレーションゲームのデートシーン用、縦長スマホUIで使う正方形寄りの写真素材。`,
     character.fixedLook,
     `場面: ${scene.title}。場所/小物: ${scene.location}。`,
-    `心理: ${scene.goal}。会話スキルは「${coach.skill}」、見るべきサインは「${coach.watch}」。${design?.visualFormula || ""}`,
+    `心理: ${scene.goal}。この場面の心理スイッチは「${activeSwitch.label}」。開くサイン: ${activeSwitch.tell}。開く条件: ${activeSwitch.opens}。`,
+    `会話スキルは「${coach.skill}」、見るべきサインは「${coach.watch}」。${design?.visualFormula || ""}`,
     `恋愛相手本人は画面に出さず、視線、2人分の飲み物、空いた席、スマホ通知、差し出された小物、余白で相手の存在を示す。`,
     `自然光または映画的な夜の光、浅い被写界深度、上質でリアル、過度な加工なし。画像内に文字、番号、字幕、ロゴを入れない。`,
     `scene-${String(index + 1).padStart(2, "0")}`,
@@ -107,6 +109,9 @@ for (const character of characters) {
   lines.push(`- **Heart memo reveal cut-in**: ${character.fixedLook} 「${design.innerLayer.privateWish}」という内面が静かに伝わる、恋愛シミュレーション結果画面用のカットイン。${design.visualFormula} 画面内に文字、番号、ロゴを入れない。恋愛相手は映さず、視線、手元、余白、二人分の小物で関係性を示す。`);
   lines.push(`- **Repair route ending CG**: ${character.fixedLook} 怖さ「${design.innerLayer.fear}」を乗り越えた直後。まだ少し緊張が残るが、関係が切れていない表情。柔らかい映画的光、浅い被写界深度、上質でリアル。画像内文字なし。`);
   lines.push(`- **Trust route ending CG**: ${character.fixedLook} 「${design.innerLayer.opensWhen}」という安心が表情に出る余韻シーン。二人分の飲み物、空いた席、スマホ通知などで相手の存在を示す。画像内文字なし。`);
+  for (const item of design.psychologicalSwitches) {
+    lines.push(`- **Psychological switch cut-in / ${item.label}**: ${character.fixedLook} 「${item.tell}」という変化が、表情・視線・手元・余白だけで伝わる一枚。テーマは「${item.opens}」。失敗差分では「${item.hurts}」が起きた直後の少し距離が出た表情にする。UI合成前提、文字・番号・ロゴなし、恋愛相手は映さない。`);
+  }
   lines.push("");
   let cursor = 0;
   for (const date of story.dates) {
