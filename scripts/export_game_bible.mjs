@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { activePersonaSwitch, characterGameDesign, characterRouteEnding, researchBasis, routeEndings, sceneCoaching, sceneDramaturgy } from "../src/gameDesign.js";
+import { activePersonaSwitch, characterFinaleScene, characterGameDesign, characterRouteEnding, researchBasis, routeEndings, sceneCoaching, sceneDramaturgy } from "../src/gameDesign.js";
 import { personaCatalog } from "../src/personas.js";
 import { storyFor } from "../src/story.js";
 
@@ -106,11 +106,16 @@ for (const [id, type, name] of characters) {
   lines.push("");
   for (const route of Object.values(routeEndings)) {
     const flavoredRoute = characterRouteEnding(id, route.key);
+    const finale = characterFinaleScene(id, route.key, "mixed");
     lines.push(`- **${flavoredRoute.badge} / ${flavoredRoute.epilogueTitle}**`);
     lines.push(`  - Player pattern: ${flavoredRoute.playerPattern}`);
     lines.push(`  - Epilogue: ${flavoredRoute.epilogue}`);
+    lines.push(`  - Finale line: 「${finale.line}」`);
+    lines.push(`  - Finale memory bridge: ${finale.memoryBridge}`);
     lines.push(`  - Next-run mission: ${flavoredRoute.replayMission}`);
+    lines.push(`  - Finale next beat: ${finale.nextBeat}`);
     lines.push(`  - Character CG cue: ${flavoredRoute.cgCue}`);
+    lines.push(`  - Finale CG cue: ${finale.cgCue}`);
   }
   lines.push("");
   lines.push("### Psychological Switches");

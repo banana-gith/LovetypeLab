@@ -1050,10 +1050,167 @@ export const characterRouteMoments = {
   },
 };
 
+const characterFinaleLines = {
+  mina: {
+    repair: {
+      line: "今日は少しだけ、言葉を置いて帰りたい。次は急がずに聞かせて。",
+      nextBeat: "次回は沈黙を修復の入口として扱い、彼女が守りたかった理想を一文で言い直す。",
+      cgCue: "駅の明かりの下、ミナが文庫本を胸元に寄せ、言葉を探して振り返る",
+    },
+    reconnect: {
+      line: "言い直してくれたの、ちゃんと残ってる。完璧じゃなくても、戻ってきてくれるなら話せる。",
+      nextBeat: "言い直せた記憶を足場にして、次は深い理想を一緒に持つ。",
+      cgCue: "雨上がりの書店前、二人分の傘の距離が少しだけ近づく",
+    },
+    spark: {
+      line: "少しびっくりした。でも、胸に残る熱って悪くないね。",
+      nextBeat: "火花を急いで形にせず、ミナが意味を持たせる時間を守る。",
+      cgCue: "川沿いの灯り、笑ったあと視線を落とすミナ、温かい飲み物の湯気",
+    },
+    trust: {
+      line: "安心できた。だから今度は、あなたの本音も少し聞きたい。",
+      nextBeat: "聞き役から恋人候補へ進むため、自分の願いを静かに差し出す。",
+      cgCue: "静かなカフェ、ミナが二杯目の飲み物越しに穏やかに待っている",
+    },
+    balance: {
+      line: "重いんじゃなくて、大事にできる人なんだって思えた。",
+      nextBeat: "深さと好意を同じ速度で進め、告白前の沈黙を味方にする。",
+      cgCue: "夜の川沿い、歩幅が揃い、ミナの横顔が少しほどける",
+    },
+  },
+  rio: {
+    repair: {
+      line: "笑ってるけど、ちょっとだけ刺さってた。次は私の楽しいを、先に面白がってほしいな。",
+      nextBeat: "謝罪より先に、リオのひらめきをもう一度肯定して空気を戻す。",
+      cgCue: "夕方のテラス席、風で髪が乱れ、リオが笑顔の奥に寂しさを残す",
+    },
+    reconnect: {
+      line: "戻ってきてくれるなら、私もまた話したくなる。そういうの、けっこう好き。",
+      nextBeat: "修復を重くしすぎず、拾い直したアイデアを次の寄り道へ変える。",
+      cgCue: "カフェの窓際、リオがストローを持ったまま笑い直す",
+    },
+    spark: {
+      line: "楽しかった、だけじゃなくて。ちゃんと大事にされてる感じもした。",
+      nextBeat: "火花の後に約束を置き、自由を放置ではなく大事にする形へ進める。",
+      cgCue: "夜の街灯、リオが振り返って笑い、スマホに次の予定の通知が光る",
+    },
+    trust: {
+      line: "安心する。でも、次はちょっとだけ予定外もしたい。",
+      nextBeat: "安心を土台に、リオが自分から提案したくなる余白を作る。",
+      cgCue: "昼のカフェ、窓の外を見るリオ、次の寄り道を待つ表情",
+    },
+    balance: {
+      line: "約束してるのに、自由でいられる。そういうの、かなりいい。",
+      nextBeat: "寄り道できる約束として恋を進め、告白後の次の遊びまで見せる。",
+      cgCue: "夕暮れの歩道、リオがスマホで次の店を見せ、二人の影が近い",
+    },
+  },
+  haruka: {
+    repair: {
+      line: "気持ちは分かりました。次は、形でもう一度見せてください。",
+      nextBeat: "曖昧な謝意ではなく、日時・理由・代案まで見える信頼回復をする。",
+      cgCue: "朝の喫茶店の外、ハルカが予定表を見ながら静かに考える",
+    },
+    reconnect: {
+      line: "話し直せるなら、大丈夫です。同じことが起きた時の決め方も、作れますから。",
+      nextBeat: "修復のあと、次に同じズレが起きた時の扱い方を一緒に決める。",
+      cgCue: "カフェのテーブル、二人分の予定メモ、ハルカの表情が少し柔らかい",
+    },
+    spark: {
+      line: "少し予想外でした。でも、理由がある予定なら嬉しいです。",
+      nextBeat: "新鮮な誘いに、彼女を選んだ理由と段取りを添える。",
+      cgCue: "建築展示の入口、ハルカが予約画面を見て少し驚いて笑う",
+    },
+    trust: {
+      line: "こういう積み重ねなら、信じてもいいと思えます。",
+      nextBeat: "信頼の足場に、具体的な好意の言葉を少し乗せる。",
+      cgCue: "朝の喫茶店、ハルカがカップを両手で持ち安心して笑う",
+    },
+    balance: {
+      line: "きちんとしているのに、少し甘い。そういう関係なら進めそうです。",
+      nextBeat: "具体性と甘さを両立し、次の約束を恋の温度で締める。",
+      cgCue: "夕方の街角、ハルカが次の約束を確認しながら微笑む",
+    },
+  },
+  yu: {
+    repair: {
+      line: "悪い人じゃないのは分かる。でも今日は、ちょっと足が止まった。",
+      nextBeat: "長い確認をやめ、短い受け取り直しと一緒に動ける提案を出す。",
+      cgCue: "夜の海沿い、ユウが少し先を歩き、距離はあるが振り返る",
+    },
+    reconnect: {
+      line: "歩きながらなら、ちゃんと話せる。止まったまま責められるのは苦手なんだ。",
+      nextBeat: "衝突後の会話を体験へ移し、動きながら本音を置ける余白を作る。",
+      cgCue: "夜景の歩道、ユウが振り返って少し真顔になる",
+    },
+    spark: {
+      line: "今日みたいなの、かなり好き。軽いだけじゃないって伝わってたらいいけど。",
+      nextBeat: "勢いの後に短い本音を置き、軽さを逃げに見せない。",
+      cgCue: "夜景ドライブの停車中、ユウが笑ったあと少し真剣な目になる",
+    },
+    trust: {
+      line: "安心はする。次はさ、考えるより先に一回行ってみよう。",
+      nextBeat: "安全を確認したうえで、ユウが身体で近づける体験へつなげる。",
+      cgCue: "昼の公園、ユウが立ち上がって手元のチケットを見せる",
+    },
+    balance: {
+      line: "楽しいことも、ちゃんとしたことも、どっちも逃げないでやれそう。",
+      nextBeat: "行動と本音を接続し、次の場所への誘いで関係を進める。",
+      cgCue: "夜の海沿い、ユウが次の場所を指差し、笑いと本音が同時にある",
+    },
+  },
+  reina: {
+    repair: {
+      line: "正しさは分かります。でも、私が何を飲み込んだかも見てほしかった。",
+      nextBeat: "正論の前に、レイナが見せなかった緊張を言葉にして受け取る。",
+      cgCue: "夜景の歩道、レイナが背筋を伸ばしたまま少し視線を外す",
+    },
+    reconnect: {
+      line: "言い負かされなかったのは、助かりました。並び直せるなら、続けられます。",
+      nextBeat: "対等さを保ったまま、整理と感情確認の両方を入れる。",
+      cgCue: "夜景の窓際、レイナが腕をほどき少しだけ目元を緩める",
+    },
+    spark: {
+      line: "面白い人ですね。ただ、曖昧なまま進むつもりはありません。",
+      nextBeat: "刺激を明確な意思と次の行動に変え、関係の定義から逃げない。",
+      cgCue: "夜のバーラウンジ、レイナが挑むように少し笑い、スマホに次の予定",
+    },
+    trust: {
+      line: "任せられるとは思いました。次は、あなたが何を望むかを聞きたいです。",
+      nextBeat: "合わせるだけでなく、自分の判断と欲しい未来をまっすぐ見せる。",
+      cgCue: "静かなレストラン、レイナが資料ではなくあなたを見る",
+    },
+    balance: {
+      line: "対等でいられるのに、少し気が抜ける。これは、悪くないです。",
+      nextBeat: "明確さと感情の扱いを両立し、告白では好きと付き合いたいを曖昧に分けない。",
+      cgCue: "夜景のテラス、レイナがまっすぐ見つめながら少し微笑む",
+    },
+  },
+};
+
 export function characterRouteEnding(characterId, routeKey) {
   const base = routeEndings[routeKey] || routeEndings.balance;
   const flavor = characterRouteMoments[characterId]?.[routeKey] || {};
   return { ...base, ...flavor };
+}
+
+export function characterFinaleScene(characterId, routeKey, memoryKey = "mixed") {
+  const design = characterGameDesign[characterId] || characterGameDesign.mina;
+  const route = characterRouteEnding(characterId, routeKey);
+  const memory = design.memoryEcho?.[memoryKey] || design.memoryEcho?.mixed || design.memoryEcho?.safe;
+  const finale = characterFinaleLines[characterId]?.[route.key] || characterFinaleLines.mina.balance;
+  return {
+    key: route.key,
+    badge: route.badge,
+    title: route.epilogueTitle,
+    line: finale.line,
+    nextBeat: finale.nextBeat || route.replayMission,
+    memoryLabel: memory?.label || "積み重なった記憶",
+    memoryBridge: memory
+      ? `${memory.label}として残った今回の接し方が、この最後の表情を少し変えている。${memory.copy}`
+      : design.winningMindset,
+    cgCue: `${finale.cgCue || route.cgCue}。${memory?.imageCue || design.visualFormula}`,
+  };
 }
 
 export function relationshipRoute(characterId, scores, flags, history = []) {

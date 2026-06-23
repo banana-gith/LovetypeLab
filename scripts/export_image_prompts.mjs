@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { activePersonaSwitch, characterGameDesign, characterRouteEnding, routeEndings, sceneCoaching } from "../src/gameDesign.js";
+import { activePersonaSwitch, characterFinaleScene, characterGameDesign, characterRouteEnding, routeEndings, sceneCoaching } from "../src/gameDesign.js";
 import { storyFor } from "../src/story.js";
 
 const characters = [
@@ -113,7 +113,9 @@ for (const character of characters) {
   lines.push(`- **Heart memo reveal cut-in**: ${character.fixedLook} 「${design.innerLayer.privateWish}」という内面が静かに伝わる、恋愛シミュレーション結果画面用のカットイン。${design.visualFormula} 画面内に文字、番号、ロゴを入れない。恋愛相手は映さず、視線、手元、余白、二人分の小物で関係性を示す。`);
   for (const route of Object.values(routeEndings)) {
     const flavoredRoute = characterRouteEnding(character.id, route.key);
+    const finale = characterFinaleScene(character.id, route.key, "mixed");
     lines.push(`- **Route ending CG / ${route.key}**: ${character.fixedLook} ${flavoredRoute.cgCue}。${design.visualFormula} 画面内に文字、番号、ロゴなし。恋愛相手は映さず、二人分の小物、視線、余白で関係性を示す。`);
+    lines.push(`- **Personal finale CG / ${route.key} ${finale.badge}**: ${character.fixedLook} 「${finale.line}」という最後の一言が表情だけで伝わる恋愛シミュレーション結果用CG。${finale.cgCue}。次の余韻は「${finale.nextBeat}」。画面内文字、番号、字幕、ロゴなし。恋愛相手は映さず、視線、二人分の飲み物、空いた席、手元、余白で関係性を示す。`);
   }
   for (const item of design.psychologicalSwitches) {
     lines.push(`- **Psychological switch cut-in / ${item.label}**: ${character.fixedLook} 「${item.tell}」という変化が、表情・視線・手元・余白だけで伝わる一枚。テーマは「${item.opens}」。失敗差分では「${item.hurts}」が起きた直後の少し距離が出た表情にする。UI合成前提、文字・番号・ロゴなし、恋愛相手は映さない。`);
