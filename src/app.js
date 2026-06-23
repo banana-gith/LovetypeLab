@@ -612,6 +612,7 @@ function sceneChoices() {
       const heartKey = heartKeyRead(c, state.sceneIndex, choice, tactic);
       const decoder = decoderRead(c, state.sceneIndex, choice, heartKey);
       const needCompass = needCompassRead(c, state.sceneIndex, choice, tactic, heartKey);
+      const connectionBid = connectionBidRead(c, state.sceneIndex, choice, needCompass, heartKey);
       return {
         ...choice,
         tactic,
@@ -619,7 +620,8 @@ function sceneChoices() {
         heartKey,
         decoder,
         needCompass,
-        effect: combineEffects(choice.effect, tactic.effect, momentum.effect, heartKey.effect, needCompass.effect),
+        connectionBid,
+        effect: combineEffects(choice.effect, tactic.effect, momentum.effect, heartKey.effect, needCompass.effect, connectionBid.effect),
       };
     }),
     `${c.id}:${state.sceneIndex}`,
@@ -715,6 +717,102 @@ function needCompassRead(character = state.char, sceneIndex = state.sceneIndex, 
     copy: `悪くない返し。ただ、${character.name}が一番見ていた「${contract.hiddenAsk}」にはもう少し踏み込める。`,
     next: `次は「${reading.goodRead}」を言葉か行動で一つ足す。`,
     effect: {},
+  };
+}
+
+function connectionBidMeta(character = state.char, sceneIndex = state.sceneIndex) {
+  const progress = sceneAt(sceneIndex, character);
+  const reading = sceneReadingCue(character.id, sceneIndex, totalScenes(character));
+  const contract = sceneEmotionalContract(character.id, progress.scene, sceneIndex, totalScenes(character));
+  const bidTypes = [
+    ["見てほしい", "話題そのものより、緊張や選んだ場所に気づいてほしい", "attention"],
+    ["聞いてほしい", "好みや理由を急いで評価せず、興味を持ってほしい", "curiosity"],
+    ["認めてほしい", "選んだものや迷った気持ちを、雑に流さず受け取ってほしい", "affirm"],
+    ["一緒にいてほしい", "沈黙や余白を失敗扱いせず、同じ空気にいてほしい", "presence"],
+    ["次へつなげてほしい", "好意を曖昧にせず、でも選べる余地を残してほしい", "future"],
+    ["分かってほしい", "解決より先に、今の感覚を分かろうとしてほしい", "validation"],
+    ["守ってほしい", "大切な価値観を、現実論や冗談で小さくしないでほしい", "protect"],
+    ["乗ってほしい", "楽しい温度や小さな誘いを、相手任せにせず拾ってほしい", "play"],
+    ["覚えていてほしい", "前に話した好みや不安を、攻略ではなく敬意として使ってほしい", "remember"],
+    ["近づいてほしい", "甘さを出しつつ、境界線や主導権も残してほしい", "closer"],
+    ["戻ってきてほしい", "ズレたあと、正しさより関係の扱い方を直してほしい", "repair"],
+    ["受け取ってほしい", "弱さや怖さを直さず、信頼として受け取ってほしい", "vulnerability"],
+    ["決め直してほしい", "仲直りの雰囲気だけで流さず、次の扱い方を決めてほしい", "reset"],
+    ["待ってほしい", "告白前の緊張を茶化さず、勇気が整うまで見てほしい", "ready"],
+    ["言い切ってほしい", "好き・付き合いたい・考えたいを、曖昧にせず返してほしい", "commit"],
+    ["大切に続けてほしい", "成立後こそ雑にせず、次の約束で大事に締めてほしい", "after"],
+  ];
+  const [label, invitation, key] = bidTypes[Math.min(sceneIndex, bidTypes.length - 1)];
+  return {
+    key,
+    label,
+    invitation,
+    signal: reading.signal,
+    ask: contract.hiddenAsk,
+    scene: `${progress.date.title} / ${progress.scene.title}`,
+  };
+}
+
+function connectionBidRead(character = state.char, sceneIndex = state.sceneIndex, choice = null, needCompass = null, heartKey = null) {
+  const meta = connectionBidMeta(character, sceneIndex);
+  const base = {
+    badge: "CONNECTION BID",
+    title: meta.label,
+    key: meta.key,
+    invitation: meta.invitation,
+    signal: meta.signal,
+    ask: meta.ask,
+    scene: meta.scene,
+    effect: {},
+  };
+  if (!choice) {
+    return {
+      ...base,
+      tone: "watch",
+      status: "小さなサイン",
+      copy: `${character.name}の「${meta.signal}」は、${meta.invitation}という小さな接続の申し出。`,
+      next: "返答は、話題の正解より先にサインへ向ける。",
+    };
+  }
+  const against = choice.branch === "strain" && choice.kind === "pushy";
+  const away = choice.branch === "strain" || needCompass?.tone === "risk" || heartKey?.tone === "locked";
+  if (against) {
+    return {
+      ...base,
+      tone: "against",
+      status: "押し返した",
+      copy: `接続の申し出に対して、少し勝ち負けや要求の形で返った。${character.name}は気持ちより圧を先に感じやすい。`,
+      next: `次は「${meta.invitation}」を一文で受け取り直す。`,
+      effect: { pressure: 1, misread: 1 },
+    };
+  }
+  if (away) {
+    return {
+      ...base,
+      tone: "away",
+      status: "見送った",
+      copy: `悪意はなくても、${character.name}の小さなサインを少し通り過ぎた。まだ戻れるので、次の返しで拾い直したい。`,
+      next: `「さっきの${meta.label}サイン、ちゃんと拾いたい」と戻る。`,
+      effect: { misread: 1, comfort: -1 },
+    };
+  }
+  if (choice.branch === "spark") {
+    return {
+      ...base,
+      tone: "spark",
+      status: "楽しく向いた",
+      copy: `接続の申し出に楽しく向き合えた。${character.name}は、反応してくれたこと自体を小さな期待として覚える。`,
+      next: "次は楽しさのあとに、大事にする一言を添える。",
+      effect: { interest: 1 },
+    };
+  }
+  return {
+    ...base,
+    tone: "toward",
+    status: "向き合った",
+    copy: `接続の申し出にちゃんと向き合えた。${character.name}は、自分の小さなサインを見てもらえたと感じている。`,
+    next: "次は同じ優しさを、行動か具体的な約束へつなげる。",
+    effect: { trust: 1, comfort: 1 },
   };
 }
 
@@ -945,6 +1043,10 @@ function needCompassCard(compass) {
   return `<div class="need-compass-card need-${compass.tone}"><span>${compass.badge}</span><b>${compass.status}: ${compass.title}</b><p>${compass.copy}</p><small>${compass.next}</small></div>`;
 }
 
+function connectionBidCard(bid) {
+  return `<div class="connection-bid-card bid-${bid.tone}"><span>${bid.badge}</span><b>${bid.status}: ${bid.title}</b><p>${bid.copy}</p><small>${bid.next}</small></div>`;
+}
+
 function game() {
   const c = state.char;
   const { date, dateIndex, local, scene } = currentScene();
@@ -962,6 +1064,7 @@ function game() {
   const heartKey = heartKeyRead(c, state.sceneIndex);
   const decoder = decoderRead(c, state.sceneIndex);
   const needCompass = needCompassRead(c, state.sceneIndex);
+  const connectionBid = connectionBidRead(c, state.sceneIndex);
   const mission = dateMissionReport(c, dateIndex);
   const memory = characterMemoryReport(c);
   const stage = relationshipStage(c);
@@ -969,7 +1072,7 @@ function game() {
   return `<div class="game-shell">
     <header class="game-header"><button class="icon-button" data-go="profile">×</button><div class="game-person">${avatar(c)}<div><b>${c.name}</b><span>${c.style}</span></div></div><div class="game-progress"><span>DATE ${dateIndex + 1} <b>${state.sceneIndex + 1} / ${count}</b></span><i><em style="width:${((state.sceneIndex + 1) / count) * 100}%;background:${c.color}"></em></i></div></header>
     <main class="game-main"><aside class="score-strip"><div class="score-hero" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>\u7dcf\u5408\u8a55\u4fa1</span><b>${tier.label}</b><p>${tier.sub}</p></div></div>${meters()}<div class="relationship-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div>${routeCompassCard(compass, true)}<div class="meter-help">\u30bf\u30a4\u30d7\u3054\u3068\u306b\u91cd\u304f\u898b\u308b\u30dd\u30a4\u30f3\u30c8\u304c\u5c11\u3057\u9055\u3044\u307e\u3059\u3002</div></aside>
-      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context"><b>今の状況</b>${sceneContext(date, scene, line)}<div class="scene-insight"><span>${dramatic.beat}</span><b>${dramatic.focus}</b></div><div class="scene-coach"><span>${coaching.badge}</span><p><b>${coaching.skill}</b>${coaching.watch}</p></div>${heartKeyCard(heartKey)}${decoderCard(decoder)}${needCompassCard(needCompass)}<div class="scene-contract"><span>${contract.badge}</span><b>${contract.mode}場面</b><p>${contract.surface}</p><small>隠れた願い: ${contract.hiddenAsk}</small></div><div class="scene-read"><span>READ THE ROOM</span><p><b>${reading.signal}</b>${reading.playerQuestion}</p></div><div class="scene-tactic"><span>${tactic.badge} TACTIC</span><p><b>${tactic.title}</b>${tactic.read}</p><small>刺さりやすい: ${tactic.prefer || "場面次第"} / 危ない: ${tactic.avoid || "読み違い"}</small></div><div class="scene-memory memory-${memory.tone}"><span>MEMORY</span><p><b>${memory.label}</b>${memory.copy}</p></div></div>${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent"><small>方向性</small>${choiceDirection(choice)}</em><p>${choice.label}</p></button>`).join("")}</div></section>
+      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context"><b>今の状況</b>${sceneContext(date, scene, line)}<div class="scene-insight"><span>${dramatic.beat}</span><b>${dramatic.focus}</b></div><div class="scene-coach"><span>${coaching.badge}</span><p><b>${coaching.skill}</b>${coaching.watch}</p></div>${heartKeyCard(heartKey)}${decoderCard(decoder)}${needCompassCard(needCompass)}${connectionBidCard(connectionBid)}<div class="scene-contract"><span>${contract.badge}</span><b>${contract.mode}場面</b><p>${contract.surface}</p><small>隠れた願い: ${contract.hiddenAsk}</small></div><div class="scene-read"><span>READ THE ROOM</span><p><b>${reading.signal}</b>${reading.playerQuestion}</p></div><div class="scene-tactic"><span>${tactic.badge} TACTIC</span><p><b>${tactic.title}</b>${tactic.read}</p><small>刺さりやすい: ${tactic.prefer || "場面次第"} / 危ない: ${tactic.avoid || "読み違い"}</small></div><div class="scene-memory memory-${memory.tone}"><span>MEMORY</span><p><b>${memory.label}</b>${memory.copy}</p></div></div>${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent"><small>方向性</small>${choiceDirection(choice)}</em><p>${choice.label}</p></button>`).join("")}</div></section>
     </main>${state.picked ? feedback() : ""}
   </div>`;
 }
@@ -995,6 +1098,7 @@ function feedback() {
       <div class="chat-bubble key key-${picked.heartKey?.tone || "near"}"><b>${picked.heartKey?.phrase || "KEY"} / ${picked.heartKey?.status || "鍵の読み"}</b><p>${picked.heartKey?.copy || "相手の本音の鍵を読み直す場面。"}</p></div>
       <div class="chat-bubble decoder decoder-${picked.decoder?.tone || "near"}"><b>${picked.decoder?.badge || "DECODER"} / ${picked.decoder?.title || "キャラ理解"}</b><p>${picked.decoder?.copy || "相手の刺さるサインを読み直す場面。"}</p></div>
       <div class="chat-bubble need need-${picked.needCompass?.tone || "near"}"><b>${picked.needCompass?.badge || "NEED"} / ${picked.needCompass?.status || "関係欲求"}</b><p>${picked.needCompass?.copy || "この場面で満たしたい欲求を読み直す場面。"}</p><small>${picked.needCompass?.next || ""}</small></div>
+      <div class="chat-bubble bid bid-${picked.connectionBid?.tone || "toward"}"><b>${picked.connectionBid?.badge || "BID"} / ${picked.connectionBid?.status || "接続サイン"}</b><p>${picked.connectionBid?.copy || "相手の小さな接続サインを読み直す場面。"}</p><small>${picked.connectionBid?.next || ""}</small></div>
       <div class="chat-bubble contract"><b>${contract.mode}場面の読み</b><p>${picked.branch === "strain" ? contract.temptingMove : contract.winningMove}</p></div>
       <div class="chat-bubble tactic"><b>${tactic.verdict}</b><p>${tactic.choiceFits ? tactic.payoff : tactic.choiceRisks ? tactic.trap : picked.why}</p></div>
       <div class="chat-bubble switch"><b>${coaching.switch.label}</b><p>${personaSwitchFeedback(c.id, state.sceneIndex, totalScenes(c), picked.branch)}</p></div>
@@ -1207,7 +1311,7 @@ function relationshipArcReport(character = state.char, history = state.history) 
 
 function relationshipArcPanel(character = state.char) {
   const arc = relationshipArcReport(character);
-  return `${routeCompassPanel(character)}<div class="arc-panel" style="--c:${character.color};--light:${character.light}"><h3>恋愛ルート読解 <span>${arc.next.label}</span></h3><p>${arc.summary}</p><div>${arc.reports.map((row) => `<article class="arc-${row.tone}"><span>${row.mode}</span><b>${row.label}</b><strong>${row.status} ${row.score}%</strong><i><em style="width:${row.score}%"></em></i><p>${row.copy}</p><small>安心${row.safe} / 火花${row.spark} / 揺れ${row.strain}</small></article>`).join("")}</div></div>${heartKeyPanel(character)}${needCompassPanel(character)}${characterDecoderPanel(character)}${continuityEchoPanel(character)}`;
+  return `${routeCompassPanel(character)}<div class="arc-panel" style="--c:${character.color};--light:${character.light}"><h3>恋愛ルート読解 <span>${arc.next.label}</span></h3><p>${arc.summary}</p><div>${arc.reports.map((row) => `<article class="arc-${row.tone}"><span>${row.mode}</span><b>${row.label}</b><strong>${row.status} ${row.score}%</strong><i><em style="width:${row.score}%"></em></i><p>${row.copy}</p><small>安心${row.safe} / 火花${row.spark} / 揺れ${row.strain}</small></article>`).join("")}</div></div>${heartKeyPanel(character)}${needCompassPanel(character)}${connectionBidPanel(character)}${characterDecoderPanel(character)}${continuityEchoPanel(character)}`;
 }
 
 function routeCompassReport(character = state.char, history = state.history) {
@@ -1315,6 +1419,43 @@ function needCompassPanel(character = state.char) {
     ["傷ついた", report.risk, "risk"],
   ];
   return `<div class="need-compass-panel need-${report.tone}" style="--c:${character.color};--light:${character.light}"><h3>関係欲求コンパス <span>${report.score}%</span></h3><p>${character.name}が場面ごとに見ていた「自由・理解・具体性」をどれだけ満たせたか。${report.label}。</p><div class="need-counts">${rows.map(([label, value, tone]) => `<span class="need-${tone}">${label}<b>${value}</b></span>`).join("")}</div><article><span>次に読む芯</span><b>${report.focus}</b><p>${report.next}</p></article></div>`;
+}
+
+function connectionBidSummary(character = state.char, history = state.history) {
+  const items = history.filter((item) => item.bidTone);
+  const toward = items.filter((item) => item.bidTone === "toward").length;
+  const spark = items.filter((item) => item.bidTone === "spark").length;
+  const away = items.filter((item) => item.bidTone === "away").length;
+  const against = items.filter((item) => item.bidTone === "against").length;
+  const score = items.length ? clamp(Math.round(((toward * 1 + spark * 0.85 - away * 0.35 - against * 0.65) / items.length) * 100)) : 0;
+  const tone = score >= 72 ? "toward" : score >= 48 ? "spark" : away + against >= 3 ? "away" : "watch";
+  const label = tone === "toward" ? "小さなサインによく向き合えた" : tone === "spark" ? "拾えているが着地を足したい" : tone === "away" ? "見送ったサインを修復したい" : "サインを探っている";
+  const latestMiss = [...items].reverse().find((item) => ["away", "against"].includes(item.bidTone));
+  const latestHit = [...items].reverse().find((item) => ["toward", "spark"].includes(item.bidTone));
+  return {
+    items,
+    toward,
+    spark,
+    away,
+    against,
+    score,
+    tone,
+    label,
+    focus: latestMiss?.bidTitle || latestHit?.bidTitle || "小さなサイン",
+    next: latestMiss?.bidNext || latestHit?.bidNext || "次は相手の話題より先に、接続のサインへ反応する。",
+  };
+}
+
+function connectionBidPanel(character = state.char) {
+  const report = connectionBidSummary(character);
+  if (!report.items.length) return "";
+  const rows = [
+    ["向き合った", report.toward, "toward"],
+    ["楽しく拾った", report.spark, "spark"],
+    ["見送った", report.away, "away"],
+    ["押し返した", report.against, "against"],
+  ];
+  return `<div class="connection-bid-panel bid-${report.tone}" style="--c:${character.color};--light:${character.light}"><h3>接続サイン読解 <span>${report.score}%</span></h3><p>${character.name}の小さな「見て」「聞いて」「戻ってきて」をどれだけ拾えたか。${report.label}。</p><div class="bid-counts">${rows.map(([label, value, tone]) => `<span class="bid-${tone}">${label}<b>${value}</b></span>`).join("")}</div><article><span>次に拾うサイン</span><b>${report.focus}</b><p>${report.next}</p></article></div>`;
 }
 
 function characterDecoderSummary(character = state.char, history = state.history) {
@@ -1724,6 +1865,11 @@ document.addEventListener("click", async (event) => {
       needTitle: state.picked.needCompass?.title,
       needCopy: state.picked.needCompass?.copy,
       needNext: state.picked.needCompass?.next,
+      bidTone: state.picked.connectionBid?.tone,
+      bidStatus: state.picked.connectionBid?.status,
+      bidTitle: state.picked.connectionBid?.title,
+      bidCopy: state.picked.connectionBid?.copy,
+      bidNext: state.picked.connectionBid?.next,
       momentum: state.picked.momentum?.label,
       scores: { ...state.scores },
     });

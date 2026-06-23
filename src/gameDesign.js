@@ -56,6 +56,24 @@ export const researchBasis = [
     takeaway:
       "プレイヤーの選択は結果・フィードバック・意味のつながりが見えるほど主体性が増す。選択後は点数だけでなく、どの関係欲求を満たしたかを返す。",
   },
+  {
+    title: "Reis, Clark, and Holmes: Perceived partner responsiveness",
+    url: "https://www.sas.rochester.edu/psy/people/faculty/reis_harry/assets/pdf/ReisClarkHolmes_2004.pdf",
+    takeaway:
+      "相手が自分のニーズや願いに応答してくれると感じることは、親密さの中心的プロセス。ゲームでは小さなサインを拾ったかどうかを、キャラの記憶と親密度に反映する。",
+  },
+  {
+    title: "The Gottman Institute: Bids for connection",
+    url: "https://www.gottman.com/blog/want-to-improve-your-relationship-start-paying-more-attention-to-bids/",
+    takeaway:
+      "接続の申し出は大きな告白だけでなく、質問・表情・軽い話題にも出る。選択肢は、向き合う・見送る・押し返すの違いが出るように設計する。",
+  },
+  {
+    title: "Game Studies: This Action Will Have Consequences",
+    url: "https://gamestudies.org/1901/articles/stang",
+    takeaway:
+      "物語上の選択は、結果が分岐しなくても感情的な帰結が見えると意味を持つ。Love Type Labでは、会話後の相手の記憶・サイン・修復余地で結果を返す。",
+  },
 ];
 
 const sceneBeats = [

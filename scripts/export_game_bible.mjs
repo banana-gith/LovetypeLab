@@ -135,6 +135,8 @@ for (const [id, type, name] of characters) {
   lines.push("");
   lines.push("Need compass rule: each scene should expose the relationship need being tested, then score whether the player's answer satisfied, nearly satisfied, or threatened it. The need should be character-specific, drawn from the active psychological switch, and should explain autonomy, felt understanding, and concrete next-step safety without turning the character into a fixed stereotype.");
   lines.push("");
+  lines.push("Connection bid rule: treat each character line as a small bid for attention, validation, play, repair, vulnerability, or future commitment. Feedback should say whether the player turned toward, turned with spark, turned away, or turned against the bid. This creates emotional consequence even when the main plot remains linear.");
+  lines.push("");
   for (const route of Object.values(routeEndings)) {
     const flavoredRoute = characterRouteEnding(id, route.key);
     const finale = characterFinaleScene(id, route.key, "mixed");
