@@ -133,6 +133,8 @@ for (const [id, type, name] of characters) {
   lines.push("");
   lines.push("Replay plan rule: after each ending, give the player one concrete next-run plan using the current route, locked routes, unopened psychological switches, heart-key misses, and character turn-offs. The plan should support autonomy, competence, and relatedness: choose a route, practice one skill, and understand the character more deeply.");
   lines.push("");
+  lines.push("Need compass rule: each scene should expose the relationship need being tested, then score whether the player's answer satisfied, nearly satisfied, or threatened it. The need should be character-specific, drawn from the active psychological switch, and should explain autonomy, felt understanding, and concrete next-step safety without turning the character into a fixed stereotype.");
+  lines.push("");
   for (const route of Object.values(routeEndings)) {
     const flavoredRoute = characterRouteEnding(id, route.key);
     const finale = characterFinaleScene(id, route.key, "mixed");

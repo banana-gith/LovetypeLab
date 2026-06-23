@@ -16,6 +16,12 @@ This file is generated from product data. Update `src/personas.js`, `src/story.j
   - 恋愛の失敗は相手タイプだけでなく、拒絶不安・信頼不安・自己否定など内的バリアでも起きる。ゲームでは良い返しだけでなく、怖さの扱いも評価する。
 - [16Personalities: How personality types handle relationship conflict](https://www.16personalities.com/articles/how-personality-types-handle-relationship-conflict-a-study)
   - 衝突時の反応はタイプ差だけでなく自己防衛の普遍性も強い。ゲームではT/FやE/Iを固定的に扱わず、場面ごとの防衛反応と修復の余地を描く。
+- [Self-Determination Theory: Theory overview](https://selfdeterminationtheory.org/theory/)
+  - 自律性・有能感・関係性の欲求が満たされるほど内発的な関与が強まる。恋愛会話では、相手の選ぶ余地、理解された感覚、次に進める具体性を場面ごとに読む。
+- [Hadden, Rodriguez, Knee, and Porter: Relationship autonomy and support provision](https://selfdeterminationtheory.org/wp-content/uploads/2015/12/Hadden_Rodriguez_Knee_Porter_20151.pdf)
+  - 関係内の自律性は相手へのケアや支援と結びつく。ゲームでは好意を押し通すより、相手が自分で選べる余地を残すほど信頼が育つ設計にする。
+- [University XP: What is Player Agency?](https://www.universityxp.com/blog/2020/8/20/what-is-player-agency)
+  - プレイヤーの選択は結果・フィードバック・意味のつながりが見えるほど主体性が増す。選択後は点数だけでなく、どの関係欲求を満たしたかを返す。
 
 ## Game Design Principles
 
@@ -170,6 +176,8 @@ During play, surface the character's attraction switches and turn-offs as learna
 Route compass rule: during play, show the likely route tendency without locking the player in. The forecast should make choices feel consequential while still allowing rerouting through repair, heart-key unlocks, and late-scene clarity.
 
 Replay plan rule: after each ending, give the player one concrete next-run plan using the current route, locked routes, unopened psychological switches, heart-key misses, and character turn-offs. The plan should support autonomy, competence, and relatedness: choose a route, practice one skill, and understand the character more deeply.
+
+Need compass rule: each scene should expose the relationship need being tested, then score whether the player's answer satisfied, nearly satisfied, or threatened it. The need should be character-specific, drawn from the active psychological switch, and should explain autonomy, felt understanding, and concrete next-step safety without turning the character into a fixed stereotype.
 
 - **REPAIR / 振り返った沈黙が、まだ終わりじゃない**
   - Player pattern: 深さに触れたが、少し結論や安心の言葉を急ぎすぎた
@@ -743,6 +751,8 @@ During play, surface the character's attraction switches and turn-offs as learna
 Route compass rule: during play, show the likely route tendency without locking the player in. The forecast should make choices feel consequential while still allowing rerouting through repair, heart-key unlocks, and late-scene clarity.
 
 Replay plan rule: after each ending, give the player one concrete next-run plan using the current route, locked routes, unopened psychological switches, heart-key misses, and character turn-offs. The plan should support autonomy, competence, and relatedness: choose a route, practice one skill, and understand the character more deeply.
+
+Need compass rule: each scene should expose the relationship need being tested, then score whether the player's answer satisfied, nearly satisfied, or threatened it. The need should be character-specific, drawn from the active psychological switch, and should explain autonomy, felt understanding, and concrete next-step safety without turning the character into a fixed stereotype.
 
 - **REPAIR / 笑ったあと、少しだけ風が止まる**
   - Player pattern: 楽しさに乗りきれず、自由を軽さとして扱ったように見えた
@@ -1342,6 +1352,8 @@ Route compass rule: during play, show the likely route tendency without locking 
 
 Replay plan rule: after each ending, give the player one concrete next-run plan using the current route, locked routes, unopened psychological switches, heart-key misses, and character turn-offs. The plan should support autonomy, competence, and relatedness: choose a route, practice one skill, and understand the character more deeply.
 
+Need compass rule: each scene should expose the relationship need being tested, then score whether the player's answer satisfied, nearly satisfied, or threatened it. The need should be character-specific, drawn from the active psychological switch, and should explain autonomy, felt understanding, and concrete next-step safety without turning the character into a fixed stereotype.
+
 - **REPAIR / しまいかけた手紙が、まだ手元にある**
   - Player pattern: 優しさはあったが、理想や創作を外側の評価でまとめてしまった
   - Epilogue: ナギは笑って別れるけれど、封筒を紙袋の奥へしまう。完全に拒絶したわけではない。ただ、見せたかったものを急いで評価された痛みが残っている。次に会うなら、作品や理想より先に、見せてくれた勇気を受け取り直したい。
@@ -1940,6 +1952,8 @@ Route compass rule: during play, show the likely route tendency without locking 
 
 Replay plan rule: after each ending, give the player one concrete next-run plan using the current route, locked routes, unopened psychological switches, heart-key misses, and character turn-offs. The plan should support autonomy, competence, and relatedness: choose a route, practice one skill, and understand the character more deeply.
 
+Need compass rule: each scene should expose the relationship need being tested, then score whether the player's answer satisfied, nearly satisfied, or threatened it. The need should be character-specific, drawn from the active psychological switch, and should explain autonomy, felt understanding, and concrete next-step safety without turning the character into a fixed stereotype.
+
 - **REPAIR / 閉じたノートに、まだ余白が残っている**
   - Player pattern: 好意はあったが、形式や最適解を急ぎすぎてアオイの思考の自由を狭めた
   - Epilogue: アオイは穏やかに別れるけれど、帰り際にノートを開かない。感情を急いで定義されたり、正解探しで近づかれた違和感が残っている。次に会うなら、まず彼女を攻略対象ではなく、一緒に考える相手として扱い直したい。
@@ -2537,6 +2551,8 @@ Route compass rule: during play, show the likely route tendency without locking 
 
 Replay plan rule: after each ending, give the player one concrete next-run plan using the current route, locked routes, unopened psychological switches, heart-key misses, and character turn-offs. The plan should support autonomy, competence, and relatedness: choose a route, practice one skill, and understand the character more deeply.
 
+Need compass rule: each scene should expose the relationship need being tested, then score whether the player's answer satisfied, nearly satisfied, or threatened it. The need should be character-specific, drawn from the active psychological switch, and should explain autonomy, felt understanding, and concrete next-step safety without turning the character into a fixed stereotype.
+
 - **REPAIR / 約束の輪郭を、もう一度描き直す**
   - Player pattern: 気持ちはあったが、ハルカが安心できる具体性が足りなかった
   - Epilogue: ハルカは怒るより先に、今日の会話を静かに整理している。曖昧な言葉や勢いが、彼女には関係を軽く扱われたように響いた。次は謝るだけでなく、日時・理由・代案まで見える形で信頼を戻したい。
@@ -3108,6 +3124,8 @@ During play, surface the character's attraction switches and turn-offs as learna
 Route compass rule: during play, show the likely route tendency without locking the player in. The forecast should make choices feel consequential while still allowing rerouting through repair, heart-key unlocks, and late-scene clarity.
 
 Replay plan rule: after each ending, give the player one concrete next-run plan using the current route, locked routes, unopened psychological switches, heart-key misses, and character turn-offs. The plan should support autonomy, competence, and relatedness: choose a route, practice one skill, and understand the character more deeply.
+
+Need compass rule: each scene should expose the relationship need being tested, then score whether the player's answer satisfied, nearly satisfied, or threatened it. The need should be character-specific, drawn from the active psychological switch, and should explain autonomy, felt understanding, and concrete next-step safety without turning the character into a fixed stereotype.
 
 - **REPAIR / 重くなった空気から、一度外へ出る**
   - Player pattern: 関係を確かめようとして、ユウのテンポを止めすぎた
@@ -3681,6 +3699,8 @@ During play, surface the character's attraction switches and turn-offs as learna
 Route compass rule: during play, show the likely route tendency without locking the player in. The forecast should make choices feel consequential while still allowing rerouting through repair, heart-key unlocks, and late-scene clarity.
 
 Replay plan rule: after each ending, give the player one concrete next-run plan using the current route, locked routes, unopened psychological switches, heart-key misses, and character turn-offs. The plan should support autonomy, competence, and relatedness: choose a route, practice one skill, and understand the character more deeply.
+
+Need compass rule: each scene should expose the relationship need being tested, then score whether the player's answer satisfied, nearly satisfied, or threatened it. The need should be character-specific, drawn from the active psychological switch, and should explain autonomy, felt understanding, and concrete next-step safety without turning the character into a fixed stereotype.
 
 - **REPAIR / 正しさでは、緊張はほどけない**
   - Player pattern: 明確さは出したが、レイナの感情の置き場所を見落とした

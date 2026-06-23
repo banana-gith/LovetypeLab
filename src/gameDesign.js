@@ -38,6 +38,24 @@ export const researchBasis = [
     takeaway:
       "衝突時の反応はタイプ差だけでなく自己防衛の普遍性も強い。ゲームではT/FやE/Iを固定的に扱わず、場面ごとの防衛反応と修復の余地を描く。",
   },
+  {
+    title: "Self-Determination Theory: Theory overview",
+    url: "https://selfdeterminationtheory.org/theory/",
+    takeaway:
+      "自律性・有能感・関係性の欲求が満たされるほど内発的な関与が強まる。恋愛会話では、相手の選ぶ余地、理解された感覚、次に進める具体性を場面ごとに読む。",
+  },
+  {
+    title: "Hadden, Rodriguez, Knee, and Porter: Relationship autonomy and support provision",
+    url: "https://selfdeterminationtheory.org/wp-content/uploads/2015/12/Hadden_Rodriguez_Knee_Porter_20151.pdf",
+    takeaway:
+      "関係内の自律性は相手へのケアや支援と結びつく。ゲームでは好意を押し通すより、相手が自分で選べる余地を残すほど信頼が育つ設計にする。",
+  },
+  {
+    title: "University XP: What is Player Agency?",
+    url: "https://www.universityxp.com/blog/2020/8/20/what-is-player-agency",
+    takeaway:
+      "プレイヤーの選択は結果・フィードバック・意味のつながりが見えるほど主体性が増す。選択後は点数だけでなく、どの関係欲求を満たしたかを返す。",
+  },
 ];
 
 const sceneBeats = [

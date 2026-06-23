@@ -611,13 +611,15 @@ function sceneChoices() {
       const momentum = momentumRead(choice);
       const heartKey = heartKeyRead(c, state.sceneIndex, choice, tactic);
       const decoder = decoderRead(c, state.sceneIndex, choice, heartKey);
+      const needCompass = needCompassRead(c, state.sceneIndex, choice, tactic, heartKey);
       return {
         ...choice,
         tactic,
         momentum,
         heartKey,
         decoder,
-        effect: combineEffects(choice.effect, tactic.effect, momentum.effect, heartKey.effect),
+        needCompass,
+        effect: combineEffects(choice.effect, tactic.effect, momentum.effect, heartKey.effect, needCompass.effect),
       };
     }),
     `${c.id}:${state.sceneIndex}`,
@@ -653,6 +655,66 @@ function decoderRead(character = state.char, sceneIndex = state.sceneIndex, choi
     title: active.label,
     copy: `「${active.opens}」が伝わり、${character.name}の警戒が少しほどけた。次は同じ方向を繰り返すだけでなく、場面に合わせて温度を変えたい。`,
     repair: active.tell,
+  };
+}
+
+function needCompassRead(character = state.char, sceneIndex = state.sceneIndex, choice = null, tacticOverride = null, heartKey = null) {
+  const progress = sceneAt(sceneIndex, character);
+  const total = totalScenes(character);
+  const design = gameDesign(character);
+  const active = activePersonaSwitch(character.id, sceneIndex, total);
+  const reading = sceneReadingCue(character.id, sceneIndex, total);
+  const contract = sceneEmotionalContract(character.id, progress.scene, sceneIndex, total);
+  const tactic = tacticOverride || sceneTacticalRead(character.id, sceneIndex, total, choice);
+  const base = {
+    badge: "NEED COMPASS",
+    title: active.label,
+    need: active.label,
+    scene: `${progress.date.title} / ${progress.scene.title}`,
+    ask: contract.hiddenAsk,
+    signal: reading.signal,
+    goodRead: reading.goodRead,
+    misread: reading.misread,
+    next: `次は「${active.opens}」を、${choice ? "一文で言い直す" : "選択肢の温度で示す"}。`,
+    effect: {},
+  };
+  if (!choice) {
+    return {
+      ...base,
+      tone: "watch",
+      status: "観察中",
+      copy: `${character.name}はいま「${active.opens}」を満たしてくれる相手かを見ている。サインは「${reading.signal}」。`,
+    };
+  }
+  const risk = choice.branch === "strain" || tactic.choiceRisks || heartKey?.tone === "locked";
+  const open = !risk && (heartKey?.tone === "open" || tactic.choiceFits || choice.branch === "safe");
+  if (risk) {
+    return {
+      ...base,
+      tone: "risk",
+      status: "欲求が傷ついた",
+      copy: `${character.name}には「${active.hurts}」に近く響いた。表面の返事より、守りたかった欲求を先に拾い直したい。`,
+      next: `「${active.hurts}みたいに聞こえたかも。${active.opens}ってことを大事にしたかった」と戻す。`,
+      effect: { pressure: 1, misread: 1 },
+    };
+  }
+  if (open) {
+    return {
+      ...base,
+      tone: "open",
+      status: "欲求が満たされた",
+      copy: `「${active.opens}」が伝わり、${character.name}は${design.lens.focus}を大事にされたと感じている。`,
+      next: `同じ方向を連打せず、次は${design.lens.playerMove}。`,
+      effect: { trust: 1, comfort: 1, misread: -1 },
+    };
+  }
+  return {
+    ...base,
+    tone: "near",
+    status: "半歩近い",
+    copy: `悪くない返し。ただ、${character.name}が一番見ていた「${contract.hiddenAsk}」にはもう少し踏み込める。`,
+    next: `次は「${reading.goodRead}」を言葉か行動で一つ足す。`,
+    effect: {},
   };
 }
 
@@ -879,6 +941,10 @@ function decoderCard(decoder) {
   return `<div class="decoder-card decoder-${decoder.tone}"><span>${decoder.badge}</span><b>${decoder.title}</b><p>${decoder.copy}</p></div>`;
 }
 
+function needCompassCard(compass) {
+  return `<div class="need-compass-card need-${compass.tone}"><span>${compass.badge}</span><b>${compass.status}: ${compass.title}</b><p>${compass.copy}</p><small>${compass.next}</small></div>`;
+}
+
 function game() {
   const c = state.char;
   const { date, dateIndex, local, scene } = currentScene();
@@ -895,6 +961,7 @@ function game() {
   const contract = sceneEmotionalContract(c.id, scene, state.sceneIndex, count);
   const heartKey = heartKeyRead(c, state.sceneIndex);
   const decoder = decoderRead(c, state.sceneIndex);
+  const needCompass = needCompassRead(c, state.sceneIndex);
   const mission = dateMissionReport(c, dateIndex);
   const memory = characterMemoryReport(c);
   const stage = relationshipStage(c);
@@ -902,7 +969,7 @@ function game() {
   return `<div class="game-shell">
     <header class="game-header"><button class="icon-button" data-go="profile">×</button><div class="game-person">${avatar(c)}<div><b>${c.name}</b><span>${c.style}</span></div></div><div class="game-progress"><span>DATE ${dateIndex + 1} <b>${state.sceneIndex + 1} / ${count}</b></span><i><em style="width:${((state.sceneIndex + 1) / count) * 100}%;background:${c.color}"></em></i></div></header>
     <main class="game-main"><aside class="score-strip"><div class="score-hero" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>\u7dcf\u5408\u8a55\u4fa1</span><b>${tier.label}</b><p>${tier.sub}</p></div></div>${meters()}<div class="relationship-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div>${routeCompassCard(compass, true)}<div class="meter-help">\u30bf\u30a4\u30d7\u3054\u3068\u306b\u91cd\u304f\u898b\u308b\u30dd\u30a4\u30f3\u30c8\u304c\u5c11\u3057\u9055\u3044\u307e\u3059\u3002</div></aside>
-      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context"><b>今の状況</b>${sceneContext(date, scene, line)}<div class="scene-insight"><span>${dramatic.beat}</span><b>${dramatic.focus}</b></div><div class="scene-coach"><span>${coaching.badge}</span><p><b>${coaching.skill}</b>${coaching.watch}</p></div>${heartKeyCard(heartKey)}${decoderCard(decoder)}<div class="scene-contract"><span>${contract.badge}</span><b>${contract.mode}場面</b><p>${contract.surface}</p><small>隠れた願い: ${contract.hiddenAsk}</small></div><div class="scene-read"><span>READ THE ROOM</span><p><b>${reading.signal}</b>${reading.playerQuestion}</p></div><div class="scene-tactic"><span>${tactic.badge} TACTIC</span><p><b>${tactic.title}</b>${tactic.read}</p><small>刺さりやすい: ${tactic.prefer || "場面次第"} / 危ない: ${tactic.avoid || "読み違い"}</small></div><div class="scene-memory memory-${memory.tone}"><span>MEMORY</span><p><b>${memory.label}</b>${memory.copy}</p></div></div>${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent"><small>方向性</small>${choiceDirection(choice)}</em><p>${choice.label}</p></button>`).join("")}</div></section>
+      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context"><b>今の状況</b>${sceneContext(date, scene, line)}<div class="scene-insight"><span>${dramatic.beat}</span><b>${dramatic.focus}</b></div><div class="scene-coach"><span>${coaching.badge}</span><p><b>${coaching.skill}</b>${coaching.watch}</p></div>${heartKeyCard(heartKey)}${decoderCard(decoder)}${needCompassCard(needCompass)}<div class="scene-contract"><span>${contract.badge}</span><b>${contract.mode}場面</b><p>${contract.surface}</p><small>隠れた願い: ${contract.hiddenAsk}</small></div><div class="scene-read"><span>READ THE ROOM</span><p><b>${reading.signal}</b>${reading.playerQuestion}</p></div><div class="scene-tactic"><span>${tactic.badge} TACTIC</span><p><b>${tactic.title}</b>${tactic.read}</p><small>刺さりやすい: ${tactic.prefer || "場面次第"} / 危ない: ${tactic.avoid || "読み違い"}</small></div><div class="scene-memory memory-${memory.tone}"><span>MEMORY</span><p><b>${memory.label}</b>${memory.copy}</p></div></div>${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent"><small>方向性</small>${choiceDirection(choice)}</em><p>${choice.label}</p></button>`).join("")}</div></section>
     </main>${state.picked ? feedback() : ""}
   </div>`;
 }
@@ -927,6 +994,7 @@ function feedback() {
       <div class="chat-bubble subtext"><b>${subtext.badge} / ${subtext.title}</b><p>${subtext.copy}</p></div>
       <div class="chat-bubble key key-${picked.heartKey?.tone || "near"}"><b>${picked.heartKey?.phrase || "KEY"} / ${picked.heartKey?.status || "鍵の読み"}</b><p>${picked.heartKey?.copy || "相手の本音の鍵を読み直す場面。"}</p></div>
       <div class="chat-bubble decoder decoder-${picked.decoder?.tone || "near"}"><b>${picked.decoder?.badge || "DECODER"} / ${picked.decoder?.title || "キャラ理解"}</b><p>${picked.decoder?.copy || "相手の刺さるサインを読み直す場面。"}</p></div>
+      <div class="chat-bubble need need-${picked.needCompass?.tone || "near"}"><b>${picked.needCompass?.badge || "NEED"} / ${picked.needCompass?.status || "関係欲求"}</b><p>${picked.needCompass?.copy || "この場面で満たしたい欲求を読み直す場面。"}</p><small>${picked.needCompass?.next || ""}</small></div>
       <div class="chat-bubble contract"><b>${contract.mode}場面の読み</b><p>${picked.branch === "strain" ? contract.temptingMove : contract.winningMove}</p></div>
       <div class="chat-bubble tactic"><b>${tactic.verdict}</b><p>${tactic.choiceFits ? tactic.payoff : tactic.choiceRisks ? tactic.trap : picked.why}</p></div>
       <div class="chat-bubble switch"><b>${coaching.switch.label}</b><p>${personaSwitchFeedback(c.id, state.sceneIndex, totalScenes(c), picked.branch)}</p></div>
@@ -1139,7 +1207,7 @@ function relationshipArcReport(character = state.char, history = state.history) 
 
 function relationshipArcPanel(character = state.char) {
   const arc = relationshipArcReport(character);
-  return `${routeCompassPanel(character)}<div class="arc-panel" style="--c:${character.color};--light:${character.light}"><h3>恋愛ルート読解 <span>${arc.next.label}</span></h3><p>${arc.summary}</p><div>${arc.reports.map((row) => `<article class="arc-${row.tone}"><span>${row.mode}</span><b>${row.label}</b><strong>${row.status} ${row.score}%</strong><i><em style="width:${row.score}%"></em></i><p>${row.copy}</p><small>安心${row.safe} / 火花${row.spark} / 揺れ${row.strain}</small></article>`).join("")}</div></div>${heartKeyPanel(character)}${characterDecoderPanel(character)}${continuityEchoPanel(character)}`;
+  return `${routeCompassPanel(character)}<div class="arc-panel" style="--c:${character.color};--light:${character.light}"><h3>恋愛ルート読解 <span>${arc.next.label}</span></h3><p>${arc.summary}</p><div>${arc.reports.map((row) => `<article class="arc-${row.tone}"><span>${row.mode}</span><b>${row.label}</b><strong>${row.status} ${row.score}%</strong><i><em style="width:${row.score}%"></em></i><p>${row.copy}</p><small>安心${row.safe} / 火花${row.spark} / 揺れ${row.strain}</small></article>`).join("")}</div></div>${heartKeyPanel(character)}${needCompassPanel(character)}${characterDecoderPanel(character)}${continuityEchoPanel(character)}`;
 }
 
 function routeCompassReport(character = state.char, history = state.history) {
@@ -1212,6 +1280,41 @@ function heartKeyPanel(character = state.char) {
   const report = heartKeySummary(character);
   if (!report.items.length) return "";
   return `<div class="heart-key-panel key-${report.tone}" style="--c:${character.color};--light:${character.light}"><h3>本音の鍵 読解率 <span>${report.score}%</span></h3><p>${character.name}が本当に見ていた願いをどれだけ読めたか。${report.label}。</p><div class="key-counts"><span>解放 ${report.open}</span><span>接近 ${report.near}</span><span>ズレ ${report.locked}</span></div><div>${report.best.map((item) => `<article class="key-${item.heartKeyTone}"><span>${item.heartKey}</span><b>${item.heartKeyTitle}</b><p>${item.heartKeyCopy}</p></article>`).join("")}</div></div>`;
+}
+
+function needCompassSummary(character = state.char, history = state.history) {
+  const items = history.filter((item) => item.needTone);
+  const open = items.filter((item) => item.needTone === "open").length;
+  const near = items.filter((item) => item.needTone === "near").length;
+  const risk = items.filter((item) => item.needTone === "risk").length;
+  const score = items.length ? clamp(Math.round(((open * 1 + near * 0.55 - risk * 0.45) / items.length) * 100)) : 0;
+  const tone = score >= 72 ? "open" : score >= 48 ? "near" : risk >= 3 ? "risk" : "watch";
+  const label = tone === "open" ? "欲求の芯まで届いた" : tone === "near" ? "欲求の近くまで読めた" : tone === "risk" ? "欲求の修復が必要" : "読み筋を作っている";
+  const latestRisk = [...items].reverse().find((item) => item.needTone === "risk");
+  const latestOpen = [...items].reverse().find((item) => item.needTone === "open");
+  const active = activePersonaSwitch(character.id, state.sceneIndex, totalScenes(character));
+  return {
+    items,
+    open,
+    near,
+    risk,
+    score,
+    tone,
+    label,
+    focus: latestRisk?.needTitle || latestOpen?.needTitle || active.label,
+    next: latestRisk?.needNext || latestOpen?.needNext || `次は「${active.opens}」を場面の温度に合わせて示す。`,
+  };
+}
+
+function needCompassPanel(character = state.char) {
+  const report = needCompassSummary(character);
+  if (!report.items.length) return "";
+  const rows = [
+    ["満たした", report.open, "open"],
+    ["近かった", report.near, "near"],
+    ["傷ついた", report.risk, "risk"],
+  ];
+  return `<div class="need-compass-panel need-${report.tone}" style="--c:${character.color};--light:${character.light}"><h3>関係欲求コンパス <span>${report.score}%</span></h3><p>${character.name}が場面ごとに見ていた「自由・理解・具体性」をどれだけ満たせたか。${report.label}。</p><div class="need-counts">${rows.map(([label, value, tone]) => `<span class="need-${tone}">${label}<b>${value}</b></span>`).join("")}</div><article><span>次に読む芯</span><b>${report.focus}</b><p>${report.next}</p></article></div>`;
 }
 
 function characterDecoderSummary(character = state.char, history = state.history) {
@@ -1616,6 +1719,11 @@ document.addEventListener("click", async (event) => {
       decoderTitle: state.picked.decoder?.title,
       decoderCopy: state.picked.decoder?.copy,
       decoderRepair: state.picked.decoder?.repair,
+      needTone: state.picked.needCompass?.tone,
+      needStatus: state.picked.needCompass?.status,
+      needTitle: state.picked.needCompass?.title,
+      needCopy: state.picked.needCompass?.copy,
+      needNext: state.picked.needCompass?.next,
       momentum: state.picked.momentum?.label,
       scores: { ...state.scores },
     });
