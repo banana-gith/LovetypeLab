@@ -161,6 +161,10 @@ Use these echoes as continuity callbacks: later scene context should name the ea
 
 **Turn-offs:** 感情の矮小化 / 質問攻め / 結論急ぎ
 
+### Character Decoder Rule
+
+During play, surface the character's attraction switches and turn-offs as learnable signals. Positive choices should name what opened; risky choices should name the turn-off and provide one repair line rather than only punishing the player.
+
 ### Character Route Endings
 
 Route compass rule: during play, show the likely route tendency without locking the player in. The forecast should make choices feel consequential while still allowing rerouting through repair, heart-key unlocks, and late-scene clarity.
@@ -727,6 +731,10 @@ Use these echoes as continuity callbacks: later scene context should name the ea
 **Attraction switches:** ひらめきに乗る / 明るさの裏の傷つきやすさに気づく / 自由を約束として守る
 
 **Turn-offs:** 冷たい現実論 / テンションの否定 / 自由を軽さと決めつける
+
+### Character Decoder Rule
+
+During play, surface the character's attraction switches and turn-offs as learnable signals. Positive choices should name what opened; risky choices should name the turn-off and provide one repair line rather than only punishing the player.
 
 ### Character Route Endings
 
@@ -1320,6 +1328,10 @@ Use these echoes as continuity callbacks: later scene context should name the ea
 
 **Turn-offs:** 雑な現実論 / 作品への早すぎる批評 / 本音を引き出す圧
 
+### Character Decoder Rule
+
+During play, surface the character's attraction switches and turn-offs as learnable signals. Positive choices should name what opened; risky choices should name the turn-off and provide one repair line rather than only punishing the player.
+
 ### Character Route Endings
 
 Route compass rule: during play, show the likely route tendency without locking the player in. The forecast should make choices feel consequential while still allowing rerouting through repair, heart-key unlocks, and late-scene clarity.
@@ -1912,6 +1924,10 @@ Use these echoes as continuity callbacks: later scene context should name the ea
 
 **Turn-offs:** 感情の即答要求 / 理屈っぽいという切り捨て / 最適解で攻略する態度
 
+### Character Decoder Rule
+
+During play, surface the character's attraction switches and turn-offs as learnable signals. Positive choices should name what opened; risky choices should name the turn-off and provide one repair line rather than only punishing the player.
+
 ### Character Route Endings
 
 Route compass rule: during play, show the likely route tendency without locking the player in. The forecast should make choices feel consequential while still allowing rerouting through repair, heart-key unlocks, and late-scene clarity.
@@ -2503,6 +2519,10 @@ Use these echoes as continuity callbacks: later scene context should name the ea
 
 **Turn-offs:** 曖昧な誘い / 時間へのルーズさ / 段取りを退屈扱いする
 
+### Character Decoder Rule
+
+During play, surface the character's attraction switches and turn-offs as learnable signals. Positive choices should name what opened; risky choices should name the turn-off and provide one repair line rather than only punishing the player.
+
 ### Character Route Endings
 
 Route compass rule: during play, show the likely route tendency without locking the player in. The forecast should make choices feel consequential while still allowing rerouting through repair, heart-key unlocks, and late-scene clarity.
@@ -3068,6 +3088,10 @@ Use these echoes as continuity callbacks: later scene context should name the ea
 **Attraction switches:** 短く率直な誘い / 体験を一緒に楽しむ / 必要な時だけ意味を添える
 
 **Turn-offs:** 長い詰問 / 重すぎる関係定義 / 疑いから入る確認
+
+### Character Decoder Rule
+
+During play, surface the character's attraction switches and turn-offs as learnable signals. Positive choices should name what opened; risky choices should name the turn-off and provide one repair line rather than only punishing the player.
 
 ### Character Route Endings
 
@@ -3635,6 +3659,10 @@ Use these echoes as continuity callbacks: later scene context should name the ea
 **Attraction switches:** 自分の軸を示す / 具体的に尊敬する / 曖昧にせず進める
 
 **Turn-offs:** 受け身すぎる態度 / 勝ち負け化 / 雑な保留や所有感
+
+### Character Decoder Rule
+
+During play, surface the character's attraction switches and turn-offs as learnable signals. Positive choices should name what opened; risky choices should name the turn-off and provide one repair line rather than only punishing the player.
 
 ### Character Route Endings
 

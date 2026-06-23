@@ -123,6 +123,10 @@ for (const [id, type, name] of characters) {
   lines.push("");
   lines.push(`**Turn-offs:** ${design.turnOffs.join(" / ")}`);
   lines.push("");
+  lines.push("### Character Decoder Rule");
+  lines.push("");
+  lines.push("During play, surface the character's attraction switches and turn-offs as learnable signals. Positive choices should name what opened; risky choices should name the turn-off and provide one repair line rather than only punishing the player.");
+  lines.push("");
   lines.push("### Character Route Endings");
   lines.push("");
   lines.push("Route compass rule: during play, show the likely route tendency without locking the player in. The forecast should make choices feel consequential while still allowing rerouting through repair, heart-key unlocks, and late-scene clarity.");
