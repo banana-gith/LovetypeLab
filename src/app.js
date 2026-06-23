@@ -1317,10 +1317,72 @@ function routeAlbumPanel(character = state.char, currentRoute) {
   }).join("")}</div></div>`;
 }
 
+function replayPlanReport(character = state.char, route = relationshipRoute(character.id, state.scores, state.flags, state.history)) {
+  const album = readRouteAlbum()[character.id] || {};
+  const routes = Object.values(routeEndings);
+  const lockedRoute = routes.find((item) => !album[item.key] && item.key !== route.key);
+  const switches = switchProgressReport(character);
+  const nextSwitch = switches.find((item) => item.tone !== "open") || switches.at(-1);
+  const heart = heartKeySummary(character);
+  const decoder = characterDecoderSummary(character);
+  const tasks = [
+    {
+      badge: route.badge || "ROUTE",
+      title: "今回のルートを磨く",
+      copy: route.replayMission || route.nextMove,
+    },
+  ];
+  if (nextSwitch) {
+    tasks.push({
+      badge: nextSwitch.status,
+      title: `${nextSwitch.label}を解放する`,
+      copy: nextSwitch.tone === "open" ? nextSwitch.tell : nextSwitch.opens,
+    });
+  }
+  if (heart.score < 72) {
+    tasks.push({
+      badge: "HEART KEY",
+      title: "本音の鍵をもう一段読む",
+      copy: heart.locked ? "鍵がずれた場面では、反論より先に隠れた願いを言い直す。" : "鍵に近い場面で、相手のサインを一文だけ具体化する。",
+    });
+  }
+  if (decoder.risk > 0) {
+    tasks.push({
+      badge: "REPAIR",
+      title: "冷めたサインを立て直す",
+      copy: decoder.repair,
+    });
+  }
+  if (lockedRoute) {
+    const flavored = characterRouteEnding(character.id, lockedRoute.key);
+    tasks.push({
+      badge: flavored.badge,
+      title: `${flavored.albumName}を狙う`,
+      copy: flavored.unlockHint || flavored.replayMission,
+    });
+  }
+  const focus = tasks.slice(0, 4);
+  return {
+    route,
+    lockedRoute,
+    nextSwitch,
+    heart,
+    decoder,
+    focus,
+    headline: lockedRoute ? `次は${characterRouteEnding(character.id, lockedRoute.key).albumName}も狙える` : "全ルート回収に近づいている",
+  };
+}
+
+function replayPlanPanel(character = state.char, route) {
+  const plan = replayPlanReport(character, route);
+  return `<div class="replay-plan-panel" style="--c:${character.color};--light:${character.light}"><h3>次周の作戦ノート <span>REPLAY PLAN</span></h3><p>${plan.headline}。今回の読み筋を次のプレイで別のエンディングや深い本音につなげます。</p><div>${plan.focus.map((task) => `<article><span>${task.badge}</span><b>${task.title}</b><p>${task.copy}</p></article>`).join("")}</div></div>`;
+}
+
 function missionBoardPanel(character = state.char) {
   const reports = storyFor(character.id).dates.map((date, index) => ({ date, report: dateMissionReport(character, index) }));
   const cleared = reports.filter(({ report }) => report.complete).length;
-  return `<div class="mission-board" style="--c:${character.color}"><h3>デートミッション <span>${cleared}/${reports.length} CLEAR</span></h3><div>${reports.map(({ date, report }, index) => `<article class="mission-${report.tone}"><span>DATE ${index + 1} / ${report.badge}</span><b>${report.title}</b><p>${report.complete ? report.success : report.next}</p><i><em style="width:${report.progress}%"></em></i><small>${date.purpose}</small></article>`).join("")}</div></div>`;
+  const route = relationshipRoute(character.id, state.scores, state.flags, state.history);
+  return `${replayPlanPanel(character, route)}<div class="mission-board" style="--c:${character.color}"><h3>デートミッション <span>${cleared}/${reports.length} CLEAR</span></h3><div>${reports.map(({ date, report }, index) => `<article class="mission-${report.tone}"><span>DATE ${index + 1} / ${report.badge}</span><b>${report.title}</b><p>${report.complete ? report.success : report.next}</p><i><em style="width:${report.progress}%"></em></i><small>${date.purpose}</small></article>`).join("")}</div></div>`;
 }
 
 function checkpoint() {
