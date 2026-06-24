@@ -1028,3 +1028,312 @@
     line-height:1.48!important;
   }
 }
+
+/* v8 playable date briefing */
+.briefing-shell{
+  min-height:100dvh!important;
+  background:
+    radial-gradient(circle at 15% 0,#50213170 0 170px,transparent 172px),
+    radial-gradient(circle at 86% 16%,#16365c66 0 190px,transparent 192px),
+    linear-gradient(135deg,#050608,#15101b 52%,#2b1511)!important;
+  color:#fff8e9!important;
+}
+.briefing-v2 .game-header{
+  height:64px!important;
+  background:linear-gradient(180deg,#08090d,#050608)!important;
+  border-bottom:1px solid var(--lux-line)!important;
+}
+.briefing-main{
+  min-height:calc(100dvh - 64px);
+  display:grid;
+  align-items:start;
+  justify-items:center;
+  padding:24px;
+}
+.briefing-card{
+  width:min(980px,100%);
+  display:grid;
+  gap:10px;
+  padding:16px;
+  border:1px solid var(--lux-line);
+  border-radius:22px;
+  background:linear-gradient(180deg,#fff8ea,#eadcc4)!important;
+  color:#211418;
+  box-shadow:var(--lux-shadow);
+}
+.briefing-hero{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 310px;
+  gap:12px;
+  align-items:stretch;
+}
+.briefing-copy{
+  padding:14px;
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 92% 10%,color-mix(in srgb,var(--c) 20%,#fff) 0 70px,transparent 72px),
+    linear-gradient(135deg,#fffaf2,#f4dfba);
+  border:1px solid #d7ad6260;
+}
+.briefing-copy span,
+.briefing-grid span,
+.briefing-start span{
+  display:inline-flex;
+  width:max-content;
+  max-width:100%;
+  margin-bottom:7px;
+  border-radius:999px;
+  padding:4px 8px;
+  background:#1a0b10;
+  color:#ffe4a8;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.1em;
+}
+.briefing-copy h1{
+  margin:3px 0 7px;
+  color:#2b151b!important;
+  font-family:'Shippori Mincho',serif;
+  font-size:30px;
+  line-height:1.28;
+  letter-spacing:0;
+  text-shadow:none!important;
+}
+.briefing-copy p{
+  margin:0;
+  color:#50383a!important;
+  font-size:12px;
+  line-height:1.6;
+}
+.briefing-photo{
+  position:relative;
+  min-height:210px;
+  border-radius:18px;
+  overflow:hidden;
+  border:1px solid #d7ad6266;
+  background:#08090b!important;
+  box-shadow:0 16px 44px #32160830;
+}
+.briefing-photo .scene-photo{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  filter:saturate(.98) contrast(1.04);
+}
+.briefing-photo:after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,#0000 48%,#13070dcc 100%);
+  pointer-events:none;
+}
+.briefing-photo small{
+  position:absolute;
+  z-index:1;
+  right:12px;
+  bottom:11px;
+  color:#ffe7b1;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.16em;
+}
+.briefing-card .date-mission{
+  margin:0!important;
+}
+.briefing-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+}
+.briefing-grid article,
+.briefing-start{
+  min-height:112px;
+  padding:11px;
+  border:1px solid #d7ad624d;
+  border-radius:16px;
+  background:linear-gradient(180deg,#fffaf2,#f5e7ce);
+  box-shadow:0 12px 28px #32160810,inset 0 1px 0 #fff9;
+}
+.briefing-grid article b,
+.briefing-start b{
+  display:block;
+  color:#231417;
+  font-size:13px;
+  line-height:1.42;
+}
+.briefing-grid article p,
+.briefing-start p{
+  margin:5px 0 0;
+  color:#573f3d!important;
+  font-size:9.5px;
+  line-height:1.5;
+}
+.briefing-win{
+  background:linear-gradient(135deg,#fff8e4,#f4d698)!important;
+}
+.briefing-risk{
+  background:linear-gradient(135deg,#fff0f1,#f2c5cb)!important;
+  border-color:#d85b7270!important;
+}
+.briefing-carry{
+  background:linear-gradient(135deg,#eef6ff,#dfeafb)!important;
+}
+.briefing-route{
+  background:linear-gradient(135deg,#f7f1ff,#ded5fb)!important;
+}
+.briefing-start{
+  min-height:0;
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:0 14px;
+  align-items:center;
+  background:linear-gradient(135deg,#1a0b10,#101a2a)!important;
+  border-color:#d7ad626b!important;
+  color:#fff8e9;
+}
+.briefing-start span{
+  grid-row:1 / 3;
+  margin:0;
+  align-self:center;
+  background:#ffe4a8;
+  color:#3a1717;
+}
+.briefing-start b{
+  color:#fff8e9;
+  font-size:15px;
+}
+.briefing-start p{
+  color:#e8cfad!important;
+  font-size:11px;
+}
+
+@media(max-width:900px){
+  .briefing-main{
+    align-items:start;
+    padding:14px;
+  }
+  .briefing-card{
+    width:min(560px,100%);
+  }
+  .briefing-hero{
+    grid-template-columns:1fr;
+  }
+  .briefing-photo{
+    min-height:260px;
+  }
+  .briefing-grid{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+@media(max-width:620px){
+  .briefing-v2 .game-header{
+    height:54px!important;
+    grid-template-columns:42px 1fr 112px!important;
+    padding:0 8px!important;
+  }
+  .briefing-shell{
+    height:100dvh!important;
+    overflow:hidden!important;
+  }
+  .briefing-main{
+    height:calc(100dvh - 54px);
+    min-height:0;
+    display:block;
+    overflow:auto;
+    padding:7px;
+  }
+  .briefing-card{
+    min-height:calc(100dvh - 68px);
+    gap:8px;
+    padding:8px;
+    border-radius:16px;
+  }
+  .briefing-hero{
+    gap:8px;
+  }
+  .briefing-copy{
+    padding:11px;
+    border-radius:13px;
+  }
+  .briefing-copy span,
+  .briefing-grid span,
+  .briefing-start span{
+    font-size:6.8px;
+    padding:3px 6px;
+    margin-bottom:5px;
+  }
+  .briefing-copy h1{
+    font-size:21px;
+    margin:2px 0 5px;
+  }
+  .briefing-copy p{
+    font-size:9.4px;
+    line-height:1.5;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .briefing-photo{
+    min-height:126px;
+    height:126px;
+    border-radius:13px;
+  }
+  .briefing-card .date-mission{
+    padding:7px 8px!important;
+    border-radius:12px!important;
+  }
+  .briefing-grid{
+    grid-template-columns:1fr 1fr;
+    gap:6px;
+  }
+  .briefing-grid article{
+    min-height:76px;
+    padding:8px;
+    border-radius:12px;
+  }
+  .briefing-grid article b{
+    font-size:9px;
+    line-height:1.32;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .briefing-grid article p{
+    font-size:7.6px;
+    line-height:1.38;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .briefing-carry,
+  .briefing-route{
+    display:none!important;
+  }
+  .briefing-start{
+    grid-template-columns:1fr;
+    gap:4px;
+    padding:9px;
+    border-radius:13px;
+  }
+  .briefing-start span{
+    grid-row:auto;
+  }
+  .briefing-start b{
+    font-size:10.4px;
+    line-height:1.35;
+  }
+  .briefing-start p{
+    font-size:8px;
+    line-height:1.35;
+  }
+  .briefing-card>.primary.full{
+    min-height:48px;
+    border-radius:14px;
+    margin:0!important;
+  }
+}

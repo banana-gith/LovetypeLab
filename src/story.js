@@ -1285,12 +1285,22 @@ const entjEnhancedStory = {
   ],
 };
 
+function fiveRallyDates(story) {
+  return {
+    ...story,
+    dates: story.dates.map((date) => ({
+      ...date,
+      scenes: date.scenes.slice(0, 5),
+    })),
+  };
+}
+
 export function storyFor(characterId) {
-  if (characterId === "rio") return rioEnhancedStory;
-  if (characterId === "nagi") return nagiEnhancedStory;
-  if (characterId === "aoi") return aoiEnhancedStory;
-  if (characterId === "reina") return entjEnhancedStory;
-  return characterStories[characterId] || characterStories.mina;
+  if (characterId === "rio") return fiveRallyDates(rioEnhancedStory);
+  if (characterId === "nagi") return fiveRallyDates(nagiEnhancedStory);
+  if (characterId === "aoi") return fiveRallyDates(aoiEnhancedStory);
+  if (characterId === "reina") return fiveRallyDates(entjEnhancedStory);
+  return fiveRallyDates(characterStories[characterId] || characterStories.mina);
 }
 
 export function branchTone(flags = {}) {

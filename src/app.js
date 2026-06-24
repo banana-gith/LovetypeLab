@@ -1,6 +1,6 @@
 import { personaCatalog } from "./personas.js";
 import { activePersonaSwitch, characterFinaleScene, characterGameDesign, characterRouteEnding, personaSwitchFeedback, relationshipPulse, relationshipRoute, routeEndings, sceneCharacterSubtext, sceneCoaching, sceneDramaturgy, sceneEmotionalContract, sceneReadingCue, sceneTacticalRead } from "./gameDesign.js";
-import { storyFor } from "./story.js";
+import { storyFor } from "./story.js?v=date-briefing-20260624b";
 
 const $ = (selector) => document.querySelector(selector);
 
@@ -557,7 +557,7 @@ function profile() {
         </div>
         <div class="training"><span class="big-spark">✦</span><div><span>TRAINING THEME</span><h3>${c.theme}</h3><p>全${s.dates.length}回のデート / ${totalScenes(c)}シーン</p></div></div>
         <label class="age-check"><input type="checkbox" checked><span>私は18歳以上で、相手への尊重を大切にして練習します。</span></label>
-        <button class="primary full" data-start>この相手とデートする →</button>
+        <button class="primary full" data-start>デート前ブリーフを見る →</button>
       </div>
     </div>
   </main>`;
@@ -1275,6 +1275,60 @@ function needCompassCard(compass) {
 
 function connectionBidCard(bid) {
   return `<div class="connection-bid-card bid-${bid.tone}"><span>${bid.badge}</span><b>${bid.status}: ${bid.title}</b><p>${bid.copy}</p><small>${bid.next}</small></div>`;
+}
+
+function briefing() {
+  const c = state.char;
+  const { date, dateIndex, scene } = currentScene();
+  const firstSceneIndex = dateStartIndex(dateIndex, c);
+  const firstScene = date.scenes[0] || scene;
+  const line = lineForScene(dateIndex, 0, firstScene);
+  const count = totalScenes(c);
+  const design = gameDesign(c);
+  const mission = dateMissionReport(c, dateIndex);
+  const reading = sceneReadingCue(c.id, firstSceneIndex, count);
+  const coaching = sceneCoaching(c.id, firstScene, firstSceneIndex, count);
+  const tactic = sceneTacticalRead(c.id, firstSceneIndex, count);
+  const contract = sceneEmotionalContract(c.id, firstScene, firstSceneIndex, count);
+  const activeSwitch = activePersonaSwitch(c.id, firstSceneIndex, count);
+  const stage = relationshipStage(c);
+  const compass = routeCompassReport(c);
+  const last = state.history.at(-1);
+  const carry = last
+    ? `<article class="briefing-carry"><span>前回からの持ち越し</span><b>${last.intent}</b><p>${last.nextImpact || last.aftertaste}</p></article>`
+    : `<article class="briefing-carry"><span>最初の読み</span><b>${design.winningMindset}</b><p>まずは相手の反応を急いで正解化せず、表情・言葉・間のどこに本音が出るかを見る。</p></article>`;
+  return `<div class="game-shell briefing-shell briefing-v2">
+    <header class="game-header"><button class="icon-button" data-go="profile">×</button><div class="game-person">${avatar(c)}<div><b>${c.name}</b><span>${c.roleName} / ${c.style}</span></div></div><div class="game-progress"><span>DATE ${dateIndex + 1} BRIEF <b>${firstSceneIndex + 1} / ${count}</b></span><i><em style="width:${(firstSceneIndex / count) * 100}%;background:${c.color}"></em></i></div></header>
+    <main class="briefing-main" style="--c:${c.color};--light:${c.light}">
+      <section class="briefing-card">
+        <div class="briefing-hero">
+          <div class="briefing-copy">
+            <span>DATE BEFORE BRIEF</span>
+            <h1>${date.title}</h1>
+            <p>${date.purpose}</p>
+          </div>
+          <div class="briefing-photo" style="background:${c.light}">${sceneArtwork(c, firstScene, firstSceneIndex)}<small>FIRST SCENE</small></div>
+        </div>
+        ${dateMissionCard(mission)}
+        <div class="briefing-grid">
+          <article class="briefing-win"><span>今日の勝ち筋</span><b>${mission.title}</b><p>${mission.aim}</p></article>
+          <article><span>相手のサイン</span><b>${reading.signal}</b><p>${reading.goodRead}</p></article>
+          <article class="briefing-risk"><span>危ない返し</span><b>${reading.misread}</b><p>${design.temptationTrap}</p></article>
+          <article><span>最初の場面</span><b>${firstScene.title}</b><p>${firstScene.location}で、${c.name}は「${line}」と切り出す。</p></article>
+          <article><span>今回の練習</span><b>${coaching.skill}</b><p>${coaching.lesson}</p></article>
+          <article><span>${activeSwitch.label}</span><b>${tactic.title}</b><p>${contract.surface}</p></article>
+          ${carry}
+          <article class="briefing-route route-${compass.tone}"><span>今のルート</span><b>${stage.label} / ${compass.label}</b><p>${compass.fork}</p></article>
+        </div>
+        <div class="briefing-start">
+          <span>選ぶ前に見ること</span>
+          <b>${reading.playerQuestion}</b>
+          <p>選択肢は「優しいか」ではなく、この相手のいまの欲求に合っているかで選ぶ。</p>
+        </div>
+        <button class="primary full" data-start-date>ラリー1へ進む →</button>
+      </section>
+    </main>
+  </div>`;
 }
 
 function game() {
@@ -2153,6 +2207,7 @@ const views = {
   home,
   characters: charactersView,
   profile,
+  briefing,
   game,
   checkpoint,
   result,
@@ -2170,7 +2225,7 @@ function startGame() {
   state.picked = null;
   state.history = [];
   state.flags = { safe: 0, spark: 0, strain: 0 };
-  state.view = "game";
+  state.view = "briefing";
   render();
 }
 
@@ -2193,6 +2248,13 @@ document.addEventListener("click", async (event) => {
 
   if (event.target.closest("[data-start]")) {
     startGame();
+    return;
+  }
+
+  if (event.target.closest("[data-start-date]")) {
+    state.view = "game";
+    state.picked = null;
+    render();
     return;
   }
 
@@ -2266,7 +2328,7 @@ document.addEventListener("click", async (event) => {
     if (state.sceneIndex === totalScenes() - 1) state.view = "result";
     else {
       state.sceneIndex += 1;
-      state.view = "game";
+      state.view = "briefing";
     }
     state.picked = null;
     render();
