@@ -4,6 +4,8 @@
 
 This repository manages the `16Type` / `love-type-lab` web MVP, research artifacts, local serving scripts, and GitHub Pages build output.
 
+Before starting repository work, read this `AGENTS.md` and keep these project rules active for the task.
+
 ## Product Rules
 
 - Keep the app static-hostable and easy to run locally.

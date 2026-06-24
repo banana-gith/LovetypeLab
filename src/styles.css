@@ -543,3 +543,259 @@
     font-size:8.6px!important;
   }
 }
+/* v6 mobile fit and character roster */
+.character-select-v2 .roster-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+  gap:12px;
+  margin-top:28px;
+}
+.character-select-v2 .roster-card{
+  width:100%;
+  overflow:hidden;
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  padding:0!important;
+  text-align:left!important;
+  color:#24151a!important;
+  border:1px solid #d9ad6380!important;
+  border-radius:16px!important;
+  background:linear-gradient(180deg,#fffaf1,#f1dfc4)!important;
+  box-shadow:0 16px 42px #0005!important;
+}
+.character-select-v2 .roster-card .profile-art{
+  min-height:0!important;
+  height:138px!important;
+  display:block!important;
+  position:relative!important;
+  overflow:hidden!important;
+}
+.character-select-v2 .roster-card .avatar,
+.character-select-v2 .roster-card .avatar-photo{
+  width:100%!important;
+  height:100%!important;
+  border-radius:0!important;
+}
+.character-select-v2 .roster-card .avatar-photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center 28%;
+}
+.character-select-v2 .roster-card .profile-content{
+  padding:12px!important;
+}
+.character-select-v2 .roster-card small{
+  display:block;
+  font-size:10px!important;
+  font-weight:900!important;
+}
+.character-select-v2 .roster-card h2{
+  margin:4px 0 6px!important;
+  font-size:22px!important;
+  line-height:1.1!important;
+}
+.character-select-v2 .roster-card h2 span{
+  font-size:8px!important;
+}
+.character-select-v2 .roster-card .profile-content>p{
+  min-height:0!important;
+  margin:0 0 8px!important;
+  color:#4d3735!important;
+  font-size:10px!important;
+  line-height:1.45!important;
+}
+.character-select-v2 .roster-card .practice{
+  margin:8px 0 0!important;
+  padding-top:8px!important;
+}
+.character-select-v2 .roster-card .practice span{
+  display:-webkit-box!important;
+  -webkit-line-clamp:2!important;
+  -webkit-box-orient:vertical!important;
+  overflow:hidden!important;
+}
+.character-select-v2 .roster-card .card-button{
+  margin-top:10px;
+  min-height:34px;
+}
+@media(max-width:620px){
+  .character-select-v2{
+    min-height:calc(100dvh - 64px)!important;
+    padding:10px 10px 24px!important;
+  }
+  .character-select-v2 .page-title h1{
+    font-size:24px!important;
+    line-height:1.2!important;
+    margin:6px 0!important;
+  }
+  .character-select-v2 .page-title p{
+    display:none!important;
+  }
+  .character-select-v2 .page-title>span{
+    font-size:8px!important;
+  }
+  .character-select-v2 .roster-grid{
+    grid-template-columns:1fr!important;
+    gap:6px!important;
+    margin-top:8px!important;
+  }
+  .character-select-v2 .roster-card{
+    display:grid!important;
+    grid-template-columns:72px minmax(0,1fr)!important;
+    border-radius:12px!important;
+    height:72px!important;
+    min-height:0!important;
+    max-height:72px!important;
+  }
+  .character-select-v2 .roster-card:before{
+    content:none!important;
+    display:none!important;
+  }
+  .character-select-v2 .roster-card .profile-art{
+    height:72px!important;
+  }
+  .character-select-v2 .roster-card .avatar:not(.avatar-photo) .head{
+    bottom:8px!important;
+    transform:scale(.62)!important;
+    transform-origin:center bottom!important;
+  }
+  .character-select-v2 .roster-card .avatar:not(.avatar-photo) .body{
+    bottom:-26px!important;
+    transform:scale(.58)!important;
+    transform-origin:center bottom!important;
+  }
+  .character-select-v2 .roster-card .orbit,
+  .character-select-v2 .roster-card .spark,
+  .character-select-v2 .roster-card .avatar-symbol{
+    display:none!important;
+  }
+  .character-select-v2 .roster-card .difficulty{
+    left:6px!important;
+    top:6px!important;
+    padding:3px 6px!important;
+    font-size:6px!important;
+  }
+  .character-select-v2 .roster-card .profile-content{
+    display:block!important;
+    height:72px!important;
+    padding:6px 8px!important;
+    min-width:0!important;
+    overflow:hidden!important;
+  }
+  .character-select-v2 .roster-card .profile-content:before{
+    content:none!important;
+    display:none!important;
+  }
+  .character-select-v2 .roster-card small{
+    display:inline-block!important;
+    max-width:100%!important;
+    border-radius:999px!important;
+    padding:2px 7px!important;
+    background:#2d1420!important;
+    color:#ffe6ad!important;
+    font-size:7px!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  .character-select-v2 .roster-card h2{
+    color:#24151a!important;
+    font-size:18px!important;
+    line-height:1.05!important;
+    margin:3px 0 2px!important;
+  }
+  .character-select-v2 .roster-card h2 span{
+    color:#7f6653!important;
+    font-size:7px!important;
+    margin-left:5px!important;
+  }
+  .character-select-v2 .roster-card .profile-content>p{
+    font-size:7.5px!important;
+    line-height:1.25!important;
+    margin-bottom:2px!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  .character-select-v2 .roster-card .tags,
+  .character-select-v2 .roster-card .practice b,
+  .character-select-v2 .roster-card .card-button{
+    display:none!important;
+  }
+  .character-select-v2 .roster-card .practice{
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+  }
+  .character-select-v2 .roster-card .practice span{
+    font-size:7px!important;
+    line-height:1.25!important;
+    margin:0!important;
+    -webkit-line-clamp:2!important;
+  }
+  .game-v2{
+    height:100dvh!important;
+    overflow:hidden!important;
+  }
+  .game-v2 .game-main{
+    height:calc(100dvh - 54px)!important;
+    overflow:hidden!important;
+    padding:6px!important;
+  }
+  .game-v2 .scene{
+    height:calc(100dvh - 66px)!important;
+    min-height:0!important;
+    grid-template-rows:auto auto auto minmax(58px,9dvh) minmax(56px,9dvh) auto auto minmax(108px,1fr)!important;
+    gap:4px!important;
+    padding:6px!important;
+  }
+  .game-v2 .scene-context{
+    padding:6px!important;
+  }
+  .game-v2 .date-mission{
+    min-height:34px!important;
+    padding:5px 7px!important;
+  }
+  .game-v2 .scene-visual{
+    min-height:58px!important;
+  }
+  .game-v2 .bubble{
+    min-height:54px!important;
+    padding:7px 9px!important;
+  }
+  .game-v2 .bubble p{
+    -webkit-line-clamp:2!important;
+  }
+  .game-v2 .goal{
+    min-height:24px!important;
+  }
+  .game-v2 .choices{
+    align-self:start!important;
+    grid-template-columns:1fr 1fr!important;
+    grid-auto-rows:auto!important;
+  }
+  .game-v2 .choices button{
+    min-height:52px!important;
+  }
+  .feedback-modal.luxury-review{
+    height:100dvh!important;
+    max-height:100dvh!important;
+    overflow:hidden!important;
+  }
+  .luxury-review .chat-head,
+  .reply-recap,
+  .reaction-card,
+  .review-verdict,
+  .review-next-grid article,
+  .review-detail-drawer{
+    flex-shrink:0!important;
+  }
+  .review-flow{
+    min-height:0!important;
+    overflow:hidden!important;
+  }
+  .review-detail-drawer[open]{
+    overflow:auto!important;
+  }
+}

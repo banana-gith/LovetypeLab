@@ -46,6 +46,7 @@ const characters = [
     type: "INFJ",
     name: "ミナ",
     roman: "MINA",
+    roleName: "静かな主人公",
     style: "INFJ風・静かな共感型",
     theme: "深い会話、余白、丁寧な距離感",
     age: "26歳",
@@ -66,6 +67,7 @@ const characters = [
     type: "ENFP",
     name: "リオ",
     roman: "RIO",
+    roleName: "自由なムードメーカー",
     style: "ENFP風・ひらめき自由型",
     theme: "楽しさ、自由、テンポの良い反応",
     age: "23歳",
@@ -88,6 +90,7 @@ const characters = [
     type: "INFP",
     name: "ナギ",
     roman: "NAGI",
+    roleName: "夢見る創作者",
     style: "INFP風・価値観ドリーマー型",
     theme: "創作、価値観、やわらかな本音",
     age: "25歳",
@@ -108,6 +111,7 @@ const characters = [
     type: "INTP",
     name: "アオイ",
     roman: "AOI",
+    roleName: "理屈派の研究者",
     style: "INTP風・知的探究型",
     theme: "仮説、思考の自由、静かな好意",
     age: "24歳",
@@ -128,6 +132,7 @@ const characters = [
     type: "ISTJ",
     name: "ハルカ",
     roman: "HARUKA",
+    roleName: "誠実な先輩",
     style: "ISTJ風・誠実積み上げ型",
     theme: "約束、具体性、信頼形成",
     age: "28歳",
@@ -148,6 +153,7 @@ const characters = [
     type: "ESTP",
     name: "ユウ",
     roman: "YU",
+    roleName: "行動派の相棒",
     style: "ESTP風・体験シェア型",
     theme: "ノリ、行動、軽快な誘い",
     age: "27歳",
@@ -168,6 +174,7 @@ const characters = [
     type: "ENTJ",
     name: "レイナ",
     roman: "REINA",
+    roleName: "戦略家のライバル",
     style: "ENTJ風・戦略直進型",
     theme: "知性、行動力、明確な言葉",
     age: "24歳",
@@ -493,13 +500,13 @@ function home() {
 }
 
 function castCard(c) {
-  return `<button class="cast-card" data-select="${c.id}">${avatar(c)}<div><small style="color:${c.color}">${c.style}</small><h3>${c.name} <span>${c.roman}</span></h3><p>${c.theme}</p></div><span class="chev">›</span></button>`;
+  return `<button class="cast-card" data-select="${c.id}">${avatar(c)}<div><small style="color:${c.color}">${c.roleName} / ${c.style}</small><h3>${c.name} <span>${c.roman}</span></h3><p>${c.theme}</p></div><span class="chev">›</span></button>`;
 }
 
 function charactersView() {
   return `${header()}<main class="page character-select-v2">
     <div class="page-title"><span>CHOOSE YOUR DATE</span><h1>誰との会話を<br class="mobile">練習しますか？</h1><p>難易度より、いま気になる相手を選んでください。</p></div>
-    <div class="profile-grid">${characters.map((c) => `<article class="profile-card"><div class="profile-art" style="background:${c.light}"><span class="difficulty">難易度 ${c.difficulty}</span>${avatarIllustration(c, "avatar-large")}</div><div class="profile-content"><small style="color:${c.color}">${c.style}</small><h2>${c.name}<span>${c.roman}</span></h2><p>${c.bio}</p><div class="tags">${c.likes.map((x) => `<span>#${x}</span>`).join("")}</div><div class="practice"><b>今回の練習テーマ</b><span>${c.theme}</span></div><button class="card-button" style="background:${c.color}" data-select="${c.id}">プロフィールを見る →</button></div></article>`).join("")}</div>
+    <div class="profile-grid roster-grid">${characters.map((c) => `<button class="profile-card roster-card" data-select="${c.id}" style="--c:${c.color};--light:${c.light}"><div class="profile-art" style="background:${c.light}"><span class="difficulty">難易度 ${c.difficulty}</span>${avatar(c, "avatar-large")}</div><div class="profile-content"><small style="color:${c.color}">${c.roleName}</small><h2>${c.name}<span>${c.roman}</span></h2><p>${c.style}</p><div class="tags">${c.likes.slice(0, 2).map((x) => `<span>#${x}</span>`).join("")}</div><div class="practice"><b>練習テーマ</b><span>${c.theme}</span></div><span class="card-button" style="background:${c.color}">プロフィールを見る →</span></div></button>`).join("")}</div>
   </main>${footer()}`;
 }
 
@@ -511,8 +518,8 @@ function profile() {
   return `${header(true)}<main class="detail profile-v2">
     <button class="back" data-go="characters">← 相手を選び直す</button>
     <div class="detail-grid">
-      <div class="detail-art" style="background:${c.light}">${avatar(c, "avatar-large")}<div class="type-stamp" style="color:${c.color}">${c.style}</div></div>
-      <div class="detail-copy"><span class="roman">${c.roman}</span><h1>${c.name}</h1><p class="lead">${c.bio}</p>
+      <div class="detail-art" style="background:${c.light}">${avatar(c, "avatar-large")}<div class="type-stamp" style="color:${c.color}">${c.roleName} / ${c.style}</div></div>
+      <div class="detail-copy"><span class="roman">${c.roman} / ${c.roleName}</span><h1>${c.name}</h1><p class="lead">${c.bio}</p>
         <div class="facts"><div><span>AGE</span><b>${c.age}</b></div><div><span>WORK</span><b>${c.job}</b></div><div><span>PACE</span><b>${c.pace}</b></div></div>
         <div class="detail-box"><div><span>好き</span><p>${c.likes.join("・")}</p></div><div><span>苦手</span><p>${c.caution}</p></div></div>
         <div class="story-brief">
@@ -1288,7 +1295,7 @@ function game() {
   const stage = relationshipStage(c);
   const compass = routeCompassReport(c);
   return `<div class="game-shell game-v2">
-    <header class="game-header"><button class="icon-button" data-go="profile">×</button><div class="game-person">${avatar(c)}<div><b>${c.name}</b><span>${c.style}</span></div></div><div class="game-progress"><span>DATE ${dateIndex + 1} <b>${state.sceneIndex + 1} / ${count}</b></span><i><em style="width:${((state.sceneIndex + 1) / count) * 100}%;background:${c.color}"></em></i></div></header>
+    <header class="game-header"><button class="icon-button" data-go="profile">×</button><div class="game-person">${avatar(c)}<div><b>${c.name}</b><span>${c.roleName} / ${c.style}</span></div></div><div class="game-progress"><span>DATE ${dateIndex + 1} <b>${state.sceneIndex + 1} / ${count}</b></span><i><em style="width:${((state.sceneIndex + 1) / count) * 100}%;background:${c.color}"></em></i></div></header>
     <main class="game-main"><aside class="score-strip"><div class="score-hero" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>\u7dcf\u5408\u8a55\u4fa1</span><b>${tier.label}</b><p>${tier.sub}</p></div></div>${meters()}<div class="relationship-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div>${routeCompassCard(compass, true)}<div class="meter-help">\u30bf\u30a4\u30d7\u3054\u3068\u306b\u91cd\u304f\u898b\u308b\u30dd\u30a4\u30f3\u30c8\u304c\u5c11\u3057\u9055\u3044\u307e\u3059\u3002</div></aside>
       <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ラリー ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context compact"><b>今の読みどころ</b>${sceneFocusPanel({ date, scene, line, reading, tactic, heartKey, needCompass, connectionBid })}</div>${previousImpactPanel()}${currentDateConversationPanel(dateIndex, local)}${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent"><small>方向性</small>${choiceDirection(choice)}</em><p>${choice.label}</p></button>`).join("")}</div></section>
     </main>${state.picked ? feedback() : ""}
@@ -1305,7 +1312,7 @@ function feedback() {
   const momentum = picked.momentum || momentumRead(picked);
   return `<div class="feedback-overlay"><div class="feedback-modal chat-modal feedback-stamp-modal luxury-review grade-${grade.className}">
     <div class="grade-stamp"><small>4段階スタンプ</small><span>${grade.rank}</span><b>${grade.phrase}</b><p>${grade.cue}</p></div>
-    <div class="chat-head" style="--c:${c.color};--light:${c.light}">${avatar(c)}<div><span>${grade.rank} / ${choiceDirection(picked)}</span><h3>${c.name}\u306e反応</h3><p>${grade.cue}</p></div></div>
+    <div class="chat-head" style="--c:${c.color};--light:${c.light}">${avatar(c)}<div><span>${c.roleName} / ${grade.rank} / ${choiceDirection(picked)}</span><h3>${c.name}\u306e反応</h3><p>${grade.cue}</p></div></div>
     <div class="review-flow">
       <div class="reply-recap"><span>あなたの返答</span><p>${picked.label}</p></div>
       <div class="reaction-card" style="--c:${c.color};--light:${c.light}"><b>${c.name}の反応</b><p>「${picked.reaction}」</p></div>
@@ -1970,7 +1977,7 @@ function checkpoint() {
     : "この先は最終結果で、ふたりの関係の着地を見ます。";
   const nextReadCopy = nextRead ? `読むサイン: ${nextRead.signal} / 合言葉: ${nextRead.playerQuestion}` : "最終結果で、今回の読み筋を振り返ります。";
   return `<div class="game-shell checkpoint-shell checkpoint-v2">
-    <header class="game-header"><button class="icon-button" data-go="profile">×</button><div class="game-person">${avatar(c)}<div><b>${c.name}</b><span>${c.style}</span></div></div><div class="game-progress"><span>DATE ${dateIndex + 1} CLEAR <b>${state.sceneIndex + 1} / ${totalScenes(c)}</b></span><i><em style="width:${((state.sceneIndex + 1) / totalScenes(c)) * 100}%;background:${c.color}"></em></i></div></header>
+    <header class="game-header"><button class="icon-button" data-go="profile">×</button><div class="game-person">${avatar(c)}<div><b>${c.name}</b><span>${c.roleName} / ${c.style}</span></div></div><div class="game-progress"><span>DATE ${dateIndex + 1} CLEAR <b>${state.sceneIndex + 1} / ${totalScenes(c)}</b></span><i><em style="width:${((state.sceneIndex + 1) / totalScenes(c)) * 100}%;background:${c.color}"></em></i></div></header>
     <main class="checkpoint-main" style="--c:${c.color};--light:${c.light}">
       <section class="checkpoint-card">
         <span class="checkpoint-kicker">DATE ${dateIndex + 1} REVIEW</span>
@@ -2107,7 +2114,7 @@ function result() {
       </div>
       <div class="result-character-card">
         ${avatar(c)}
-        <span>${c.type}風デート完走</span>
+        <span>${c.roleName} / ${c.type}風デート完走</span>
         <h2>${type}</h2>
         <p>${end[2]}</p>
       </div>
@@ -2119,7 +2126,7 @@ function result() {
     </section>
     <details class="result-detail-drawer">
       <summary>詳細ログとメーターを見る</summary>
-      <div class="report-grid"><div class="share-card" style="--c:${c.color};--light:${c.light}"><div class="share-brand">Love Type Lab ✦</div>${avatar(c)}<span>${c.type}風デート完走</span><h2>${type}</h2><div class="route-card"><small>${route.badge}</small><b>${route.name}</b><p>${route.summary}</p></div><div class="epilogue-card"><span>ENDING SCENE</span><b>${route.epilogueTitle}</b><p>${route.epilogue}</p><small>次回ミッション: ${route.replayMission}</small></div><p>${c.name}との${story(c).dates.length}回のデートで、${gd.mastery}</p><div class="share-tags"><span>#LoveTypeLab</span><span>#${c.type}風</span><span>#会話練習</span></div><small>TYPE DATE TRAINER</small></div>
+      <div class="report-grid"><div class="share-card" style="--c:${c.color};--light:${c.light}"><div class="share-brand">Love Type Lab ✦</div>${avatar(c)}<span>${c.roleName} / ${c.type}風デート完走</span><h2>${type}</h2><div class="route-card"><small>${route.badge}</small><b>${route.name}</b><p>${route.summary}</p></div><div class="epilogue-card"><span>ENDING SCENE</span><b>${route.epilogueTitle}</b><p>${route.epilogue}</p><small>次回ミッション: ${route.replayMission}</small></div><p>${c.name}との${story(c).dates.length}回のデートで、${gd.mastery}</p><div class="share-tags"><span>#LoveTypeLab</span><span>#${c.roleName}</span><span>#${c.type}風</span></div><small>TYPE DATE TRAINER</small></div>
       <div class="score-report"><div class="playstyle-card"><span>${style.badge}</span><b>${style.title}</b><p>${style.copy}</p></div>${relationshipArcPanel(c)}<div class="memory-card memory-${memory.tone}"><span>${c.name}に残った記憶</span><b>${memory.label}</b><p>${memory.copy}</p></div><div class="finale-scene-card" style="--c:${c.color};--light:${c.light}"><span>${finale.badge} FINALE</span><b>${c.name}が最後に残した一言</b><p>「${finale.line}」</p><small>${finale.memoryBridge}</small><em>${finale.nextBeat}</em></div>${missionBoardPanel(c)}<div class="heart-memo-panel"><h3>${c.name}の本音メモ <span>${heart.unlocked.length}/5</span></h3>${heart.unlocked.map((memo) => `<article><b>${memo.title}</b><p>${memo.text}</p></article>`).join("")}${heart.locked ? `<small>未解放メモ: ${heart.locked} / 次の鍵は「${heart.nextHint}」</small>` : `<small>すべての本音メモを解放しました。</small>`}</div>${switchProgressPanel(c)}${routeAlbumPanel(c, route)}<h2>5つの空気メーター</h2>${meters()}<div class="skill-panel"><h3>今回身についた会話スキル</h3><div>${playerSkillBadges().map((badge) => `<article><span>${badge.icon}</span><b>${badge.title}</b><p>${badge.text}</p></article>`).join("")}</div></div><div class="learned-strip"><h3>解放した会話レッスン</h3><p>${learned.slice(0, 8).map((item) => `<span>${item.badge} ${item.skill}</span>`).join("")}</p></div><div class="moment-log"><h3>印象に残る選択</h3>${decisiveMoments().map((moment) => `<article class="moment-${moment.branch}"><span>${moment.intent}</span><b>${moment.scene}</b><p>${moment.text}</p></article>`).join("")}</div><div class="insight"><span>✦</span><div><b>あなたの勝ち筋</b><p>${strongestInsight()} ${gd.winningMindset}</p></div></div><div class="insight"><span>→</span><div><b>次の一手</b><p>${route.nextMove}</p></div></div><div class="insight warn"><span>!</span><div><b>次に伸びるポイント</b><p>${growthInsight()} ${gd.temptationTrap}</p></div></div></div></div>
     </details>
   </main>`;
