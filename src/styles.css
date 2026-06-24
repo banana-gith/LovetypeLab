@@ -1337,3 +1337,113 @@
     margin:0!important;
   }
 }
+
+/* v9 choice readout cues */
+.choice-readout{
+  grid-column:auto;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  width:max-content;
+  max-width:100%;
+  border:1px solid #d7ad6266;
+  border-radius:999px;
+  padding:3px 7px;
+  background:#fff7e7;
+  color:#5a3518;
+  font-size:8px;
+  font-style:normal;
+  font-weight:900;
+  line-height:1;
+}
+.choice-readout small{
+  color:#8a6232;
+  font-size:7px;
+}
+.choice-readout span{
+  max-width:150px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#6f4b24;
+  font-size:7.5px;
+  font-weight:800;
+}
+.readout-fit .choice-readout,
+.choice-readout.readout-fit,
+.choice-readout-review.readout-fit{
+  background:linear-gradient(135deg,#fff5d3,#f6d98d)!important;
+  border-color:#d3a15b8f!important;
+}
+.readout-safe .choice-readout,
+.choice-readout.readout-safe,
+.choice-readout-review.readout-safe{
+  background:linear-gradient(135deg,#eefaf4,#ccebdd)!important;
+  border-color:#78b5967d!important;
+}
+.readout-spark .choice-readout,
+.choice-readout.readout-spark,
+.choice-readout-review.readout-spark{
+  background:linear-gradient(135deg,#fff0de,#ffcaa2)!important;
+  border-color:#df7c4285!important;
+}
+.readout-risk .choice-readout,
+.choice-readout.readout-risk,
+.choice-readout-review.readout-risk{
+  background:linear-gradient(135deg,#fff0f2,#f2c3cd)!important;
+  border-color:#d85b727d!important;
+}
+.readout-repair .choice-readout,
+.choice-readout.readout-repair,
+.choice-readout-review.readout-repair{
+  background:linear-gradient(135deg,#f2edff,#d9cff9)!important;
+  border-color:#8e6ed685!important;
+}
+.choice-readout-review b{
+  display:block;
+  color:#fff8e9!important;
+  font-size:13px;
+  line-height:1.45;
+  margin-bottom:5px;
+}
+.choice-readout-review p{
+  color:#fff2d6!important;
+}
+
+@media(max-width:620px){
+  .game-v2 .choices button{
+    grid-template-rows:auto auto 1fr!important;
+  }
+  .choice-readout{
+    grid-column:2!important;
+    font-size:6.2px!important;
+    padding:2px 5px!important;
+    gap:3px!important;
+  }
+  .choice-readout small,
+  .choice-readout span{
+    display:none!important;
+  }
+  .review-next-grid{
+    grid-template-columns:1fr 1fr!important;
+  }
+  .choice-readout-review{
+    grid-column:1 / -1!important;
+  }
+  .choice-readout-review b{
+    font-size:10px!important;
+    line-height:1.35!important;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .choice-readout-review p{
+    font-size:8.6px!important;
+    line-height:1.42!important;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+}

@@ -1052,6 +1052,64 @@ function choiceAftertaste(choice) {
   return "空気が少し揺れ、相手は次の一言で本当に見てくれるかを測っている";
 }
 
+function riskLabel(key) {
+  return {
+    pressure: "圧",
+    misread: "誤読",
+    "type-mismatch": "型違い",
+    "tactic-mismatch": "読み違い",
+    low: "低",
+  }[key] || "注意";
+}
+
+function choiceReadout(choice) {
+  const evaluation = choice.evaluation || {};
+  const fit = choice.fit || evaluation.fit || {};
+  if (evaluation.recoveredFromSceneIndex !== null && evaluation.recoveredFromSceneIndex !== undefined) {
+    return {
+      tone: "repair",
+      label: "修復",
+      copy: "前のズレを拾い直す",
+      review: `前の揺れをなかったことにせず、${fit.advances || "相手の言葉"}へ戻ろうとしている。`,
+    };
+  }
+  if (choice.branch === "strain" || !["low", undefined, null].includes(fit.risk)) {
+    return {
+      tone: "risk",
+      label: `危険:${riskLabel(fit.risk)}`,
+      copy: choice.branch === "strain" ? "相手のサインを踏む" : "相性の急所から外れる",
+      review: `危険は「${riskLabel(fit.risk)}」。${choice.tactic?.trap || choice.decoder?.repair || "相手の主導権を残せているか確認したい。"}`,
+    };
+  }
+  if (["core", "need", "type-fit"].includes(evaluation.fitKey) || choice.heartKey?.tone === "open" || choice.needCompass?.tone === "open") {
+    return {
+      tone: "fit",
+      label: "刺さる",
+      copy: `${fit.advances || "本音"}を拾う`,
+      review: `拾えたのは「${fit.primaryNeed || fit.advances || "相手の欲求"}」。この相手が見てほしい場所に近い。`,
+    };
+  }
+  if (choice.branch === "spark") {
+    return {
+      tone: "spark",
+      label: "温度",
+      copy: `${fit.advances || "恋愛温度"}を上げる`,
+      review: `会話の温度は上がる。ただし、次に${fit.primaryNeed || "相手の大事な欲求"}へ着地させないと軽く見える。`,
+    };
+  }
+  return {
+    tone: "safe",
+    label: "安心",
+    copy: `${fit.advances || "話せる空気"}を作る`,
+    review: `土台は作れる。ここから${fit.primaryNeed || "相手の欲求"}へ一歩踏み込むと、汎用回答から抜ける。`,
+  };
+}
+
+function choiceReadoutChip(choice) {
+  const readout = choiceReadout(choice);
+  return `<em class="choice-readout readout-${readout.tone}"><small>読解</small>${readout.label}<span>${readout.copy}</span></em>`;
+}
+
 function strictChoiceReview(choice, character = state.char, evaluation = choice.evaluation, useEvaluation = true) {
   if (useEvaluation && evaluation?.review) return evaluation.review;
   const bias = persona(character)?.scoringBias?.[choice.kind] ?? 1;
@@ -1064,6 +1122,12 @@ function strictChoiceReview(choice, character = state.char, evaluation = choice.
   if (choice.branch === "spark" && bias < 1 && character.best !== choice.kind) return `楽しくはある。ただし、この相手には少し表面をなでている。軽さのあとに、具体的な理解か敬意を足さないと残らない。`;
   if (bias >= 1.15) return `この相手の急所をちゃんと踏めている。偶然の優しさではなく、${character.name}が欲しい受け取られ方に近い。`;
   return `合格。ただ、まだ「誰にでも言えそう」な範囲。${character.name}ならではの怖がり方、喜び方まで読めると一段上がる。`;
+}
+
+function choiceReviewReadout(choice) {
+  const readout = choiceReadout(choice);
+  const fit = choice.fit || choice.evaluation?.fit || {};
+  return `<article class="choice-readout-review readout-${readout.tone}"><span>選択の読解</span><b>${readout.label} / ${fit.advances || fit.primaryNeed || choiceDirection(choice)}</b><p>${readout.review}</p></article>`;
 }
 
 function previousChoiceForScene(sceneIndex = state.sceneIndex) {
@@ -1351,7 +1415,7 @@ function game() {
   return `<div class="game-shell game-v2">
     <header class="game-header"><button class="icon-button" data-go="profile">×</button><div class="game-person">${avatar(c)}<div><b>${c.name}</b><span>${c.roleName} / ${c.style}</span></div></div><div class="game-progress"><span>DATE ${dateIndex + 1} <b>${state.sceneIndex + 1} / ${count}</b></span><i><em style="width:${((state.sceneIndex + 1) / count) * 100}%;background:${c.color}"></em></i></div></header>
     <main class="game-main"><aside class="score-strip"><div class="score-hero" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>\u7dcf\u5408\u8a55\u4fa1</span><b>${tier.label}</b><p>${tier.sub}</p></div></div>${meters()}<div class="relationship-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div>${routeCompassCard(compass, true)}<div class="meter-help">\u30bf\u30a4\u30d7\u3054\u3068\u306b\u91cd\u304f\u898b\u308b\u30dd\u30a4\u30f3\u30c8\u304c\u5c11\u3057\u9055\u3044\u307e\u3059\u3002</div></aside>
-      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ラリー ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context compact"><b>今の読みどころ</b>${sceneFocusPanel({ date, scene, line, reading, tactic, heartKey, needCompass, connectionBid })}</div>${previousImpactPanel()}${currentDateConversationPanel(dateIndex, local)}${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent"><small>方向性</small>${choiceDirection(choice)}</em><p>${choice.label}</p></button>`).join("")}</div></section>
+      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ラリー ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context compact"><b>今の読みどころ</b>${sceneFocusPanel({ date, scene, line, reading, tactic, heartKey, needCompass, connectionBid })}</div>${previousImpactPanel()}${currentDateConversationPanel(dateIndex, local)}${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch} readout-${choiceReadout(choice).tone}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent"><small>方向性</small>${choiceDirection(choice)}</em>${choiceReadoutChip(choice)}<p>${choice.label}</p></button>`).join("")}</div></section>
     </main>${state.picked ? feedback() : ""}
   </div>`;
 }
@@ -1372,6 +1436,7 @@ function feedback() {
       <div class="reaction-card" style="--c:${c.color};--light:${c.light}"><b>${c.name}の反応</b><p>「${picked.reaction}」</p></div>
       <div class="review-verdict"><span>辛口レビュー</span><strong>${grade.rank}</strong><b>${strictChoiceReview(picked, c)}</b><p>${grade.cue}</p></div>
       <div class="review-next-grid">
+        ${choiceReviewReadout(picked)}
         <article class="next-impact"><span>次に響く</span><p>${picked.evaluation?.nextImpact || choiceAftertaste(picked)}</p></article>
         <article class="recovery-tip"><span>リカバリー</span><p>${picked.evaluation?.recovery || picked.better}</p></article>
       </div>
