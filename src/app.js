@@ -2203,6 +2203,54 @@ function resultFocusCards(character, gameplay, route) {
   </div>`;
 }
 
+function branchTimelineVerdict(history = state.history) {
+  if (!history.length) return "まだ分岐は白紙。最初の5ラリーで、安心・火花・揺れのどれを土台にするかが決まる。";
+  const { counts } = branchSummary(history);
+  const recovered = hasRecovery(history);
+  if (counts.strain >= 4) return "揺れが多い回。攻めているというより、相手が守りに入る場面が続いている。次周は致命傷の直後を修復練習にする。";
+  if (recovered) return "途中でズレたが、修復の線は作れている。次周は同じズレを起こす前に、相手の言葉を一つ拾う。";
+  if (counts.spark > counts.safe + 2) return "火花が先行した回。印象には残るが、終盤で安心や具体性へ着地させないと軽く見える。";
+  if (counts.safe > counts.spark + 3) return "安心は作れた回。ただし安全運転が続くと恋愛温度が伸びにくい。次周は各デート終盤で一度だけ意思を出す。";
+  return "安心と火花の配分は悪くない。次周は一番効いた一手の型を、別ルートでもう一度狙う。";
+}
+
+function routeBranchTimelinePanel(character = state.char, history = state.history) {
+  const historyByScene = new Map(history.map((item) => [item.sceneIndex, item]));
+  const counts = branchSummary(history).counts;
+  const gradeClass = (grade = "Close") => ({
+    "Great!": "great",
+    Good: "good",
+    Close: "close",
+    Miss: "miss",
+  }[grade] || "close");
+  const branchLabel = (branch) => ({ safe: "安心", spark: "火花", strain: "揺れ" }[branch] || "未選択");
+  let cursor = 0;
+  return `<section class="branch-timeline-panel" style="--c:${character.color};--light:${character.light}">
+    <div class="branch-timeline-head">
+      <div><span>ROUTE TIMELINE</span><b>15ラリーの分岐ログ</b><p>${branchTimelineVerdict(history)}</p></div>
+      <dl><div><dt>安心</dt><dd>${counts.safe}</dd></div><div><dt>火花</dt><dd>${counts.spark}</dd></div><div><dt>揺れ</dt><dd>${counts.strain}</dd></div></dl>
+    </div>
+    <div class="branch-timeline-dates">
+      ${storyFor(character.id).dates.map((date, dateIndex) => {
+        const scenes = date.scenes.map((scene, local) => {
+          const sceneIndex = cursor + local;
+          const item = historyByScene.get(sceneIndex);
+          const branch = item?.branch || "blank";
+          const repaired = item?.recoveredFromSceneIndex !== null && item?.recoveredFromSceneIndex !== undefined;
+          const title = `${date.title} ${local + 1}: ${scene.title}`;
+          return `<article class="timeline-node node-${branch} grade-${gradeClass(item?.grade)} ${repaired ? "repaired" : ""}" aria-label="${title} ${item ? branchLabel(item.branch) : "未選択"}">
+            <span>${sceneIndex + 1}</span>
+            <b>${item ? branchLabel(item.branch) : "未選択"}</b>
+            <small>${item?.grade || "..."}</small>
+          </article>`;
+        }).join("");
+        cursor += date.scenes.length;
+        return `<div class="branch-date"><h3>DATE ${dateIndex + 1}<span>${date.title}</span></h3><div>${scenes}</div></div>`;
+      }).join("")}
+    </div>
+  </section>`;
+}
+
 function result() {
   const c = state.char;
   const gd = gameDesign(c);
@@ -2239,7 +2287,8 @@ function result() {
       </div>
     </section>
     <section class="result-verdict">
-      <div class="gameplay-final-review"><span>5ラリー全体レビュー</span><b>${gameplay.finalReview}</b><p>${gameplay.nextMission}</p></div>
+      <div class="gameplay-final-review"><span>15ラリー総合レビュー</span><b>${gameplay.finalReview}</b><p>${gameplay.nextMission}</p></div>
+      ${routeBranchTimelinePanel(c, state.history)}
       ${resultFocusCards(c, gameplay, route)}
       <div class="result-actions"><button class="primary" data-share>結果をコピーする</button><button class="outline" data-restart>もう一度デートする</button></div>
     </section>
