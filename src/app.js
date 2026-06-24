@@ -420,44 +420,65 @@ function footer() {
 }
 
 function home() {
-  return `${header()}<main>
-    <section class="hero">
+  const featured = characters[0];
+  const rival = characters[1] || featured;
+  return `${header()}<main class="landing-v2">
+    <section class="hero game-hero" style="--c:${featured.color};--light:${featured.light}">
       <div class="hero-copy">
-        <div class="eyebrow">✦ 3回のデートで学ぶ、恋愛会話トレーニング</div>
-        <h1>「いい人」で終わらない<br><span>会話の距離感</span>を<br>ゲームで身につける。</h1>
-        <p>同じ言葉でも、相手の会話スタイルによって受け取られ方は変わります。<br class="desktop">${characters.length}人とのデートを通して、自分らしい伝え方を見つけましょう。</p>
-        <div class="hero-actions"><button class="primary" data-go="characters">デートをはじめる →</button><button class="text-button" data-scroll="how"><span>▶</span>遊び方を見る</button></div>
-        <div class="safe-note"><span>18+</span><p>これは診断・攻略ではなく、相手の同意と境界線を大切にする会話練習です。</p></div>
-      </div>
-      <div class="hero-visual">
-        <div class="blob"></div>
-        <div class="date-card">
-          <div class="card-top"><span>DATE 01</span><span class="live-dot">● PLAYING</span></div>
-          <div class="date-person">${avatar(characters[0], "avatar-large")}<div><small>静かな共感型</small><h3>ミナ</h3><p>「今日は、ゆっくり話せそうで少し安心した」</p></div></div>
-          <div class="mini-choice"><span>A</span>どうして安心したの？</div>
-          <div class="mini-choice active"><span>B</span>そう感じたんだね。聞けてうれしい。</div>
+        <h1>Love Type Lab</h1>
+        <p class="hero-subtitle">5ラリーの会話で、距離が近づく。ズレたら相手の反応を見て立て直す。恋愛会話を「選択」と「辛口レビュー」で遊ぶ、静的ブラウザゲームです。</p>
+        <div class="hero-actions"><button class="primary" data-go="characters">デートをはじめる →</button><button class="text-button" data-scroll="how"><span>▶</span>ゲームループを見る</button></div>
+        <div class="hero-stats">
+          <article><b>3</b><span>DATES</span><p>ブリーフから幕間まで</p></article>
+          <article><b>5</b><span>RALLIES</span><p>会話が前後につながる</p></article>
+          <article><b>${characters.length}</b><span>CAST</span><p>刺さる返しが違う</p></article>
         </div>
-        <div class="feedback-float"><span>TRUST</span><strong>+8</strong><p>気持ちを受け止めた</p></div>
+      </div>
+      <div class="hero-stage">
+        <div class="mock-window">
+          <div class="mock-top"><span>DATE 01 / RALLY 03</span><b>LIVE ROUTE</b></div>
+          <div class="mock-main">
+            <div class="mock-person">${avatar(featured, "avatar-large")}<div><small>${featured.style}</small><h3>${featured.name}</h3><p>「さっきの言い方、ちゃんと聞いてくれてる感じがした」</p></div></div>
+            <div class="mock-log">
+              <article class="log-you"><span>YOU</span><p>無理に明るくしないで、今の気持ちを少し聞かせて。</p></article>
+              <article class="log-them"><span>${featured.name}</span><p>「その聞き方なら、もう少し話せる」</p></article>
+            </div>
+          </div>
+          <div class="mock-choice-row"><button>A 安心を積む</button><button class="active">B 一歩踏み込む</button><button>C 空気を乱す</button></div>
+        </div>
+        <div class="route-hud">
+          <article><span>前ラリーの影響</span><b>修復チャンス</b><p>さっきのズレを拾えるかで、次の発話が変わる。</p></article>
+          <article class="harsh"><span>辛口レビュー</span><b>優しいだけ。相手別の核心に触れてない。</b><p>褒めて終わりでは距離は動かない。</p></article>
+        </div>
       </div>
     </section>
-    <section class="promise"><p>会話に、たったひとつの「正解」はありません。</p><span>大切なのは、相手を決めつけず、反応を見ながら歩幅を合わせること。</span></section>
-    <section class="how" id="how">
-      <div class="section-head"><span>HOW IT WORKS</span><h2>選ぶ。気づく。次に活かす。</h2><p>選択肢ごとの相手視点、理由、改善フレーズをすぐ確認できます。</p></div>
-      <div class="steps">
+    <section class="promise prologue-band"><p>これは診断ではなく、相手の反応を読みながらリカバリーする会話ゲーム。</p><span>攻略の正解はキャラごとに変わります。同じ「面白く寄り添う」だけでは通用しません。</span></section>
+    <section class="how loop-section" id="how">
+      <div class="section-head"><span>CORE LOOP</span><h2>1場面で、会話が5回つながる。</h2><p>各ラリーの選択が、次の相手発話・修復余地・最終評価に残ります。</p></div>
+      <div class="loop-grid">
         ${[
-          ["01", "相手を選ぶ", `${characters.length}つの会話スタイルから、練習したい相手を選びます。`, "♥"],
-          ["02", "会話を選ぶ", "3回のデートで、場面ごとの返答を選びます。", "●"],
-          ["03", "相手視点で学ぶ", "なぜ響いたか、なぜすれ違ったかを確認します。", "✦"],
-        ].map((step, index) => `<div class="step"><div class="step-icon icon-${index}">${step[3]}<b>${step[0]}</b></div><h3>${step[1]}</h3><p>${step[2]}</p>${index < 2 ? `<span class="step-arrow">›</span>` : ""}</div>`).join("")}
+          ["01", "デート前ブリーフ", "相手のサインと危ない返しだけを先に読む。"],
+          ["02", "5ラリー会話", "前の選択が次の発話に影響し、単発問題で終わらない。"],
+          ["03", "辛口レビュー", "相手の反応、ズレた理由、リカバリー案を即確認。"],
+          ["04", "幕間と最終評価", "全体の転機・致命傷・次周ミッションが出る。"],
+        ].map((step) => `<article><span>${step[0]}</span><b>${step[1]}</b><p>${step[2]}</p></article>`).join("")}
       </div>
     </section>
-    <section class="cast">
-      <div class="section-head"><span>MEET THE CAST</span><h2>誰との会話を練習しますか？</h2></div>
+    <section class="cast cast-v2">
+      <div class="section-head"><span>CHARACTER ROUTES</span><h2>相手ごとに、刺さる言葉が違う。</h2><p>ミナには安心、リオには熱、レイナには精度。雑な万能回答は容赦なく削られます。</p></div>
       <div class="cast-grid">${characters.map((c) => castCard(c)).join("")}</div>
       <button class="secondary" data-go="characters">${characters.length}人のプロフィールを見る →</button>
     </section>
-    <section class="lab" id="about"><div><span class="eyebrow">ABOUT THIS LAB</span><h2>タイプは、人を決めつけるためではありません。</h2></div><div><p>16タイプ風の表現は、会話傾向を理解するためのヒントです。心理診断、医療助言、恋愛成功の保証ではありません。</p><ul><li>✓ 相手の同意と境界線を尊重します</li><li>✓ 断られた時の態度も評価します</li><li>✓ 強引な誘い、返答の強要、感情の否定は低評価です</li></ul></div></section>
-    <section class="bottom-cta"><span>READY?</span><h2>次の会話を、少しだけ<br>自分らしく。</h2><button class="primary light" data-go="characters">無料でデートをはじめる →</button></section>
+    <section class="lab result-preview" id="about">
+      <div><span class="eyebrow">ENDING DESIGN</span><h2>最後は長文解説ではなく、次に遊ぶ理由を出す。</h2></div>
+      <div class="ending-preview">
+        ${avatar(rival)}
+        <article><span>一番効いた一手</span><b>相手の言葉を引用して受け止めた</b></article>
+        <article><span>今回の致命傷</span><b>好意を急がせ、相手の余白を削った</b></article>
+        <article><span>次周ミッション</span><b>修復に頼る前に、ズレのサインを拾う</b></article>
+      </div>
+    </section>
+    <section class="bottom-cta bottom-cta-v2"><span>READY?</span><h2>会話の次の一手を、選びに行く。</h2><button class="primary light" data-go="characters">無料でデートをはじめる →</button></section>
   </main>${footer()}`;
 }
 
@@ -613,7 +634,7 @@ function sceneChoices() {
       const decoder = decoderRead(c, state.sceneIndex, choice, heartKey);
       const needCompass = needCompassRead(c, state.sceneIndex, choice, tactic, heartKey);
       const connectionBid = connectionBidRead(c, state.sceneIndex, choice, needCompass, heartKey);
-      return {
+      const enrichedChoice = {
         ...choice,
         tactic,
         momentum,
@@ -623,9 +644,101 @@ function sceneChoices() {
         connectionBid,
         effect: combineEffects(choice.effect, tactic.effect, momentum.effect, heartKey.effect, needCompass.effect, connectionBid.effect, characterFitEffect(c, choice)),
       };
+      const evaluation = evaluateChoice(enrichedChoice, { character: c, sceneIndex: state.sceneIndex, history: state.history });
+      return {
+        ...enrichedChoice,
+        fit: evaluation.fit,
+        evaluation,
+      };
     }),
     `${c.id}:${state.sceneIndex}`,
   );
+}
+
+function recentRecoverableStrain(history = state.history, sceneIndex = state.sceneIndex) {
+  return [...history]
+    .reverse()
+    .find((item) => item.branch === "strain" && sceneIndex - item.sceneIndex <= 2);
+}
+
+function choiceFit(choice, character = state.char) {
+  const design = gameDesign(character);
+  const bias = persona(character)?.scoringBias?.[choice.kind] ?? 1;
+  const primaryNeed = choice.connectionBid?.key || choice.needCompass?.need || choice.heartKey?.title || design.lens.focus;
+  const risk = choice.branch === "strain"
+    ? choice.kind === "pushy" ? "pressure" : "misread"
+    : bias <= 0.88 ? "type-mismatch"
+      : choice.tactic?.choiceRisks ? "tactic-mismatch"
+        : "low";
+  const advances = choice.heartKey?.tone === "open"
+    ? choice.heartKey.title
+    : choice.needCompass?.tone === "open"
+      ? choice.needCompass.title
+      : choice.branch === "spark" ? "恋愛温度" : choice.branch === "safe" ? "安心の土台" : "修復余地";
+  return {
+    ...(choice.fit || {}),
+    primaryNeed,
+    risk,
+    advances,
+    canRepair: choice.fit?.canRepair ?? choice.branch === "safe",
+  };
+}
+
+function reviewVoice(character = state.char) {
+  return gameDesign(character).reviewVoice || {
+    praise: "その相手に刺さる返しです。場面の欲求をちゃんと読めています。",
+    miss: "読みが浅いです。優しさやノリの前に、相手が守りたいものを見てください。",
+    pushy: "踏み込み方が雑です。距離を縮めたのではなく、相手の主導権を奪っています。",
+    repair: "戻せています。ズレをなかったことにせず、扱い直したのが効いています。",
+    final: "相手ごとの欲求を読まずに同じ返しを続けると、すぐ汎用的になります。",
+  };
+}
+
+function evaluateChoice(choice, { character = state.char, sceneIndex = state.sceneIndex, history = state.history } = {}) {
+  const fit = choiceFit(choice, character);
+  const voice = reviewVoice(character);
+  const bias = persona(character)?.scoringBias?.[choice.kind] ?? 1;
+  const recoverable = recentRecoverableStrain(history, sceneIndex);
+  const recoveredFromSceneIndex = choice.branch === "safe" && recoverable ? recoverable.sceneIndex : null;
+  const grade = choiceGrade(choice);
+  const fitKey = choice.heartKey?.tone === "open" ? "core"
+    : choice.needCompass?.tone === "open" ? "need"
+      : choice.connectionBid?.tone === "toward" || choice.connectionBid?.tone === "spark" ? "bid"
+        : bias >= 1.15 ? "type-fit"
+          : bias <= 0.88 ? "type-mismatch"
+            : choice.branch;
+  const reviewTone = recoveredFromSceneIndex !== null ? "repair"
+    : choice.branch === "strain" && choice.kind === "pushy" ? "pushy"
+      : choice.branch === "strain" ? "miss"
+        : grade.rank === "Great!" || fitKey === "type-fit" || fitKey === "core" ? "praise"
+          : "near";
+  const reviewLead = {
+    praise: voice.praise,
+    repair: voice.repair,
+    pushy: voice.pushy,
+    miss: voice.miss,
+    near: strictChoiceReview(choice, character, null, false),
+  }[reviewTone];
+  const nextPromptTone = recoveredFromSceneIndex !== null ? "repair" : choice.branch;
+  const nextImpact = nextPromptTone === "repair"
+    ? "次のラリーでは、相手は『言い直してくれる人か』を見ます。ここで雑に進めると修復が薄まります。"
+    : nextPromptTone === "strain"
+      ? "次のラリーは警戒寄りに変わります。相手は好意より先に、さっきのズレをどう扱うかを見ます。"
+      : nextPromptTone === "spark"
+        ? "次のラリーは温度が上がります。ただし、軽さだけが続くと本気度を疑われます。"
+        : "次のラリーは話し続けやすい空気になります。安全運転で止めず、どこかで自分の意思も出したい場面です。";
+  return {
+    fit,
+    fitKey,
+    needKey: fit.primaryNeed,
+    riskKey: fit.risk,
+    reviewTone,
+    review: `${reviewLead} 次は「${choice.better}」くらいまで具体化してください。`,
+    nextPromptTone,
+    nextImpact,
+    recovery: recoveredFromSceneIndex !== null ? `Scene ${recoveredFromSceneIndex + 1} のズレをここで拾い直しました。修復は成功寄りですが、次に同じ雑さを出すと帳消しです。` : fit.canRepair ? "もし次でズレたら、相手の言葉を一つ引用して受け取り直すと戻せます。" : "この返しの後は修復しにくいので、次の一手は必ず相手の主導権を残してください。",
+    recoveredFromSceneIndex,
+  };
 }
 
 function characterFitEffect(character, choice) {
@@ -922,7 +1035,8 @@ function choiceAftertaste(choice) {
   return "空気が少し揺れ、相手は次の一言で本当に見てくれるかを測っている";
 }
 
-function strictChoiceReview(choice, character = state.char) {
+function strictChoiceReview(choice, character = state.char, evaluation = choice.evaluation, useEvaluation = true) {
+  if (useEvaluation && evaluation?.review) return evaluation.review;
   const bias = persona(character)?.scoringBias?.[choice.kind] ?? 1;
   if (choice.branch === "strain") {
     if (choice.kind === "pushy") return `${character.name}相手にその踏み込みは雑。距離を縮めたのではなく、相手に処理を押しつけている。次は先に相手の言葉を一つ拾う。`;
@@ -944,6 +1058,14 @@ function lineForScene(dateIndex, local, scene) {
   const previous = local > 0 ? previousChoiceForScene() : null;
   if (previous) return scene.line[previous.branch] || scene.line.default;
   return scene.line.default;
+}
+
+function previousImpactPanel() {
+  const previous = previousChoiceForScene();
+  if (!previous) {
+    return `<div class="previous-impact empty"><span>前ラリーの影響</span><p>まだ影響はありません。最初の返しで、このデートの空気が決まります。</p></div>`;
+  }
+  return `<div class="previous-impact impact-${previous.nextPromptTone || previous.branch}"><span>前ラリーの影響</span><b>${conversationBranchLabel(previous.nextPromptTone || previous.branch)}として持ち越し</b><p>${previous.nextImpact || previous.aftertaste}</p></div>`;
 }
 
 function dateConversationItems(dateIndex = currentScene().dateIndex, history = state.history) {
@@ -968,8 +1090,8 @@ function currentDateConversationPanel(dateIndex, local) {
     return `<div class="conversation-chain empty"><span>5ラリー会話</span><p>このデートは1つの場面で5回続く会話です。最初の返しが、次の相手の言い方を変えます。</p></div>`;
   }
   return `<div class="conversation-chain"><span>ここまでの会話</span><div>${items.map((item, index) => {
-    const key = item.branch === "safe" && items.slice(0, index).some((prev) => prev.branch === "strain") ? "repair" : item.branch;
-    return `<article class="chain-${key}"><b>${index + 1}/${local + 1} ${conversationBranchLabel(key)}</b><p>${item.intent}: ${item.aftertaste}</p><small>${item.strictReview || ""}</small></article>`;
+    const key = item.nextPromptTone || (item.branch === "safe" && items.slice(0, index).some((prev) => prev.branch === "strain") ? "repair" : item.branch);
+    return `<article class="chain-${key}"><b>${index + 1}/${local + 1} ${conversationBranchLabel(key)}</b><p>${item.intent}: ${item.aftertaste}</p><small>${item.nextImpact || item.strictReview || ""}</small></article>`;
   }).join("")}</div></div>`;
 }
 
@@ -1158,7 +1280,7 @@ function game() {
   return `<div class="game-shell">
     <header class="game-header"><button class="icon-button" data-go="profile">×</button><div class="game-person">${avatar(c)}<div><b>${c.name}</b><span>${c.style}</span></div></div><div class="game-progress"><span>DATE ${dateIndex + 1} <b>${state.sceneIndex + 1} / ${count}</b></span><i><em style="width:${((state.sceneIndex + 1) / count) * 100}%;background:${c.color}"></em></i></div></header>
     <main class="game-main"><aside class="score-strip"><div class="score-hero" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>\u7dcf\u5408\u8a55\u4fa1</span><b>${tier.label}</b><p>${tier.sub}</p></div></div>${meters()}<div class="relationship-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div>${routeCompassCard(compass, true)}<div class="meter-help">\u30bf\u30a4\u30d7\u3054\u3068\u306b\u91cd\u304f\u898b\u308b\u30dd\u30a4\u30f3\u30c8\u304c\u5c11\u3057\u9055\u3044\u307e\u3059\u3002</div></aside>
-      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ラリー ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context compact"><b>今の読みどころ</b>${sceneFocusPanel({ date, scene, line, reading, tactic, heartKey, needCompass, connectionBid })}</div>${currentDateConversationPanel(dateIndex, local)}${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent"><small>方向性</small>${choiceDirection(choice)}</em><p>${choice.label}</p></button>`).join("")}</div></section>
+      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ラリー ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context compact"><b>今の読みどころ</b>${sceneFocusPanel({ date, scene, line, reading, tactic, heartKey, needCompass, connectionBid })}</div>${previousImpactPanel()}${currentDateConversationPanel(dateIndex, local)}${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent"><small>方向性</small>${choiceDirection(choice)}</em><p>${choice.label}</p></button>`).join("")}</div></section>
     </main>${state.picked ? feedback() : ""}
   </div>`;
 }
@@ -1177,8 +1299,10 @@ function feedback() {
     <div class="chat-thread feedback-simple">
       <div class="chat-bubble you"><b>あなた / ${choiceDirection(picked)}</b><p>${picked.label}</p></div>
       <div class="chat-bubble them" style="--c:${c.color};--light:${c.light}"><b>${c.name}</b><p>「${picked.reaction}」</p></div>
-      <div class="chat-bubble subtext"><b>${subtext.title}</b><p>${subtext.copy}</p></div>
       <div class="chat-bubble strict-review"><b>辛口レビュー</b><p>${strictChoiceReview(picked, c)}</p></div>
+      <div class="chat-bubble next-impact"><b>次ラリーへの影響</b><p>${picked.evaluation?.nextImpact || choiceAftertaste(picked)}</p></div>
+      <div class="chat-bubble recovery-tip"><b>リカバリー案</b><p>${picked.evaluation?.recovery || picked.better}</p></div>
+      <div class="chat-bubble subtext"><b>${subtext.title}</b><p>${subtext.copy}</p></div>
       <div class="chat-bubble read-summary key-${picked.heartKey?.tone || "near"}"><b>${picked.heartKey?.status || "鍵の読み"} / ${picked.needCompass?.status || "関係欲求"} / ${picked.connectionBid?.status || "接続サイン"}</b><p>${tactic.choiceFits ? tactic.payoff : tactic.choiceRisks ? tactic.trap : picked.why}</p><small>${momentum.label}: ${momentum.copy}</small></div>
       <div class="chat-bubble better"><b>次にもっと自然にするなら</b><p>${picked.better}</p></div>
     </div>
@@ -1277,6 +1401,52 @@ function dateMissionCard(report) {
   return `<div class="date-mission mission-${report.tone}"><div><span>${report.badge}</span><b>${report.title}</b><p>${report.aim}</p></div><strong>${report.progress}%</strong><i><em style="width:${report.progress}%"></em></i><small>${report.status}: ${report.checks.map((check) => `<mark class="${check.done ? "done" : ""}">${check.label}</mark>`).join("")}</small></div>`;
 }
 
+function historyMomentLabel(item, character = state.char) {
+  if (!item) return "";
+  const progress = sceneAt(item.sceneIndex, character);
+  return `${progress.date.title} / ${progress.scene.title}`;
+}
+
+function gameplayReviewReport(character = state.char, history = state.history) {
+  const voice = reviewVoice(character);
+  const best = history.find((item) => ["praise", "repair"].includes(item.reviewTone) || item.grade === "Great!") || history.find((item) => item.branch !== "strain");
+  const fatal = history.find((item) => item.branch === "strain" || ["pressure", "misread", "type-mismatch", "tactic-mismatch"].includes(item.riskKey));
+  const repair = history.find((item) => item.recoveredFromSceneIndex !== null);
+  const repeated = history.reduce((acc, item) => {
+    acc[item.branch] = (acc[item.branch] || 0) + 1;
+    return acc;
+  }, {});
+  const habit = Object.entries(repeated).sort((a, b) => b[1] - a[1])[0]?.[0] || "safe";
+  const habitCopy = {
+    safe: "受け止めが多い。初心者としては強いが、相手によっては恋愛温度が不足する。",
+    spark: "温度を上げるのは上手い。ただ、軽さが続くと本気度を疑われる。",
+    strain: "ズレが多い。攻めているのではなく、相手の主導権を削っている場面がある。",
+  }[habit] || "場面ごとに探っている。";
+  return {
+    best,
+    fatal,
+    repair,
+    habit,
+    habitCopy,
+    finalReview: `${voice.final} ${habitCopy}`,
+    nextMission: repair
+      ? "次周は修復に頼らず、ズレる前のサインを一つ早く拾う。"
+      : fatal
+        ? "次周は致命傷になった一手の直後に、相手の言葉を引用して受け取り直す。"
+        : "次周は安全圏に留まらず、各デート終盤で自分の意思を一度だけ強く出す。",
+  };
+}
+
+function gameplayReviewCards(character = state.char, history = state.history) {
+  const report = gameplayReviewReport(character, history);
+  const card = (tone, label, item, fallback) => `<article class="gameplay-${tone}"><span>${label}</span><b>${item ? historyMomentLabel(item, character) : fallback[0]}</b><p>${item ? item.strictReview || item.nextImpact || item.aftertaste : fallback[1]}</p></article>`;
+  return `<div class="gameplay-review-cards">
+    ${card("best", "一番効いた一手", report.best, ["まだ未確定", "相手に残る一手は、ここから作る。"])}
+    ${card("fatal", "今回の致命傷", report.fatal, ["大きな致命傷なし", "ただし無難に寄ると、恋愛の温度は伸びにくい。"])}
+    ${card("repair", "修復できた場面", report.repair, ["修復場面なし", "ズレが少ない回。次は攻めた後の着地も練習できる。"])}
+  </div>`;
+}
+
 function dateIntermissionReport(character = state.char, dateIndex = currentScene().dateIndex, history = state.history) {
   const items = missionHistory(character, dateIndex, history);
   const date = storyFor(character.id).dates[dateIndex];
@@ -1326,7 +1496,7 @@ function intermissionPanel(character = state.char, dateIndex = currentScene().da
   const report = dateIntermissionReport(character, dateIndex);
   const strongest = report.strongest ? `${report.strongest.bidStatus || report.strongest.needStatus || report.strongest.heartKey || "残った一手"}: ${report.strongest.bidCopy || report.strongest.needCopy || report.strongest.heartKeyCopy || report.strongest.aftertaste}` : "まだ白紙に近い。次のデートで輪郭が出る。";
   const fragile = report.fragile ? `${report.fragile.bidStatus || report.fragile.needStatus || report.fragile.heartKey || "揺れた一手"}: ${report.fragile.bidCopy || report.fragile.needCopy || report.fragile.heartKeyCopy || report.fragile.aftertaste}` : "大きな引っかかりは少ない。次は少しだけ温度を上げられる。";
-  return `<div class="intermission-panel intermission-${report.tone}" style="--c:${character.color};--light:${character.light}"><h3>${character.name}の幕間ノート <span>INTERMISSION</span></h3><p class="private-line">${report.privateLine}</p><div><article><span>残った一手</span><b>${report.strongest?.intent || report.summary.label}</b><p>${strongest}</p></article><article><span>次に扱う余白</span><b>${report.fragile?.intent || report.mission.title}</b><p>${fragile}</p></article></div><small>持ち越し: ${report.carry} / 次回フック: ${report.nextHook}</small></div>`;
+  return `<div class="intermission-panel intermission-${report.tone}" style="--c:${character.color};--light:${character.light}"><h3>${character.name}の幕間ノート <span>INTERMISSION</span></h3><p class="private-line">${report.privateLine}</p><div><article><span>残った一手</span><b>${report.strongest?.intent || report.summary.label}</b><p>${strongest}</p></article><article><span>次に扱う余白</span><b>${report.fragile?.intent || report.mission.title}</b><p>${fragile}</p></article></div>${gameplayReviewCards(character, missionHistory(character, dateIndex))}<small>持ち越し: ${report.carry} / 次回フック: ${report.nextHook}</small></div>`;
 }
 
 function hasRecovery(history = state.history) {
@@ -1877,6 +2047,19 @@ function decisiveMoments() {
   }));
 }
 
+function resultFocusCards(character, gameplay, route) {
+  const itemCard = (tone, label, item, fallbackTitle, fallbackCopy) => `<article class="result-focus-card ${tone}">
+    <span>${label}</span>
+    <b>${item ? historyMomentLabel(item, character) : fallbackTitle}</b>
+    <p>${item ? item.strictReview || item.nextImpact || item.aftertaste : fallbackCopy}</p>
+  </article>`;
+  return `<div class="result-focus-grid">
+    ${itemCard("best", "一番効いた一手", gameplay.best, "まだ決定打なし", "悪くない。でも相手の記憶に残る一手としては弱い。次周は相手固有の欲求まで踏む。")}
+    ${itemCard("fatal", "今回の致命傷", gameplay.fatal, "大きな致命傷なし", "致命傷は避けた。ただし安全運転だけなら恋愛の温度は上がらない。")}
+    <article class="result-focus-card mission"><span>次周ミッション</span><b>${route.replayMission || route.nextMove}</b><p>${gameplay.nextMission}</p></article>
+  </div>`;
+}
+
 function result() {
   const c = state.char;
   const gd = gameDesign(c);
@@ -1890,11 +2073,38 @@ function result() {
   const heart = heartMemoUnlocks(c);
   const memory = characterMemoryReport(c);
   const finale = characterFinaleScene(c.id, route.key, memory.key);
+  const gameplay = gameplayReviewReport(c, state.history);
   unlockRouteEnding(c, route, total);
   const type = total >= 78 ? "\u304b\u306a\u308a\u76f8\u6027\u304c\u3044\u3044\u4f1a\u8a71" : total >= 62 ? "\u3058\u308f\u3063\u3068\u523a\u3055\u308b\u4f1a\u8a71" : total >= 48 ? "\u3042\u3068\u4e00\u6b69\u3067\u5c4a\u304f\u4f1a\u8a71" : "\u4f5c\u6226\u3092\u5909\u3048\u308b\u3068\u4f38\u3073\u308b\u4f1a\u8a71";
-  return `${header(true)}<main class="result-page"><span class="result-kicker">YOUR DATE RESULT</span><div class="ending-icon">${end[0]}</div><h1>${end[1]}</h1><p>${end[2]}</p>
-    <div class="report-grid"><div class="share-card" style="--c:${c.color};--light:${c.light}"><div class="share-brand">Love Type Lab ✦</div>${avatar(c)}<span>${c.type}風デート完走</span><h2>${type}</h2><div class="route-card"><small>${route.badge}</small><b>${route.name}</b><p>${route.summary}</p></div><div class="epilogue-card"><span>ENDING SCENE</span><b>${route.epilogueTitle}</b><p>${route.epilogue}</p><small>次回ミッション: ${route.replayMission}</small></div><p>${c.name}との${story(c).dates.length}回のデートで、${gd.mastery}</p><div class="share-tags"><span>#LoveTypeLab</span><span>#${c.type}風</span><span>#会話練習</span></div><small>TYPE DATE TRAINER</small></div>
-    <div class="score-report"><div class="total-score-card" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>\u30e1\u30a4\u30f3\u8a55\u4fa1</span><b>${tier.label}</b><p>${tier.sub}</p></div></div><div class="relationship-stage result-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div><div class="playstyle-card"><span>${style.badge}</span><b>${style.title}</b><p>${style.copy}</p></div>${relationshipArcPanel(c)}<div class="memory-card memory-${memory.tone}"><span>${c.name}に残った記憶</span><b>${memory.label}</b><p>${memory.copy}</p></div><div class="finale-scene-card" style="--c:${c.color};--light:${c.light}"><span>${finale.badge} FINALE</span><b>${c.name}が最後に残した一言</b><p>「${finale.line}」</p><small>${finale.memoryBridge}</small><em>${finale.nextBeat}</em></div>${missionBoardPanel(c)}<div class="heart-memo-panel"><h3>${c.name}の本音メモ <span>${heart.unlocked.length}/5</span></h3>${heart.unlocked.map((memo) => `<article><b>${memo.title}</b><p>${memo.text}</p></article>`).join("")}${heart.locked ? `<small>未解放メモ: ${heart.locked} / 次の鍵は「${heart.nextHint}」</small>` : `<small>すべての本音メモを解放しました。</small>`}</div>${switchProgressPanel(c)}${routeAlbumPanel(c, route)}<h2>5\u3064\u306e\u7a7a\u6c17\u30e1\u30fc\u30bf\u30fc</h2>${meters()}<div class="skill-panel"><h3>今回身についた会話スキル</h3><div>${playerSkillBadges().map((badge) => `<article><span>${badge.icon}</span><b>${badge.title}</b><p>${badge.text}</p></article>`).join("")}</div></div><div class="learned-strip"><h3>解放した会話レッスン</h3><p>${learned.slice(0, 8).map((item) => `<span>${item.badge} ${item.skill}</span>`).join("")}</p></div><div class="moment-log"><h3>印象に残る選択</h3>${decisiveMoments().map((moment) => `<article class="moment-${moment.branch}"><span>${moment.intent}</span><b>${moment.scene}</b><p>${moment.text}</p></article>`).join("")}</div><div class="insight"><span>✦</span><div><b>あなたの勝ち筋</b><p>${strongestInsight()} ${gd.winningMindset}</p></div></div><div class="insight"><span>→</span><div><b>次の一手</b><p>${route.nextMove}</p></div></div><div class="insight warn"><span>!</span><div><b>次に伸びるポイント</b><p>${growthInsight()} ${gd.temptationTrap}</p></div></div><button class="primary full" data-share>結果をコピーする</button><button class="outline full" data-restart>もう一度デートする</button></div></div>
+  return `${header(true)}<main class="result-page result-v2" style="--c:${c.color};--light:${c.light}">
+    <section class="result-hero">
+      <div class="result-main-card">
+        <span class="result-kicker">YOUR DATE RESULT</span>
+        <div class="ending-icon">${end[0]}</div>
+        <h1>${route.name}</h1>
+        <p>${route.summary}</p>
+        <div class="result-score-row">
+          <div class="total-score-card compact" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>メイン評価</span><b>${tier.label}</b><p>${tier.sub}</p></div></div>
+          <div class="relationship-stage result-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div>
+        </div>
+      </div>
+      <div class="result-character-card">
+        ${avatar(c)}
+        <span>${c.type}風デート完走</span>
+        <h2>${type}</h2>
+        <p>${end[2]}</p>
+      </div>
+    </section>
+    <section class="result-verdict">
+      <div class="gameplay-final-review"><span>5ラリー全体レビュー</span><b>${gameplay.finalReview}</b><p>${gameplay.nextMission}</p></div>
+      ${resultFocusCards(c, gameplay, route)}
+      <div class="result-actions"><button class="primary" data-share>結果をコピーする</button><button class="outline" data-restart>もう一度デートする</button></div>
+    </section>
+    <details class="result-detail-drawer">
+      <summary>詳細ログとメーターを見る</summary>
+      <div class="report-grid"><div class="share-card" style="--c:${c.color};--light:${c.light}"><div class="share-brand">Love Type Lab ✦</div>${avatar(c)}<span>${c.type}風デート完走</span><h2>${type}</h2><div class="route-card"><small>${route.badge}</small><b>${route.name}</b><p>${route.summary}</p></div><div class="epilogue-card"><span>ENDING SCENE</span><b>${route.epilogueTitle}</b><p>${route.epilogue}</p><small>次回ミッション: ${route.replayMission}</small></div><p>${c.name}との${story(c).dates.length}回のデートで、${gd.mastery}</p><div class="share-tags"><span>#LoveTypeLab</span><span>#${c.type}風</span><span>#会話練習</span></div><small>TYPE DATE TRAINER</small></div>
+      <div class="score-report"><div class="playstyle-card"><span>${style.badge}</span><b>${style.title}</b><p>${style.copy}</p></div>${relationshipArcPanel(c)}<div class="memory-card memory-${memory.tone}"><span>${c.name}に残った記憶</span><b>${memory.label}</b><p>${memory.copy}</p></div><div class="finale-scene-card" style="--c:${c.color};--light:${c.light}"><span>${finale.badge} FINALE</span><b>${c.name}が最後に残した一言</b><p>「${finale.line}」</p><small>${finale.memoryBridge}</small><em>${finale.nextBeat}</em></div>${missionBoardPanel(c)}<div class="heart-memo-panel"><h3>${c.name}の本音メモ <span>${heart.unlocked.length}/5</span></h3>${heart.unlocked.map((memo) => `<article><b>${memo.title}</b><p>${memo.text}</p></article>`).join("")}${heart.locked ? `<small>未解放メモ: ${heart.locked} / 次の鍵は「${heart.nextHint}」</small>` : `<small>すべての本音メモを解放しました。</small>`}</div>${switchProgressPanel(c)}${routeAlbumPanel(c, route)}<h2>5つの空気メーター</h2>${meters()}<div class="skill-panel"><h3>今回身についた会話スキル</h3><div>${playerSkillBadges().map((badge) => `<article><span>${badge.icon}</span><b>${badge.title}</b><p>${badge.text}</p></article>`).join("")}</div></div><div class="learned-strip"><h3>解放した会話レッスン</h3><p>${learned.slice(0, 8).map((item) => `<span>${item.badge} ${item.skill}</span>`).join("")}</p></div><div class="moment-log"><h3>印象に残る選択</h3>${decisiveMoments().map((moment) => `<article class="moment-${moment.branch}"><span>${moment.intent}</span><b>${moment.scene}</b><p>${moment.text}</p></article>`).join("")}</div><div class="insight"><span>✦</span><div><b>あなたの勝ち筋</b><p>${strongestInsight()} ${gd.winningMindset}</p></div></div><div class="insight"><span>→</span><div><b>次の一手</b><p>${route.nextMove}</p></div></div><div class="insight warn"><span>!</span><div><b>次に伸びるポイント</b><p>${growthInsight()} ${gd.temptationTrap}</p></div></div></div></div>
+    </details>
   </main>`;
 }
 
@@ -1979,6 +2189,14 @@ document.addEventListener("click", async (event) => {
       intent: choiceIntentLabel(state.picked),
       aftertaste: choiceAftertaste(state.picked),
       strictReview: strictChoiceReview(state.picked, state.char),
+      fitKey: state.picked.evaluation?.fitKey,
+      needKey: state.picked.evaluation?.needKey,
+      riskKey: state.picked.evaluation?.riskKey,
+      reviewTone: state.picked.evaluation?.reviewTone,
+      nextPromptTone: state.picked.evaluation?.nextPromptTone,
+      nextImpact: state.picked.evaluation?.nextImpact,
+      recovery: state.picked.evaluation?.recovery,
+      recoveredFromSceneIndex: state.picked.evaluation?.recoveredFromSceneIndex,
       grade: grade.rank,
       skill: coaching.skill,
       skillBadge: coaching.badge,
