@@ -429,35 +429,36 @@ function footer() {
 }
 
 function home() {
-  const featured = characters[0];
-  const rival = characters[1] || featured;
+  const featured = characters.find((c) => c.portrait) || characters[0];
+  const rival = characters.find((c) => c.assetSet) || featured;
   return `${header()}<main class="landing-v2">
     <section class="hero game-hero" style="--c:${featured.color};--light:${featured.light}">
       <div class="hero-copy">
-        <h1>Love Type Lab</h1>
-        <p class="hero-subtitle">5ラリーの会話で、距離が近づく。ズレたら相手の反応を見て立て直す。恋愛会話を「選択」と「辛口レビュー」で遊ぶ、静的ブラウザゲームです。</p>
-        <div class="hero-actions"><button class="primary" data-go="characters">デートをはじめる →</button><button class="text-button" data-scroll="how"><span>▶</span>ゲームループを見る</button></div>
+        <p class="luxury-label">TYPE DATE TRAINER</p>
+        <h1>会話で、<br>恋は動く。</h1>
+        <p class="hero-subtitle">5ラリーの会話で、相手の本音を読み解け。あなたの一言が未来を変える、恋愛会話トレーニング・ラボ。</p>
+        <div class="hero-actions"><button class="primary" data-go="characters">ラボをはじめる →</button><button class="text-button" data-scroll="how"><span>▶</span>遊び方を見る</button></div>
         <div class="hero-stats">
-          <article><b>3</b><span>DATES</span><p>ブリーフから幕間まで</p></article>
-          <article><b>5</b><span>RALLIES</span><p>会話が前後につながる</p></article>
-          <article><b>${characters.length}</b><span>CAST</span><p>刺さる返しが違う</p></article>
+          <article><b>5</b><span>5ラリー会話</span><p>選択で分岐するリアルな会話体験</p></article>
+          <article><b>B-</b><span>辛口レビュー</span><p>キャラ別の本音でズバッと評価</p></article>
+          <article><b>↺</b><span>リカバリー</span><p>失敗からの立て直しで逆転も可能</p></article>
         </div>
       </div>
       <div class="hero-stage">
         <div class="mock-window">
-          <div class="mock-top"><span>DATE 01 / RALLY 03</span><b>LIVE ROUTE</b></div>
+          <div class="mock-top"><span>DATE 01 / RALLY 03</span><b>PREMIUM ROUTE</b></div>
           <div class="mock-main">
-            <div class="mock-person">${avatar(featured, "avatar-large")}<div><small>${featured.style}</small><h3>${featured.name}</h3><p>「さっきの言い方、ちゃんと聞いてくれてる感じがした」</p></div></div>
+            <div class="mock-person">${avatar(featured, "avatar-large")}<div><small>${featured.style}</small><h3>${featured.name}</h3><p>「最近、仕事でちょっと大変で…聞いてくれる？」</p></div></div>
             <div class="mock-log">
-              <article class="log-you"><span>YOU</span><p>無理に明るくしないで、今の気持ちを少し聞かせて。</p></article>
-              <article class="log-them"><span>${featured.name}</span><p>「その聞き方なら、もう少し話せる」</p></article>
+              <article class="log-you"><span>YOU</span><p>うん、話して。全部聞くよ。</p></article>
+              <article class="log-them"><span>${featured.name}</span><p>「優しい。でも、私のことを見てる感じはまだ薄いかも」</p></article>
             </div>
           </div>
-          <div class="mock-choice-row"><button>A 安心を積む</button><button class="active">B 一歩踏み込む</button><button>C 空気を乱す</button></div>
+          <div class="mock-choice-row"><button>A 共感</button><button class="active">B 深掘り</button><button>C 距離注意</button></div>
         </div>
         <div class="route-hud">
-          <article><span>前ラリーの影響</span><b>修復チャンス</b><p>さっきのズレを拾えるかで、次の発話が変わる。</p></article>
-          <article class="harsh"><span>辛口レビュー</span><b>優しいだけ。相手別の核心に触れてない。</b><p>褒めて終わりでは距離は動かない。</p></article>
+          <article><span>次への影響</span><b>心の距離は縮まりにくいかも。</b><p>このまま優しいだけだと、記憶に残らない。</p></article>
+          <article class="harsh"><span>辛口レビュー</span><b>B- / あなたらしさがゼロ。</b><p>もっと“あなたからの視点”が欲しかった。</p></article>
         </div>
       </div>
     </section>
@@ -1302,20 +1303,27 @@ function feedback() {
   const subtext = sceneCharacterSubtext(c.id, state.sceneIndex, totalScenes(c), picked.branch);
   const tactic = picked.tactic || sceneTacticalRead(c.id, state.sceneIndex, totalScenes(c), picked);
   const momentum = picked.momentum || momentumRead(picked);
-  return `<div class="feedback-overlay"><div class="feedback-modal chat-modal feedback-stamp-modal grade-${grade.className}">
+  return `<div class="feedback-overlay"><div class="feedback-modal chat-modal feedback-stamp-modal luxury-review grade-${grade.className}">
     <div class="grade-stamp"><small>4段階スタンプ</small><span>${grade.rank}</span><b>${grade.phrase}</b><p>${grade.cue}</p></div>
     <div class="chat-head" style="--c:${c.color};--light:${c.light}">${avatar(c)}<div><span>${grade.rank} / ${choiceDirection(picked)}</span><h3>${c.name}\u306e反応</h3><p>${grade.cue}</p></div></div>
-    <div class="chat-thread feedback-simple">
-      <div class="chat-bubble you"><b>あなた / ${choiceDirection(picked)}</b><p>${picked.label}</p></div>
-      <div class="chat-bubble them" style="--c:${c.color};--light:${c.light}"><b>${c.name}</b><p>「${picked.reaction}」</p></div>
-      <div class="chat-bubble strict-review"><b>辛口レビュー</b><p>${strictChoiceReview(picked, c)}</p></div>
-      <div class="chat-bubble next-impact"><b>次ラリーへの影響</b><p>${picked.evaluation?.nextImpact || choiceAftertaste(picked)}</p></div>
-      <div class="chat-bubble recovery-tip"><b>リカバリー案</b><p>${picked.evaluation?.recovery || picked.better}</p></div>
-      <div class="chat-bubble subtext"><b>${subtext.title}</b><p>${subtext.copy}</p></div>
-      <div class="chat-bubble read-summary key-${picked.heartKey?.tone || "near"}"><b>${picked.heartKey?.status || "鍵の読み"} / ${picked.needCompass?.status || "関係欲求"} / ${picked.connectionBid?.status || "接続サイン"}</b><p>${tactic.choiceFits ? tactic.payoff : tactic.choiceRisks ? tactic.trap : picked.why}</p><small>${momentum.label}: ${momentum.copy}</small></div>
-      <div class="chat-bubble better"><b>次にもっと自然にするなら</b><p>${picked.better}</p></div>
+    <div class="review-flow">
+      <div class="reply-recap"><span>あなたの返答</span><p>${picked.label}</p></div>
+      <div class="reaction-card" style="--c:${c.color};--light:${c.light}"><b>${c.name}の反応</b><p>「${picked.reaction}」</p></div>
+      <div class="review-verdict"><span>辛口レビュー</span><strong>${grade.rank}</strong><b>${strictChoiceReview(picked, c)}</b><p>${grade.cue}</p></div>
+      <div class="review-next-grid">
+        <article class="next-impact"><span>次に響く</span><p>${picked.evaluation?.nextImpact || choiceAftertaste(picked)}</p></article>
+        <article class="recovery-tip"><span>リカバリー</span><p>${picked.evaluation?.recovery || picked.better}</p></article>
+      </div>
+      <details class="review-detail-drawer">
+        <summary>詳細を見る</summary>
+        <div class="chat-thread feedback-simple">
+          <div class="chat-bubble subtext"><b>${subtext.title}</b><p>${subtext.copy}</p></div>
+          <div class="chat-bubble read-summary key-${picked.heartKey?.tone || "near"}"><b>${picked.heartKey?.status || "鍵の読み"} / ${picked.needCompass?.status || "関係欲求"} / ${picked.connectionBid?.status || "接続サイン"}</b><p>${tactic.choiceFits ? tactic.payoff : tactic.choiceRisks ? tactic.trap : picked.why}</p><small>${momentum.label}: ${momentum.copy}</small></div>
+          <div class="chat-bubble better"><b>次にもっと自然にするなら</b><p>${picked.better}</p></div>
+          <div class="delta-row">${Object.entries(picked.effect).filter(([, value]) => value !== 0).map(([key, value]) => `<span class="${value > 0 ? "plus" : "minus"}">${scoreIcon(scoreDecor[key]?.icon || "gauge")} ${scoreDecor[key]?.short || scoreLabels[key]} ${value > 0 ? "+" : ""}${value}</span>`).join("")}</div>
+        </div>
+      </details>
     </div>
-    <div class="delta-row">${Object.entries(picked.effect).filter(([, value]) => value !== 0).map(([key, value]) => `<span class="${value > 0 ? "plus" : "minus"}">${scoreIcon(scoreDecor[key]?.icon || "gauge")} ${scoreDecor[key]?.short || scoreLabels[key]} ${value > 0 ? "+" : ""}${value}</span>`).join("")}</div>
     <button class="primary full" data-next>${state.sceneIndex === totalScenes() - 1 ? "\u7d50\u679c\u3092\u898b\u308b" : "\u6b21\u306e\u30e9\u30ea\u30fc\u3078"} \u2192</button>
   </div></div>`;
 }
