@@ -404,6 +404,15 @@ function avatar(c, large = "") {
   </div>`;
 }
 
+function avatarIllustration(c, large = "") {
+  return `<div class="avatar ${large}" style="--c:${c.color};--light:${c.light};--hair:${c.hair}" aria-label="${c.name}のイラスト">
+    <span class="orbit orbit-a"></span><span class="orbit orbit-b"></span>
+    <span class="avatar-symbol">${c.emoji}</span>
+    <div class="head"><div class="hair"></div><div class="face"><i class="eye left"></i><i class="eye right"></i><i class="mouth"></i></div></div>
+    <div class="body"></div><span class="spark one">✦</span><span class="spark two">•</span>
+  </div>`;
+}
+
 function logo() {
   return `<button class="logo" data-go="home"><span class="logo-mark">♥</span><span>Love Type <em>Lab</em></span></button>`;
 }
@@ -487,9 +496,9 @@ function castCard(c) {
 }
 
 function charactersView() {
-  return `${header()}<main class="page">
+  return `${header()}<main class="page character-select-v2">
     <div class="page-title"><span>CHOOSE YOUR DATE</span><h1>誰との会話を<br class="mobile">練習しますか？</h1><p>難易度より、いま気になる相手を選んでください。</p></div>
-    <div class="profile-grid">${characters.map((c) => `<article class="profile-card"><div class="profile-art" style="background:${c.light}"><span class="difficulty">難易度 ${c.difficulty}</span>${avatar(c, "avatar-large")}</div><div class="profile-content"><small style="color:${c.color}">${c.style}</small><h2>${c.name}<span>${c.roman}</span></h2><p>${c.bio}</p><div class="tags">${c.likes.map((x) => `<span>#${x}</span>`).join("")}</div><div class="practice"><b>今回の練習テーマ</b><span>${c.theme}</span></div><button class="card-button" style="background:${c.color}" data-select="${c.id}">プロフィールを見る →</button></div></article>`).join("")}</div>
+    <div class="profile-grid">${characters.map((c) => `<article class="profile-card"><div class="profile-art" style="background:${c.light}"><span class="difficulty">難易度 ${c.difficulty}</span>${avatarIllustration(c, "avatar-large")}</div><div class="profile-content"><small style="color:${c.color}">${c.style}</small><h2>${c.name}<span>${c.roman}</span></h2><p>${c.bio}</p><div class="tags">${c.likes.map((x) => `<span>#${x}</span>`).join("")}</div><div class="practice"><b>今回の練習テーマ</b><span>${c.theme}</span></div><button class="card-button" style="background:${c.color}" data-select="${c.id}">プロフィールを見る →</button></div></article>`).join("")}</div>
   </main>${footer()}`;
 }
 
@@ -498,7 +507,7 @@ function profile() {
   const p = persona(c);
   const s = story(c);
   const gd = gameDesign(c);
-  return `${header(true)}<main class="detail">
+  return `${header(true)}<main class="detail profile-v2">
     <button class="back" data-go="characters">← 相手を選び直す</button>
     <div class="detail-grid">
       <div class="detail-art" style="background:${c.light}">${avatar(c, "avatar-large")}<div class="type-stamp" style="color:${c.color}">${c.style}</div></div>
@@ -1277,7 +1286,7 @@ function game() {
   const mission = dateMissionReport(c, dateIndex);
   const stage = relationshipStage(c);
   const compass = routeCompassReport(c);
-  return `<div class="game-shell">
+  return `<div class="game-shell game-v2">
     <header class="game-header"><button class="icon-button" data-go="profile">×</button><div class="game-person">${avatar(c)}<div><b>${c.name}</b><span>${c.style}</span></div></div><div class="game-progress"><span>DATE ${dateIndex + 1} <b>${state.sceneIndex + 1} / ${count}</b></span><i><em style="width:${((state.sceneIndex + 1) / count) * 100}%;background:${c.color}"></em></i></div></header>
     <main class="game-main"><aside class="score-strip"><div class="score-hero" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>\u7dcf\u5408\u8a55\u4fa1</span><b>${tier.label}</b><p>${tier.sub}</p></div></div>${meters()}<div class="relationship-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div>${routeCompassCard(compass, true)}<div class="meter-help">\u30bf\u30a4\u30d7\u3054\u3068\u306b\u91cd\u304f\u898b\u308b\u30dd\u30a4\u30f3\u30c8\u304c\u5c11\u3057\u9055\u3044\u307e\u3059\u3002</div></aside>
       <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ラリー ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context compact"><b>今の読みどころ</b>${sceneFocusPanel({ date, scene, line, reading, tactic, heartKey, needCompass, connectionBid })}</div>${previousImpactPanel()}${currentDateConversationPanel(dateIndex, local)}${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent"><small>方向性</small>${choiceDirection(choice)}</em><p>${choice.label}</p></button>`).join("")}</div></section>
@@ -1952,7 +1961,7 @@ function checkpoint() {
     ? `${next.date.title}は「${next.scene.location}」から。次は${nextGuide.skill}。${nextGuide.lesson}`
     : "この先は最終結果で、ふたりの関係の着地を見ます。";
   const nextReadCopy = nextRead ? `読むサイン: ${nextRead.signal} / 合言葉: ${nextRead.playerQuestion}` : "最終結果で、今回の読み筋を振り返ります。";
-  return `<div class="game-shell checkpoint-shell">
+  return `<div class="game-shell checkpoint-shell checkpoint-v2">
     <header class="game-header"><button class="icon-button" data-go="profile">×</button><div class="game-person">${avatar(c)}<div><b>${c.name}</b><span>${c.style}</span></div></div><div class="game-progress"><span>DATE ${dateIndex + 1} CLEAR <b>${state.sceneIndex + 1} / ${totalScenes(c)}</b></span><i><em style="width:${((state.sceneIndex + 1) / totalScenes(c)) * 100}%;background:${c.color}"></em></i></div></header>
     <main class="checkpoint-main" style="--c:${c.color};--light:${c.light}">
       <section class="checkpoint-card">
