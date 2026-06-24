@@ -799,3 +799,232 @@
     overflow:auto!important;
   }
 }
+
+/* v7 conversation screen visual polish */
+.game-v2 .scene{
+  border:1px solid #c58a4e99!important;
+  background:
+    linear-gradient(180deg,#fff9ee 0%,#f7e8ca 52%,#e9cca0 100%)!important;
+  box-shadow:0 18px 55px #10070a55,inset 0 1px 0 #fff8!important;
+}
+.game-v2 .scene-context,
+.game-v2 .date-mission,
+.game-v2 .bubble,
+.game-v2 .choices button{
+  box-shadow:0 8px 24px #5b2b1d12,inset 0 1px 0 #fff9!important;
+}
+.game-v2 .scene-visual{
+  height:320px!important;
+  border:1px solid #f5cf8a78!important;
+  background:#151018!important;
+  box-shadow:0 14px 38px #24101836!important;
+}
+.game-v2 .scene-visual img{
+  object-position:center 38%!important;
+  filter:saturate(1.08) contrast(1.03)!important;
+}
+.game-v2 .scene-label span,
+.game-v2 .goal,
+.date-mission span{
+  background:linear-gradient(135deg,#4b1020,#201228)!important;
+  color:#ffedbd!important;
+  border:1px solid #e7ba686e!important;
+}
+.game-v2 .scene-label b{
+  color:#3c1b22!important;
+  background:#fff7e6cc!important;
+  border:1px solid #ddb77573!important;
+}
+.game-v2 .scene-focus-grid article,
+.game-v2 .scene-context-flow article{
+  border:1px solid #d2a76466!important;
+}
+.game-v2 .date-mission{
+  background:linear-gradient(135deg,#fff6e5,#f1d49f)!important;
+  border-color:#d3a15b88!important;
+}
+.game-v2 .bubble{
+  background:linear-gradient(180deg,#fffaf1,#f5e2c0)!important;
+  border:1px solid #d8a96678!important;
+}
+.game-v2 .bubble p{
+  color:#211418!important;
+  text-shadow:0 1px 0 #fff9!important;
+}
+.game-v2 .choices button{
+  background:linear-gradient(180deg,#fffaf1,#f2dfbf)!important;
+  border-color:#d3a15b7a!important;
+}
+.game-v2 .choices button:nth-child(1){
+  border-left:4px solid #7f8f9e!important;
+}
+.game-v2 .choices button:nth-child(2){
+  border-left:4px solid #dc6a3b!important;
+}
+.game-v2 .choices button:nth-child(3){
+  border-left:4px solid #8e6ed6!important;
+}
+.game-v2 .choices button:nth-child(4){
+  border-left:4px solid #2d8c7b!important;
+}
+.choice-intent{
+  background:#fff0cb!important;
+  color:#51300d!important;
+}
+.feedback-overlay{
+  background:linear-gradient(180deg,#0b0912d9,#21101add)!important;
+}
+.feedback-modal.luxury-review{
+  background:
+    radial-gradient(circle at 14% 5%,#26324c 0 120px,transparent 122px),
+    linear-gradient(180deg,#151327,#221322 54%,#2b1711)!important;
+}
+.feedback-overlay .feedback-modal.feedback-stamp-modal.luxury-review{
+  background:
+    radial-gradient(circle at 14% 5%,#26324c 0 120px,transparent 122px),
+    linear-gradient(180deg,#151327,#221322 54%,#2b1711)!important;
+}
+.luxury-review .chat-head,
+.reply-recap,
+.reaction-card,
+.review-verdict,
+.review-next-grid article,
+.review-detail-drawer{
+  box-shadow:0 12px 32px #0007,inset 0 1px 0 #fff1!important;
+}
+.review-next-grid article p{
+  font-size:13px!important;
+  line-height:1.65!important;
+}
+
+@media(max-width:620px){
+  .game-v2 .game-main{
+    padding:6px!important;
+    background:linear-gradient(180deg,#050507,#180b10 46%,#25130e)!important;
+  }
+  .game-v2 .scene{
+    height:calc(100dvh - 66px)!important;
+    grid-template-rows:auto auto auto 178px minmax(66px,auto) auto auto minmax(112px,auto)!important;
+    gap:5px!important;
+    padding:7px!important;
+    border-radius:16px!important;
+    background:
+      radial-gradient(circle at 88% 18%,#ffffff75 0 34px,transparent 35px),
+      linear-gradient(180deg,#fff9ed 0%,#f7e2bb 50%,#e7c493 100%)!important;
+  }
+  .game-v2 .scene-label span,
+  .game-v2 .scene-label b{
+    font-size:7.6px!important;
+    line-height:1.15!important;
+    padding:5px 8px!important;
+  }
+  .game-v2 .scene-context{
+    padding:7px!important;
+    border-radius:12px!important;
+  }
+  .game-v2 .scene-focus-grid article{
+    padding:6px!important;
+    min-height:40px!important;
+  }
+  .game-v2 .scene-focus-grid article span{
+    font-size:5.8px!important;
+    color:#6d3f27!important;
+  }
+  .game-v2 .scene-focus-grid article b{
+    font-size:7.6px!important;
+    line-height:1.28!important;
+    color:#24151a!important;
+  }
+  .game-v2 .date-mission{
+    min-height:38px!important;
+    padding:7px 8px!important;
+    border-radius:12px!important;
+  }
+  .game-v2 .date-mission b{
+    font-size:8.8px!important;
+    line-height:1.25!important;
+  }
+  .game-v2 .date-mission strong{
+    width:35px!important;
+    height:35px!important;
+  }
+  .game-v2 .scene-visual{
+    height:178px!important;
+    min-height:178px!important;
+    border-radius:14px!important;
+  }
+  .game-v2 .scene-visual .cue{
+    right:10px!important;
+    bottom:10px!important;
+    padding:5px 8px!important;
+    background:#24151acc!important;
+    color:#ffe8be!important;
+    border:1px solid #f1ca8970!important;
+  }
+  .game-v2 .bubble{
+    min-height:66px!important;
+    padding:9px 11px!important;
+    border-radius:13px!important;
+  }
+  .game-v2 .bubble span{
+    font-size:7.4px!important;
+    color:#765047!important;
+  }
+  .game-v2 .bubble p{
+    font-size:12.4px!important;
+    line-height:1.42!important;
+    letter-spacing:0!important;
+  }
+  .game-v2 .goal{
+    min-height:27px!important;
+    font-size:7.4px!important;
+    line-height:1.3!important;
+    padding:7px 9px!important;
+    border-radius:10px!important;
+  }
+  .game-v2 .scene h2{
+    font-size:10.8px!important;
+    color:#2b151c!important;
+  }
+  .game-v2 .choices{
+    gap:6px!important;
+  }
+  .game-v2 .choices button{
+    min-height:56px!important;
+    padding:7px!important;
+    border-radius:12px!important;
+  }
+  .game-v2 .choices button>span{
+    width:20px!important;
+    height:20px!important;
+    font-size:6.6px!important;
+    background:#35121d!important;
+    color:#ffe7b5!important;
+    border-color:#e6bd7475!important;
+  }
+  .choice-intent{
+    font-size:6.4px!important;
+    line-height:1!important;
+    padding:3px 5px!important;
+  }
+  .game-v2 .choices button p{
+    font-size:8.1px!important;
+    line-height:1.34!important;
+    color:#231417!important;
+  }
+  .luxury-review .chat-head{
+    background:linear-gradient(135deg,#15182b,#171018)!important;
+  }
+  .reaction-card p{
+    font-size:13px!important;
+    line-height:1.48!important;
+  }
+  .review-verdict b{
+    font-size:12.4px!important;
+    line-height:1.42!important;
+  }
+  .review-next-grid p{
+    font-size:9.3px!important;
+    line-height:1.48!important;
+  }
+}
