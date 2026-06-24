@@ -1179,6 +1179,21 @@
 .briefing-carry{
   background:linear-gradient(135deg,#eef6ff,#dfeafb)!important;
 }
+.briefing-drill{
+  background:linear-gradient(135deg,#24142b,#3a1920)!important;
+  border-color:#d7ad6278!important;
+  box-shadow:0 16px 34px #1a071040,inset 0 1px 0 #fff2!important;
+}
+.briefing-drill span{
+  background:#ffe4a8!important;
+  color:#3a1717!important;
+}
+.briefing-drill b{
+  color:#fff8e9!important;
+}
+.briefing-drill p{
+  color:#f0d6b8!important;
+}
 .briefing-route{
   background:linear-gradient(135deg,#f7f1ff,#ded5fb)!important;
 }
@@ -1206,6 +1221,17 @@
 .briefing-start p{
   color:#e8cfad!important;
   font-size:11px;
+}
+.briefing-start.drill-active{
+  background:linear-gradient(135deg,#24142b,#3a1920)!important;
+  border-color:#ffcf8170!important;
+}
+.briefing-start.drill-active span{
+  background:#ffe4a8!important;
+  color:#3a1717!important;
+}
+.briefing-start.drill-active p{
+  color:#f0d6b8!important;
 }
 
 @media(max-width:900px){
@@ -1615,6 +1641,90 @@
   color:#d9cff9;
 }
 
+/* v11 replay drill actions */
+.replay-drill-panel{
+  display:grid;
+  grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);
+  gap:12px;
+  align-items:stretch;
+  margin:12px 0 0;
+  padding:14px;
+  border:1px solid #d7ad6248;
+  border-radius:16px;
+  background:
+    radial-gradient(circle at 14% 20%,color-mix(in srgb,var(--c) 20%,transparent) 0 110px,transparent 112px),
+    linear-gradient(135deg,#fff8ea,#eadcc4);
+  box-shadow:0 14px 34px #32160816,inset 0 1px 0 #fff8;
+}
+.replay-drill-panel>div:first-child span{
+  display:inline-flex;
+  margin-bottom:7px;
+  border-radius:999px;
+  padding:3px 8px;
+  background:#170a10;
+  color:#ffe4a8;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.12em;
+}
+.replay-drill-panel>div:first-child b{
+  display:block;
+  color:#201116;
+  font-family:'Shippori Mincho','Noto Serif JP',serif;
+  font-size:18px;
+  line-height:1.35;
+}
+.replay-drill-panel>div:first-child p{
+  margin:6px 0 0;
+  color:#60433c!important;
+  font-size:10px;
+  line-height:1.6;
+}
+.replay-drill-options{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+}
+.replay-drill-options button{
+  min-width:0;
+  min-height:118px;
+  display:grid;
+  align-content:start;
+  gap:6px;
+  padding:11px;
+  border:1px solid #d7ad625c;
+  border-radius:13px;
+  background:linear-gradient(180deg,#181020,#331316);
+  color:#fff8e9;
+  text-align:left;
+  box-shadow:0 12px 28px #21080d24,inset 0 1px 0 #fff1;
+}
+.replay-drill-options button:hover{
+  transform:translateY(-1px);
+  border-color:#ffcf81;
+}
+.replay-drill-options button span{
+  width:max-content;
+  max-width:100%;
+  border-radius:999px;
+  padding:3px 7px;
+  background:#ffe4a8;
+  color:#2b0d12;
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.09em;
+}
+.replay-drill-options button b{
+  color:#fff;
+  font-size:11px;
+  line-height:1.35;
+}
+.replay-drill-options button small{
+  color:#ecd3b5;
+  font-size:8px;
+  line-height:1.45;
+}
+
 @media(max-width:620px){
   .branch-timeline-panel{
     padding:10px!important;
@@ -1681,5 +1791,48 @@
   }
   .timeline-node small{
     font-size:6px!important;
+  }
+  .replay-drill-panel{
+    grid-template-columns:1fr!important;
+    gap:8px!important;
+    padding:10px!important;
+    border-radius:14px!important;
+  }
+  .replay-drill-panel>div:first-child b{
+    font-size:14px!important;
+  }
+  .replay-drill-panel>div:first-child p{
+    font-size:8.5px!important;
+    line-height:1.45!important;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .replay-drill-options{
+    grid-template-columns:1fr!important;
+    gap:6px!important;
+  }
+  .replay-drill-options button{
+    min-height:0!important;
+    grid-template-columns:auto 1fr;
+    gap:3px 8px!important;
+    padding:9px!important;
+    border-radius:11px!important;
+  }
+  .replay-drill-options button span{
+    grid-row:1 / 3;
+    align-self:start;
+    font-size:6px!important;
+  }
+  .replay-drill-options button b{
+    font-size:9.4px!important;
+  }
+  .replay-drill-options button small{
+    font-size:7.4px!important;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
   }
 }

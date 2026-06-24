@@ -271,6 +271,7 @@ let state = {
   picked: null,
   history: [],
   flags: { safe: 0, spark: 0, strain: 0 },
+  replayDrill: null,
 };
 
 const ROUTE_ALBUM_KEY = "love-type-lab-route-album-v1";
@@ -1361,6 +1362,19 @@ function briefing() {
   const carry = last
     ? `<article class="briefing-carry"><span>前回からの持ち越し</span><b>${last.intent}</b><p>${last.nextImpact || last.aftertaste}</p></article>`
     : `<article class="briefing-carry"><span>最初の読み</span><b>${design.winningMindset}</b><p>まずは相手の反応を急いで正解化せず、表情・言葉・間のどこに本音が出るかを見る。</p></article>`;
+  const startGuide = state.replayDrill
+    ? {
+      label: "次周ドリル",
+      title: state.replayDrill.title,
+      copy: state.replayDrill.copy,
+      className: "drill-active",
+    }
+    : {
+      label: "選ぶ前に見ること",
+      title: reading.playerQuestion,
+      copy: "選択肢は「優しいか」ではなく、この相手のいまの欲求に合っているかで選ぶ。",
+      className: "",
+    };
   return `<div class="game-shell briefing-shell briefing-v2">
     <header class="game-header"><button class="icon-button" data-go="profile">×</button><div class="game-person">${avatar(c)}<div><b>${c.name}</b><span>${c.roleName} / ${c.style}</span></div></div><div class="game-progress"><span>DATE ${dateIndex + 1} BRIEF <b>${firstSceneIndex + 1} / ${count}</b></span><i><em style="width:${(firstSceneIndex / count) * 100}%;background:${c.color}"></em></i></div></header>
     <main class="briefing-main" style="--c:${c.color};--light:${c.light}">
@@ -1384,10 +1398,10 @@ function briefing() {
           ${carry}
           <article class="briefing-route route-${compass.tone}"><span>今のルート</span><b>${stage.label} / ${compass.label}</b><p>${compass.fork}</p></article>
         </div>
-        <div class="briefing-start">
-          <span>選ぶ前に見ること</span>
-          <b>${reading.playerQuestion}</b>
-          <p>選択肢は「優しいか」ではなく、この相手のいまの欲求に合っているかで選ぶ。</p>
+        <div class="briefing-start ${startGuide.className}">
+          <span>${startGuide.label}</span>
+          <b>${startGuide.title}</b>
+          <p>${startGuide.copy}</p>
         </div>
         <button class="primary full" data-start-date>ラリー1へ進む →</button>
       </section>
@@ -2064,6 +2078,26 @@ function replayPlanPanel(character = state.char, route) {
   return `<div class="replay-plan-panel" style="--c:${character.color};--light:${character.light}"><h3>次周の作戦ノート <span>REPLAY PLAN</span></h3><p>${plan.headline}。今回の読み筋を次のプレイで別のエンディングや深い本音につなげます。</p><div>${plan.focus.map((task) => `<article><span>${task.badge}</span><b>${task.title}</b><p>${task.copy}</p></article>`).join("")}</div></div>`;
 }
 
+function replayDrillOptions(character = state.char, route = relationshipRoute(character.id, state.scores, state.flags, state.history)) {
+  const plan = replayPlanReport(character, route);
+  const base = plan.focus.slice(0, 3);
+  if (base.length >= 3) return base;
+  return [
+    ...base,
+    { badge: "SAFE", title: "安心を崩さず進める", copy: "最初の5ラリーでsafeを3回以上選び、相手が話し続けられる土台を作る。" },
+    { badge: "SPARK", title: "火花を温度に変える", copy: "sparkのあとにsafeを入れ、楽しいだけで終わらせず本気度へ着地させる。" },
+    { badge: "REPAIR", title: "ズレた直後に戻す", copy: "strain後2ラリー以内に、相手の言葉を引用するsafeで修復する。" },
+  ].slice(0, 3);
+}
+
+function replayDrillPanel(character = state.char, route) {
+  const drills = replayDrillOptions(character, route);
+  return `<div class="replay-drill-panel" style="--c:${character.color};--light:${character.light}">
+    <div><span>NEXT RUN DRILL</span><b>次周は練習テーマを選ぶ</b><p>ただやり直すだけではなく、今回の弱点か未解放ルートを狙って再挑戦できます。</p></div>
+    <div class="replay-drill-options">${drills.map((drill, index) => `<button data-drill="${index}"><span>${drill.badge}</span><b>${drill.title}</b><small>${drill.copy}</small></button>`).join("")}</div>
+  </div>`;
+}
+
 function missionBoardPanel(character = state.char) {
   const reports = storyFor(character.id).dates.map((date, index) => ({ date, report: dateMissionReport(character, index) }));
   const cleared = reports.filter(({ report }) => report.complete).length;
@@ -2290,6 +2324,7 @@ function result() {
       <div class="gameplay-final-review"><span>15ラリー総合レビュー</span><b>${gameplay.finalReview}</b><p>${gameplay.nextMission}</p></div>
       ${routeBranchTimelinePanel(c, state.history)}
       ${resultFocusCards(c, gameplay, route)}
+      ${replayDrillPanel(c, route)}
       <div class="result-actions"><button class="primary" data-share>結果をコピーする</button><button class="outline" data-restart>もう一度デートする</button></div>
     </section>
     <details class="result-detail-drawer">
@@ -2343,6 +2378,11 @@ function startGame() {
   render();
 }
 
+function startReplayDrill(drill) {
+  state.replayDrill = drill ? { badge: drill.badge, title: drill.title, copy: drill.copy } : null;
+  startGame();
+}
+
 document.addEventListener("click", async (event) => {
   const go = event.target.closest("[data-go]");
   if (go) {
@@ -2355,6 +2395,7 @@ document.addEventListener("click", async (event) => {
   const selected = event.target.closest("[data-select]");
   if (selected) {
     state.char = characters.find((character) => character.id === selected.dataset.select);
+    state.replayDrill = null;
     state.view = "profile";
     render();
     return;
@@ -2450,7 +2491,16 @@ document.addEventListener("click", async (event) => {
   }
 
   if (event.target.closest("[data-restart]")) {
+    state.replayDrill = null;
     startGame();
+    return;
+  }
+
+  const drill = event.target.closest("[data-drill]");
+  if (drill) {
+    const route = relationshipRoute(state.char.id, state.scores, state.flags, state.history);
+    const options = replayDrillOptions(state.char, route);
+    startReplayDrill(options[Number(drill.dataset.drill)] || options[0]);
     return;
   }
 
