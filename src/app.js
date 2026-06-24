@@ -682,7 +682,7 @@ function recentRecoverableStrain(history = state.history, sceneIndex = state.sce
 function choiceFit(choice, character = state.char) {
   const design = gameDesign(character);
   const bias = persona(character)?.scoringBias?.[choice.kind] ?? 1;
-  const primaryNeed = choice.connectionBid?.key || choice.needCompass?.need || choice.heartKey?.title || design.lens.focus;
+  const primaryNeed = choice.connectionBid?.title || choice.connectionBid?.label || choice.needCompass?.title || choice.needCompass?.need || choice.heartKey?.title || design.lens.focus;
   const risk = choice.branch === "strain"
     ? choice.kind === "pushy" ? "pressure" : "misread"
     : bias <= 0.88 ? "type-mismatch"
@@ -1108,7 +1108,31 @@ function choiceReadout(choice) {
 
 function choiceReadoutChip(choice) {
   const readout = choiceReadout(choice);
-  return `<em class="choice-readout readout-${readout.tone}"><small>読解</small>${readout.label}<span>${readout.copy}</span></em>`;
+  const signal = choiceFitSignal(choice);
+  return `<em class="choice-readout readout-${readout.tone}"><small>${signal.badge}</small>${readout.label}<span>${signal.copy}</span></em>`;
+}
+
+function choiceFitSignal(choice, character = state.char) {
+  const evaluation = choice.evaluation || {};
+  const fit = choice.fit || evaluation.fit || {};
+  const need = fit.primaryNeed || fit.advances || gameDesign(character).lens.focus;
+  if (evaluation.recoveredFromSceneIndex !== null && evaluation.recoveredFromSceneIndex !== undefined) {
+    return { badge: "修復", copy: `${character.name}の警戒を戻す` };
+  }
+  if (choice.branch === "strain") {
+    const badge = choice.kind === "pushy" ? "地雷" : "誤読";
+    return { badge, copy: `${character.name}には${riskLabel(fit.risk)}に見える` };
+  }
+  if (evaluation.fitKey === "type-mismatch" || ["type-mismatch", "tactic-mismatch"].includes(fit.risk)) {
+    return { badge: "注意", copy: `${character.name}には浅く響く` };
+  }
+  if (["core", "need", "type-fit"].includes(evaluation.fitKey)) {
+    return { badge: "特効", copy: `${character.name}の${need}に刺さる` };
+  }
+  if (choice.branch === "spark") {
+    return { badge: "温度", copy: `${character.name}の期待を上げる` };
+  }
+  return { badge: "土台", copy: `${character.name}が続けやすい` };
 }
 
 function strictChoiceReview(choice, character = state.char, evaluation = choice.evaluation, useEvaluation = true) {
@@ -1128,7 +1152,8 @@ function strictChoiceReview(choice, character = state.char, evaluation = choice.
 function choiceReviewReadout(choice) {
   const readout = choiceReadout(choice);
   const fit = choice.fit || choice.evaluation?.fit || {};
-  return `<article class="choice-readout-review readout-${readout.tone}"><span>選択の読解</span><b>${readout.label} / ${fit.advances || fit.primaryNeed || choiceDirection(choice)}</b><p>${readout.review}</p></article>`;
+  const signal = choiceFitSignal(choice);
+  return `<article class="choice-readout-review readout-${readout.tone}"><span>${signal.badge}読解</span><b>${readout.label} / ${fit.advances || fit.primaryNeed || choiceDirection(choice)}</b><p>${readout.review}</p></article>`;
 }
 
 function previousChoiceForScene(sceneIndex = state.sceneIndex) {
@@ -1313,7 +1338,7 @@ function kindLabelList(value = "") {
     .join("・") || "場面次第";
 }
 
-function sceneFocusPanel({ date, scene, line, reading, tactic, heartKey, needCompass, connectionBid }) {
+function sceneFocusPanel({ date, scene, line, reading, tactic, heartKey, needCompass, connectionBid, activeSwitch }) {
   const parts = sceneContextParts(date, scene, line);
   const lead = parts.find(([label]) => ["直前の会話", "直前の流れ"].includes(label)) || parts[0];
   const photo = parts.find(([label]) => label === "この一枚") || parts[1];
@@ -1322,7 +1347,7 @@ function sceneFocusPanel({ date, scene, line, reading, tactic, heartKey, needCom
   return `<div class="scene-focus-grid">
     <article class="focus-now"><span>状況</span><b>${scene.title}</b><p>${echo ? echo[1] : status}</p></article>
     <article class="focus-read"><span>読むサイン</span><b>${reading.signal}</b><p>${heartKey.title}: ${reading.playerQuestion}</p></article>
-    <article class="focus-strategy"><span>勝ち筋</span><b>${tactic.title}</b><p>${needCompass.ask}</p><small>拾う: ${kindLabelList(tactic.prefer)} / 注意: ${kindLabelList(tactic.avoid)} / サイン: ${connectionBid.title}</small></article>
+    <article class="focus-strategy"><span>勝ち筋</span><b>${tactic.title}</b><p>${needCompass.ask}</p><small>鍵: ${activeSwitch?.opens || kindLabelList(tactic.prefer)} / 地雷: ${activeSwitch?.hurts || kindLabelList(tactic.avoid)} / サイン: ${connectionBid.title}</small></article>
   </div>`;
 }
 
@@ -1423,13 +1448,14 @@ function game() {
   const heartKey = heartKeyRead(c, state.sceneIndex);
   const needCompass = needCompassRead(c, state.sceneIndex);
   const connectionBid = connectionBidRead(c, state.sceneIndex);
+  const activeSwitch = activePersonaSwitch(c.id, state.sceneIndex, count);
   const mission = dateMissionReport(c, dateIndex);
   const stage = relationshipStage(c);
   const compass = routeCompassReport(c);
   return `<div class="game-shell game-v2">
     <header class="game-header"><button class="icon-button" data-go="profile">×</button><div class="game-person">${avatar(c)}<div><b>${c.name}</b><span>${c.roleName} / ${c.style}</span></div></div><div class="game-progress"><span>DATE ${dateIndex + 1} <b>${state.sceneIndex + 1} / ${count}</b></span><i><em style="width:${((state.sceneIndex + 1) / count) * 100}%;background:${c.color}"></em></i></div></header>
     <main class="game-main"><aside class="score-strip"><div class="score-hero" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>\u7dcf\u5408\u8a55\u4fa1</span><b>${tier.label}</b><p>${tier.sub}</p></div></div>${meters()}<div class="relationship-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div>${routeCompassCard(compass, true)}<div class="meter-help">\u30bf\u30a4\u30d7\u3054\u3068\u306b\u91cd\u304f\u898b\u308b\u30dd\u30a4\u30f3\u30c8\u304c\u5c11\u3057\u9055\u3044\u307e\u3059\u3002</div></aside>
-      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ラリー ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context compact"><b>今の読みどころ</b>${sceneFocusPanel({ date, scene, line, reading, tactic, heartKey, needCompass, connectionBid })}</div>${previousImpactPanel()}${currentDateConversationPanel(dateIndex, local)}${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch} readout-${choiceReadout(choice).tone}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent"><small>方向性</small>${choiceDirection(choice)}</em>${choiceReadoutChip(choice)}<p>${choice.label}</p></button>`).join("")}</div></section>
+      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ラリー ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context compact"><b>今の読みどころ</b>${sceneFocusPanel({ date, scene, line, reading, tactic, heartKey, needCompass, connectionBid, activeSwitch })}</div>${previousImpactPanel()}${currentDateConversationPanel(dateIndex, local)}${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch} readout-${choiceReadout(choice).tone}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent"><small>方向性</small>${choiceDirection(choice)}</em>${choiceReadoutChip(choice)}<p>${choice.label}</p></button>`).join("")}</div></section>
     </main>${state.picked ? feedback() : ""}
   </div>`;
 }
