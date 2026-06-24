@@ -1,6 +1,6 @@
 import { personaCatalog } from "./personas.js";
 import { activePersonaSwitch, characterFinaleScene, characterGameDesign, characterRouteEnding, personaSwitchFeedback, relationshipPulse, relationshipRoute, routeEndings, sceneCharacterSubtext, sceneCoaching, sceneDramaturgy, sceneEmotionalContract, sceneReadingCue, sceneTacticalRead } from "./gameDesign.js";
-import { branchTone, storyFor } from "./story.js";
+import { storyFor } from "./story.js";
 
 const $ = (selector) => document.querySelector(selector);
 
@@ -566,10 +566,10 @@ function compatibilityScore(character = state.char, scores = state.scores) {
 }
 
 function compatibilityTier(score) {
-  if (score >= 82) return { icon: "gauge", label: "\u304b\u306a\u308a\u3044\u3044\u611f\u3058", sub: "\u3057\u3063\u304b\u308a\u523a\u3055\u3063\u3066\u308b" };
-  if (score >= 68) return { icon: "gauge", label: "\u76f8\u6027\u304b\u306a\u308a\u5b89\u5b9a", sub: "\u4f1a\u8a71\u306e\u6e29\u5ea6\u304c\u5408\u3063\u3066\u308b" };
-  if (score >= 54) return { icon: "gauge", label: "\u307e\u3060\u4f38\u3073\u308b", sub: "\u3042\u3068\u4e00\u6b69\u3067\u8fd1\u3065\u304f" };
-  return { icon: "gauge", label: "\u4f5c\u6226\u898b\u76f4\u3057\u4e2d", sub: "\u8fd4\u3057\u65b9\u3067\u5316\u3051\u308b" };
+  if (score >= 82) return { icon: "gauge", label: "\u3053\u308c\u306f\u523a\u3055\u3063\u3066\u308b", sub: "\u76f8\u624b\u306e\u6027\u683c\u30c4\u30dc\u3092\u8aad\u3081\u3066\u3044\u308b" };
+  if (score >= 68) return { icon: "gauge", label: "\u5408\u683c\u3002\u3067\u3082\u6c4e\u7528\u7684", sub: "\u60aa\u304f\u306a\u3044\u304c\u3001\u307e\u3060\u8ab0\u306b\u3067\u3082\u8a00\u3048\u308b" };
+  if (score >= 54) return { icon: "gauge", label: "\u8aad\u307f\u304c\u7518\u3044", sub: "\u512a\u3057\u3055\u3060\u3051\u3067\u62bc\u3057\u5207\u3063\u3066\u3044\u308b" };
+  return { icon: "gauge", label: "\u4f5c\u6226\u7834\u7dbb", sub: "\u305d\u306e\u8fd4\u3057\u306f\u76f8\u624b\u3092\u898b\u3066\u3044\u306a\u3044" };
 }
 
 function relationshipStage(character = state.char, scores = state.scores, flags = state.flags) {
@@ -621,11 +621,21 @@ function sceneChoices() {
         decoder,
         needCompass,
         connectionBid,
-        effect: combineEffects(choice.effect, tactic.effect, momentum.effect, heartKey.effect, needCompass.effect, connectionBid.effect),
+        effect: combineEffects(choice.effect, tactic.effect, momentum.effect, heartKey.effect, needCompass.effect, connectionBid.effect, characterFitEffect(c, choice)),
       };
     }),
     `${c.id}:${state.sceneIndex}`,
   );
+}
+
+function characterFitEffect(character, choice) {
+  const bias = persona(character)?.scoringBias?.[choice.kind] ?? 1;
+  if (choice.branch === "strain") return {};
+  if (bias >= 1.15) return { trust: 2, interest: 2, comfort: 1, misread: -1 };
+  if (bias >= 1.05) return { interest: 1 };
+  if (bias <= 0.78) return { trust: -2, interest: -2, comfort: -1, pressure: 1, misread: 2 };
+  if (bias <= 0.88) return { interest: -1, misread: 1 };
+  return {};
 }
 
 function decoderRead(character = state.char, sceneIndex = state.sceneIndex, choice = null, heartKey = null) {
@@ -912,6 +922,57 @@ function choiceAftertaste(choice) {
   return "空気が少し揺れ、相手は次の一言で本当に見てくれるかを測っている";
 }
 
+function strictChoiceReview(choice, character = state.char) {
+  const bias = persona(character)?.scoringBias?.[choice.kind] ?? 1;
+  if (choice.branch === "strain") {
+    if (choice.kind === "pushy") return `${character.name}相手にその踏み込みは雑。距離を縮めたのではなく、相手に処理を押しつけている。次は先に相手の言葉を一つ拾う。`;
+    return `${character.name}の出したサインを軽く扱っている。場を和ませたつもりでも、相手からは「見ていない」に近い。`;
+  }
+  if (bias <= 0.88) return `返し自体は悪くないが、${character.type}風の${character.name}には刺さりが浅い。あなたの得意技を押すより、この相手が重く見る欲求に合わせたい。`;
+  if (choice.branch === "safe" && bias < 1 && character.best !== choice.kind) return `無難。傷つけてはいないが、恋愛ゲームとしては弱い。${character.name}には安心だけでなく、相手特有の欲求を狙う一文が必要。`;
+  if (choice.branch === "spark" && bias < 1 && character.best !== choice.kind) return `楽しくはある。ただし、この相手には少し表面をなでている。軽さのあとに、具体的な理解か敬意を足さないと残らない。`;
+  if (bias >= 1.15) return `この相手の急所をちゃんと踏めている。偶然の優しさではなく、${character.name}が欲しい受け取られ方に近い。`;
+  return `合格。ただ、まだ「誰にでも言えそう」な範囲。${character.name}ならではの怖がり方、喜び方まで読めると一段上がる。`;
+}
+
+function previousChoiceForScene(sceneIndex = state.sceneIndex) {
+  return state.history.find((item) => item.sceneIndex === sceneIndex - 1) || null;
+}
+
+function lineForScene(dateIndex, local, scene) {
+  if (typeof scene.line === "string") return scene.line;
+  const previous = local > 0 ? previousChoiceForScene() : null;
+  if (previous) return scene.line[previous.branch] || scene.line.default;
+  return scene.line.default;
+}
+
+function dateConversationItems(dateIndex = currentScene().dateIndex, history = state.history) {
+  const start = dateStartIndex(dateIndex);
+  const date = story().dates[dateIndex];
+  const end = start + (date?.scenes.length || 0) - 1;
+  return history.filter((item) => item.sceneIndex >= start && item.sceneIndex <= end);
+}
+
+function conversationBranchLabel(branch) {
+  return {
+    safe: "受け止め",
+    spark: "温度上げ",
+    strain: "ズレ",
+    repair: "修復",
+  }[branch] || "様子見";
+}
+
+function currentDateConversationPanel(dateIndex, local) {
+  const items = dateConversationItems(dateIndex);
+  if (!items.length) {
+    return `<div class="conversation-chain empty"><span>5ラリー会話</span><p>このデートは1つの場面で5回続く会話です。最初の返しが、次の相手の言い方を変えます。</p></div>`;
+  }
+  return `<div class="conversation-chain"><span>ここまでの会話</span><div>${items.map((item, index) => {
+    const key = item.branch === "safe" && items.slice(0, index).some((prev) => prev.branch === "strain") ? "repair" : item.branch;
+    return `<article class="chain-${key}"><b>${index + 1}/${local + 1} ${conversationBranchLabel(key)}</b><p>${item.intent}: ${item.aftertaste}</p><small>${item.strictReview || ""}</small></article>`;
+  }).join("")}</div></div>`;
+}
+
 function choiceIntentLabel(choice) {
   const cleanIntent = choice.intent && !choice.intent.includes("?") ? choice.intent : "";
   if (cleanIntent) return cleanIntent;
@@ -1081,8 +1142,7 @@ function game() {
   const c = state.char;
   const { date, dateIndex, local, scene } = currentScene();
   const choices = sceneChoices();
-  const tone = branchTone(state.flags);
-  const line = typeof scene.line === "string" ? scene.line : scene.line[tone] || scene.line.default;
+  const line = lineForScene(dateIndex, local, scene);
   const count = totalScenes(c);
   const total = compatibilityScore(c);
   const tier = compatibilityTier(total);
@@ -1098,7 +1158,7 @@ function game() {
   return `<div class="game-shell">
     <header class="game-header"><button class="icon-button" data-go="profile">×</button><div class="game-person">${avatar(c)}<div><b>${c.name}</b><span>${c.style}</span></div></div><div class="game-progress"><span>DATE ${dateIndex + 1} <b>${state.sceneIndex + 1} / ${count}</b></span><i><em style="width:${((state.sceneIndex + 1) / count) * 100}%;background:${c.color}"></em></i></div></header>
     <main class="game-main"><aside class="score-strip"><div class="score-hero" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>\u7dcf\u5408\u8a55\u4fa1</span><b>${tier.label}</b><p>${tier.sub}</p></div></div>${meters()}<div class="relationship-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div>${routeCompassCard(compass, true)}<div class="meter-help">\u30bf\u30a4\u30d7\u3054\u3068\u306b\u91cd\u304f\u898b\u308b\u30dd\u30a4\u30f3\u30c8\u304c\u5c11\u3057\u9055\u3044\u307e\u3059\u3002</div></aside>
-      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context compact"><b>今の読みどころ</b>${sceneFocusPanel({ date, scene, line, reading, tactic, heartKey, needCompass, connectionBid })}</div>${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent"><small>方向性</small>${choiceDirection(choice)}</em><p>${choice.label}</p></button>`).join("")}</div></section>
+      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ラリー ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context compact"><b>今の読みどころ</b>${sceneFocusPanel({ date, scene, line, reading, tactic, heartKey, needCompass, connectionBid })}</div>${currentDateConversationPanel(dateIndex, local)}${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-${choice.branch}"><span>${String.fromCharCode(65 + index)}</span><em class="choice-intent"><small>方向性</small>${choiceDirection(choice)}</em><p>${choice.label}</p></button>`).join("")}</div></section>
     </main>${state.picked ? feedback() : ""}
   </div>`;
 }
@@ -1118,11 +1178,12 @@ function feedback() {
       <div class="chat-bubble you"><b>あなた / ${choiceDirection(picked)}</b><p>${picked.label}</p></div>
       <div class="chat-bubble them" style="--c:${c.color};--light:${c.light}"><b>${c.name}</b><p>「${picked.reaction}」</p></div>
       <div class="chat-bubble subtext"><b>${subtext.title}</b><p>${subtext.copy}</p></div>
+      <div class="chat-bubble strict-review"><b>辛口レビュー</b><p>${strictChoiceReview(picked, c)}</p></div>
       <div class="chat-bubble read-summary key-${picked.heartKey?.tone || "near"}"><b>${picked.heartKey?.status || "鍵の読み"} / ${picked.needCompass?.status || "関係欲求"} / ${picked.connectionBid?.status || "接続サイン"}</b><p>${tactic.choiceFits ? tactic.payoff : tactic.choiceRisks ? tactic.trap : picked.why}</p><small>${momentum.label}: ${momentum.copy}</small></div>
       <div class="chat-bubble better"><b>次にもっと自然にするなら</b><p>${picked.better}</p></div>
     </div>
     <div class="delta-row">${Object.entries(picked.effect).filter(([, value]) => value !== 0).map(([key, value]) => `<span class="${value > 0 ? "plus" : "minus"}">${scoreIcon(scoreDecor[key]?.icon || "gauge")} ${scoreDecor[key]?.short || scoreLabels[key]} ${value > 0 ? "+" : ""}${value}</span>`).join("")}</div>
-    <button class="primary full" data-next>${state.sceneIndex === totalScenes() - 1 ? "\u7d50\u679c\u3092\u898b\u308b" : "\u6b21\u306e\u4f1a\u8a71\u3078"} \u2192</button>
+    <button class="primary full" data-next>${state.sceneIndex === totalScenes() - 1 ? "\u7d50\u679c\u3092\u898b\u308b" : "\u6b21\u306e\u30e9\u30ea\u30fc\u3078"} \u2192</button>
   </div></div>`;
 }
 
@@ -1133,9 +1194,9 @@ function branchSummary(items) {
   }, { safe: 0, spark: 0, strain: 0 });
   const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
   const labels = {
-    safe: ["安心寄り", "相手の温度を丁寧に拾えている"],
-    spark: ["火花寄り", "楽しい期待は作れている。次は誠実さも添えたい"],
-    strain: ["揺れ寄り", "少し空気が乱れたぶん、次は受け取り直しが鍵"],
+    safe: ["安心寄り", "丁寧ではある。ただし安全運転だけだと、恋愛の温度は上がらない。相手特有の欲求まで踏むこと。"],
+    spark: ["火花寄り", "楽しい期待は作れている。だが軽さが続くと、相手は『本気で見てる？』と冷める。"],
+    strain: ["揺れ寄り", "空気を乱している。ここから取り返すには、言い訳より先に相手の受け取りを認める必要がある。"],
   };
   return { key: top, label: labels[top][0], copy: labels[top][1], counts };
 }
@@ -1849,9 +1910,9 @@ function strongestInsight() {
 }
 
 function growthInsight() {
-  if (state.scores.pressure > state.scores.misread && state.scores.pressure > 25) return "答えを急がず、相手が選べる余白を残すとさらに良くなります。";
-  if (state.scores.misread > 25) return "相手の言葉の奥にある気持ちを一度確認してから返すと、すれ違いが減ります。";
-  return "安心感に加えて、あなた自身の好意や希望も少しずつ言葉にしてみましょう。";
+  if (state.scores.pressure > state.scores.misread && state.scores.pressure > 25) return "圧が出ています。好意のつもりでも、相手から見ると返答を急かす人です。余白を残さない限り次は閉じられます。";
+  if (state.scores.misread > 25) return "読み違いが目立ちます。表面の言葉に反応していて、相手が本当に守りたいものを拾えていません。";
+  return "悪くないですが、まだ丸い。安心感だけで終わらせず、この相手にだけ刺さる敬意・遊び・具体性を出してください。";
 }
 
 const views = {
@@ -1917,6 +1978,7 @@ document.addEventListener("click", async (event) => {
       branch: state.picked.branch,
       intent: choiceIntentLabel(state.picked),
       aftertaste: choiceAftertaste(state.picked),
+      strictReview: strictChoiceReview(state.picked, state.char),
       grade: grade.rank,
       skill: coaching.skill,
       skillBadge: coaching.badge,
