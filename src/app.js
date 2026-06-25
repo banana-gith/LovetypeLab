@@ -2291,57 +2291,31 @@ function missionBoardPanel(character = state.char) {
 
 function checkpoint() {
   const c = state.char;
-  const { date, dateIndex, local } = currentScene();
-  const start = dateStartIndex(dateIndex, c);
-  const picks = state.history.filter((item) => item.sceneIndex >= start && item.sceneIndex <= state.sceneIndex);
-  const summary = branchSummary(picks);
-  const last = picks.at(-1);
-  const combo = currentCombo();
-  const style = playStyleReport();
+  const { date, dateIndex } = currentScene();
   const next = state.sceneIndex + 1 < totalScenes(c) ? sceneAt(state.sceneIndex + 1, c) : null;
-  const nextGuide = next ? sceneCoaching(c.id, next.scene, state.sceneIndex + 1, totalScenes(c)) : null;
-  const nextRead = next ? sceneReadingCue(c.id, state.sceneIndex + 1, totalScenes(c)) : null;
-  const stage = relationshipStage(c);
-  const route = relationshipRoute(c.id, state.scores, state.flags, state.history);
-  const heart = heartMemoUnlocks(c);
-  const mission = dateMissionReport(c, dateIndex);
-  const memory = characterMemoryReport(c);
-  const arc = relationshipArcReport(c);
-  const compass = routeCompassReport(c);
-  const total = compatibilityScore(c);
-  const nextCopy = next
-    ? `${next.date.title}は「${next.scene.location}」から。次は${nextGuide.skill}。${nextGuide.lesson}`
-    : "この先は最終結果で、ふたりの関係の着地を見ます。";
-  const nextReadCopy = nextRead ? `読むサイン: ${nextRead.signal} / 合言葉: ${nextRead.playerQuestion}` : "最終結果で、今回の読み筋を振り返ります。";
+  const report = dateIntermissionReport(c, dateIndex);
+  const strongest = report.strongest;
+  const strongestTitle = strongest?.intent || report.summary.label;
+  const strongestCopy = strongest?.aftertaste || strongest?.bidCopy || strongest?.needCopy || report.mission.success || report.summary.copy;
+  const nextTitle = next ? `${next.date.title} / ${next.scene.title}` : "最終レポート";
+  const nextCopy = next ? report.carry : "ここから先の細かい評価は、最後の総合レポートでまとめて確認します。";
   return `<div class="game-shell checkpoint-shell checkpoint-v2">
     <header class="game-header"><button class="icon-button" data-go="profile">×</button><div class="game-person">${avatar(c)}<div><b>${c.name}</b><span>${c.roleName} / ${c.style}</span></div></div><div class="game-progress"><span>DATE ${dateIndex + 1} CLEAR <b>${state.sceneIndex + 1} / ${totalScenes(c)}</b></span><i><em style="width:${((state.sceneIndex + 1) / totalScenes(c)) * 100}%;background:${c.color}"></em></i></div></header>
     <main class="checkpoint-main" style="--c:${c.color};--light:${c.light}">
-      <section class="checkpoint-card">
+      <section class="checkpoint-card checkpoint-card-minimal">
         <span class="checkpoint-kicker">DATE ${dateIndex + 1} REVIEW</span>
         <h1>${date.title}の幕間</h1>
-        <p>${date.purpose}</p>
-        <div class="checkpoint-hero">
-          <div><span>総合評価</span><strong>${total}</strong></div>
-          <div class="relationship-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div>
-        </div>
-        ${intermissionPanel(c, dateIndex)}
-        <div class="checkpoint-grid">
-          <article class="branch-${summary.key}"><span>多かった返し</span><b>${summary.label}</b><p>${summary.copy}</p></article>
-          <article><span>今の読み筋</span><b>${route.badge}</b><p>${relationshipPulse(c.id, state.scores, state.flags)}</p></article>
-          <article><span>直近の余韻</span><b>${last?.intent || "様子を見る"}</b><p>${last?.aftertaste || "まだ相手の反応を探っている。"}</p></article>
-          <article class="stage-${combo.tone}"><span>${style.badge}</span><b>${style.title}</b><p>${combo.label}。${style.copy}</p></article>
-          <article class="mission-${mission.tone}"><span>${mission.badge}</span><b>${mission.title} ${mission.progress}%</b><p>${mission.complete ? mission.success : mission.next}</p></article>
-          <article class="memory-${memory.tone}"><span>MEMORY</span><b>${memory.label}</b><p>${memory.copy}</p></article>
-          <article class="arc-${arc.next.tone}"><span>LOVE ARC</span><b>${arc.next.label}</b><p>${arc.next.advice}</p></article>
-          <article class="route-${compass.tone}"><span>ROUTE</span><b>${compass.label} ${compass.confidence}%</b><p>${compass.fork}</p></article>
-        </div>
+        <p class="checkpoint-private">${report.privateLine}</p>
+        <article class="checkpoint-core">
+          <span>今回残った一手</span>
+          <b>${strongestTitle}</b>
+          <p>${strongestCopy}</p>
+        </article>
         <div class="checkpoint-next">
-          <span>NEXT SCENE</span>
-          <b>${next ? `${next.date.title} / ${next.scene.title}` : "最終結果"}</b>
-          <p>${nextCopy} ${nextReadCopy}</p>
+          <span>${next ? "次に見ること" : "次は総合評価"}</span>
+          <b>${nextTitle}</b>
+          <p>${nextCopy}</p>
         </div>
-        <div class="heart-progress"><span>HEART MEMO</span><b>${heart.unlocked.length}/5 解放</b><p>次に見えそうな内面: ${heart.nextHint}</p></div>
-        ${switchProgressPanel(c, true)}
         <button class="primary full" data-continue-date>${next ? "次のデートへ" : "結果を見る"} →</button>
       </section>
     </main>

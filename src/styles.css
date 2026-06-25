@@ -2443,3 +2443,151 @@
     overflow:hidden;
   }
 }
+
+/* v15 date review: compact intermission card */
+.checkpoint-v2{
+  background:linear-gradient(135deg,var(--play-bg-a),#17182a 48%,var(--play-bg-b))!important;
+  color:#fff7e6!important;
+}
+.checkpoint-v2 .checkpoint-main{
+  height:calc(100dvh - 64px)!important;
+  display:grid!important;
+  place-items:center!important;
+  padding:14px!important;
+  overflow:hidden!important;
+  background:linear-gradient(135deg,var(--play-bg-a),#17182a 48%,var(--play-bg-b))!important;
+}
+.checkpoint-v2 .checkpoint-card.checkpoint-card-minimal{
+  width:min(480px,100%)!important;
+  max-height:100%!important;
+  display:grid!important;
+  gap:10px!important;
+  overflow:auto!important;
+  border:1px solid var(--play-line)!important;
+  border-radius:22px!important;
+  background:linear-gradient(180deg,var(--play-panel),var(--play-panel-2))!important;
+  color:var(--play-ink)!important;
+  box-shadow:0 26px 76px #09040a88,inset 0 1px 0 #fff9!important;
+}
+.checkpoint-card-minimal .checkpoint-kicker,
+.checkpoint-card-minimal .checkpoint-core span,
+.checkpoint-card-minimal .checkpoint-next span{
+  display:inline-flex!important;
+  width:max-content!important;
+  max-width:100%!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  border-radius:999px!important;
+  padding:4px 8px!important;
+  background:#35121d!important;
+  color:var(--play-gold-soft)!important;
+  border:1px solid #e2b66466!important;
+  font-size:8px!important;
+  font-weight:900!important;
+  letter-spacing:.12em!important;
+}
+.checkpoint-card-minimal h1{
+  margin:0!important;
+  color:var(--play-ink)!important;
+  text-shadow:none!important;
+  font-size:27px!important;
+  line-height:1.25!important;
+}
+.checkpoint-card-minimal .checkpoint-private{
+  margin:0!important;
+  padding:12px 13px!important;
+  border-radius:16px!important;
+  background:linear-gradient(135deg,#244b6c,#35121d)!important;
+  color:#fff6df!important;
+  border:1px solid #d9a64f66!important;
+  font-size:12px!important;
+  line-height:1.65!important;
+}
+.checkpoint-card-minimal .checkpoint-core,
+.checkpoint-card-minimal .checkpoint-next{
+  margin:0!important;
+  padding:13px!important;
+  border:1px solid #c9914b70!important;
+  border-radius:16px!important;
+  background:linear-gradient(180deg,#fffaf2,#f4e1c4)!important;
+  color:var(--play-ink)!important;
+  box-shadow:0 10px 28px #3d160e18!important;
+}
+.checkpoint-card-minimal .checkpoint-core b,
+.checkpoint-card-minimal .checkpoint-next b{
+  display:block!important;
+  margin-top:6px!important;
+  color:var(--play-ink)!important;
+  font-size:15px!important;
+  line-height:1.35!important;
+}
+.checkpoint-card-minimal .checkpoint-core p,
+.checkpoint-card-minimal .checkpoint-next p{
+  margin:6px 0 0!important;
+  color:var(--play-muted)!important;
+  font-size:11px!important;
+  line-height:1.58!important;
+}
+.checkpoint-card-minimal .primary.full{
+  margin:0!important;
+  min-height:52px!important;
+  border-radius:16px!important;
+}
+
+@media(max-width:620px){
+  .checkpoint-v2 .checkpoint-main{
+    height:calc(100dvh - 54px)!important;
+    padding:7px!important;
+  }
+  .checkpoint-v2 .checkpoint-card.checkpoint-card-minimal{
+    min-height:0!important;
+    max-height:calc(100dvh - 68px)!important;
+    gap:6px!important;
+    padding:8px!important;
+    border-radius:16px!important;
+    overflow:hidden!important;
+  }
+  .checkpoint-card-minimal .checkpoint-kicker,
+  .checkpoint-card-minimal .checkpoint-core span,
+  .checkpoint-card-minimal .checkpoint-next span{
+    font-size:6.8px!important;
+    padding:3px 6px!important;
+  }
+  .checkpoint-card-minimal h1{
+    font-size:18px!important;
+    line-height:1.2!important;
+  }
+  .checkpoint-card-minimal .checkpoint-private{
+    padding:8px 9px!important;
+    border-radius:13px!important;
+    font-size:8.6px!important;
+    line-height:1.35!important;
+    display:-webkit-box!important;
+    -webkit-line-clamp:2!important;
+    -webkit-box-orient:vertical!important;
+    overflow:hidden!important;
+  }
+  .checkpoint-card-minimal .checkpoint-core,
+  .checkpoint-card-minimal .checkpoint-next{
+    padding:8px 9px!important;
+    border-radius:13px!important;
+  }
+  .checkpoint-card-minimal .checkpoint-core b,
+  .checkpoint-card-minimal .checkpoint-next b{
+    font-size:11px!important;
+    line-height:1.32!important;
+  }
+  .checkpoint-card-minimal .checkpoint-core p,
+  .checkpoint-card-minimal .checkpoint-next p{
+    font-size:7.8px!important;
+    line-height:1.32!important;
+    display:-webkit-box!important;
+    -webkit-line-clamp:1!important;
+    -webkit-box-orient:vertical!important;
+    overflow:hidden!important;
+  }
+  .checkpoint-card-minimal .primary.full{
+    min-height:44px!important;
+    height:44px!important;
+  }
+}
