@@ -1875,3 +1875,205 @@
     align-self:end!important;
   }
 }
+
+/* v13 character roster readability */
+.character-select-v2 .roster-grid{
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr))!important;
+  gap:16px!important;
+  max-width:1180px!important;
+  margin:0 auto!important;
+}
+.character-select-v2 .roster-card{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  height:auto!important;
+  max-height:none!important;
+  min-height:342px!important;
+  overflow:hidden!important;
+  border-radius:16px!important;
+  background:linear-gradient(180deg,#fff9ee 0%,#f4e4c9 100%)!important;
+}
+.character-select-v2 .roster-card .profile-art{
+  display:block!important;
+  height:154px!important;
+  min-height:154px!important;
+  overflow:hidden!important;
+}
+.character-select-v2 .roster-card .profile-content{
+  display:flex!important;
+  flex-direction:column!important;
+  min-height:188px!important;
+  height:auto!important;
+  padding:14px!important;
+  overflow:visible!important;
+}
+.character-select-v2 .roster-card .profile-content:before{
+  content:"DATE ROUTE"!important;
+  display:inline-flex!important;
+  align-self:flex-start!important;
+  margin-bottom:8px!important;
+  border-radius:999px!important;
+  padding:3px 8px!important;
+  background:#21141b!important;
+  color:#ffe4a8!important;
+  font-size:7px!important;
+  font-weight:900!important;
+  letter-spacing:.12em!important;
+}
+.character-select-v2 .roster-card small{
+  display:inline-flex!important;
+  align-self:flex-start!important;
+  max-width:100%!important;
+  border-radius:999px!important;
+  padding:3px 8px!important;
+  background:#30131d!important;
+  color:#ffe4a8!important;
+  font-size:8px!important;
+  line-height:1.25!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+.character-select-v2 .roster-card h2{
+  color:#21141b!important;
+  font-size:24px!important;
+  line-height:1.12!important;
+  margin:7px 0 5px!important;
+}
+.character-select-v2 .roster-card h2 span{
+  color:#7d6756!important;
+  font-size:8px!important;
+  margin-left:6px!important;
+}
+.character-select-v2 .roster-card .profile-content>p{
+  color:#4d3735!important;
+  font-size:10px!important;
+  line-height:1.45!important;
+  margin:0 0 8px!important;
+  white-space:normal!important;
+  display:-webkit-box!important;
+  -webkit-line-clamp:2!important;
+  -webkit-box-orient:vertical!important;
+  overflow:hidden!important;
+}
+.character-select-v2 .roster-card .practice{
+  margin:0!important;
+  padding:8px 0 0!important;
+  border-top:1px solid #d8b87873!important;
+}
+.character-select-v2 .roster-card .practice b{
+  display:block!important;
+  color:#6b4b30!important;
+  font-size:8px!important;
+}
+.character-select-v2 .roster-card .practice span{
+  color:#24151a!important;
+  font-size:10px!important;
+  line-height:1.45!important;
+  margin-top:3px!important;
+  display:-webkit-box!important;
+  -webkit-line-clamp:2!important;
+  -webkit-box-orient:vertical!important;
+  overflow:hidden!important;
+}
+.character-select-v2 .roster-card .tags{
+  display:flex!important;
+  margin:2px 0 8px!important;
+}
+.character-select-v2 .roster-card .card-button{
+  display:flex!important;
+  margin-top:auto!important;
+  min-height:34px!important;
+  height:auto!important;
+  font-size:10px!important;
+}
+
+@media(max-width:620px){
+  .character-select-v2{
+    padding:14px 12px 44px!important;
+  }
+  .character-select-v2 .page-title{
+    margin-bottom:14px!important;
+  }
+  .character-select-v2 .page-title h1{
+    font-size:29px!important;
+    line-height:1.16!important;
+    margin:7px 0!important;
+  }
+  .character-select-v2 .roster-grid{
+    grid-template-columns:1fr!important;
+    gap:10px!important;
+    margin-top:12px!important;
+  }
+  .character-select-v2 .roster-card{
+    grid-template-columns:112px minmax(0,1fr)!important;
+    min-height:132px!important;
+    height:auto!important;
+    max-height:none!important;
+    border-radius:14px!important;
+  }
+  .character-select-v2 .roster-card .profile-art{
+    height:auto!important;
+    min-height:132px!important;
+  }
+  .character-select-v2 .roster-card .difficulty{
+    left:7px!important;
+    top:7px!important;
+    max-width:92px!important;
+    padding:4px 6px!important;
+    color:#4a2a18!important;
+    font-size:7px!important;
+    white-space:nowrap!important;
+  }
+  .character-select-v2 .roster-card .avatar:not(.avatar-photo) .head{
+    bottom:14px!important;
+    transform:scale(.76)!important;
+    transform-origin:center bottom!important;
+  }
+  .character-select-v2 .roster-card .avatar:not(.avatar-photo) .body{
+    bottom:-20px!important;
+    transform:scale(.72)!important;
+    transform-origin:center bottom!important;
+  }
+  .character-select-v2 .roster-card .profile-content{
+    min-height:132px!important;
+    height:auto!important;
+    padding:11px 11px 10px!important;
+  }
+  .character-select-v2 .roster-card .profile-content:before,
+  .character-select-v2 .roster-card .tags,
+  .character-select-v2 .roster-card .card-button{
+    display:none!important;
+  }
+  .character-select-v2 .roster-card small{
+    max-width:100%!important;
+    padding:3px 7px!important;
+    font-size:8px!important;
+  }
+  .character-select-v2 .roster-card h2{
+    font-size:21px!important;
+    line-height:1.08!important;
+    margin:6px 0 4px!important;
+  }
+  .character-select-v2 .roster-card h2 span{
+    font-size:8px!important;
+  }
+  .character-select-v2 .roster-card .profile-content>p{
+    font-size:9px!important;
+    line-height:1.35!important;
+    margin:0 0 7px!important;
+    -webkit-line-clamp:2!important;
+  }
+  .character-select-v2 .roster-card .practice{
+    padding-top:7px!important;
+  }
+  .character-select-v2 .roster-card .practice b{
+    display:block!important;
+    font-size:7px!important;
+  }
+  .character-select-v2 .roster-card .practice span{
+    font-size:9px!important;
+    line-height:1.35!important;
+    -webkit-line-clamp:2!important;
+  }
+}
