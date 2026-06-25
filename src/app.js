@@ -1533,10 +1533,10 @@ function sceneFocusPanel({ date, scene, line, reading, tactic, heartKey, needCom
   const photo = parts.find(([label]) => label === "この一枚") || parts[1];
   const echo = parts.find(([label]) => label === "覚えている一手");
   const status = `${lead?.[1] || ""} ${photo?.[1] || ""}`.trim();
-  return `<div class="scene-focus-grid">
-    <article class="focus-now"><span>状況</span><b>${scene.title}</b><p>${echo ? echo[1] : status}</p></article>
-    <article class="focus-read"><span>読むサイン</span><b>${reading.signal}</b><p>${heartKey.title}: ${reading.playerQuestion}</p></article>
-    <article class="focus-strategy"><span>勝ち筋</span><b>${tactic.title}</b><p>${needCompass.ask}</p><small>鍵: ${activeSwitch?.opens || kindLabelList(tactic.prefer)} / 地雷: ${activeSwitch?.hurts || kindLabelList(tactic.avoid)} / サイン: ${connectionBid.title}</small></article>
+  const sceneStatus = echo ? echo[1] : status;
+  return `<div class="scene-focus-compact">
+    <article><span>今の空気</span><b>${scene.title}</b><p>${sceneStatus}</p></article>
+    <article><span>相手のサイン</span><b>${reading.signal}</b><p>${reading.playerQuestion}</p></article>
   </div>`;
 }
 
@@ -1566,16 +1566,7 @@ function briefing() {
   const design = gameDesign(c);
   const mission = dateMissionReport(c, dateIndex);
   const reading = sceneReadingCue(c.id, firstSceneIndex, count);
-  const coaching = sceneCoaching(c.id, firstScene, firstSceneIndex, count);
   const tactic = sceneTacticalRead(c.id, firstSceneIndex, count);
-  const contract = sceneEmotionalContract(c.id, firstScene, firstSceneIndex, count);
-  const activeSwitch = activePersonaSwitch(c.id, firstSceneIndex, count);
-  const stage = relationshipStage(c);
-  const compass = routeCompassReport(c);
-  const last = state.history.at(-1);
-  const carry = last
-    ? `<article class="briefing-carry"><span>前回からの持ち越し</span><b>${last.intent}</b><p>${last.nextImpact || last.aftertaste}</p></article>`
-    : `<article class="briefing-carry"><span>最初の読み</span><b>${design.winningMindset}</b><p>まずは相手の反応を急いで正解化せず、表情・言葉・間のどこに本音が出るかを見る。</p></article>`;
   const startGuide = state.replayDrill
     ? {
       label: "次周ドリル",
@@ -1601,16 +1592,10 @@ function briefing() {
           </div>
           <div class="briefing-photo" style="background:${c.light}">${sceneArtwork(c, firstScene, firstSceneIndex)}<small>FIRST SCENE</small></div>
         </div>
-        ${dateMissionCard(mission)}
-        <div class="briefing-grid">
-          <article class="briefing-win"><span>今日の勝ち筋</span><b>${mission.title}</b><p>${mission.aim}</p></article>
-          <article><span>相手のサイン</span><b>${reading.signal}</b><p>${reading.goodRead}</p></article>
-          <article class="briefing-risk"><span>危ない返し</span><b>${reading.misread}</b><p>${design.temptationTrap}</p></article>
-          <article><span>最初の場面</span><b>${firstScene.title}</b><p>${firstScene.location}で、${c.name}は「${line}」と切り出す。</p></article>
-          <article><span>今回の練習</span><b>${coaching.skill}</b><p>${coaching.lesson}</p></article>
-          <article><span>${activeSwitch.label}</span><b>${tactic.title}</b><p>${contract.surface}</p></article>
-          ${carry}
-          <article class="briefing-route route-${compass.tone}"><span>今のルート</span><b>${stage.label} / ${compass.label}</b><p>${compass.fork}</p></article>
+        <div class="briefing-grid briefing-grid-minimal">
+          <article class="briefing-win"><span>今日の目的</span><b>${mission.title}</b><p>${mission.aim}</p></article>
+          <article><span>見るサイン</span><b>${reading.signal}</b><p>${reading.goodRead}</p></article>
+          <article class="briefing-risk"><span>避けること</span><b>${reading.misread}</b><p>${design.temptationTrap}</p></article>
         </div>
         <div class="briefing-start ${startGuide.className}">
           <span>${startGuide.label}</span>
@@ -1644,7 +1629,7 @@ function game() {
   return `<div class="game-shell game-v2">
     <header class="game-header"><button class="icon-button" data-go="profile">×</button><div class="game-person">${avatar(c)}<div><b>${c.name}</b><span>${c.roleName} / ${c.style}</span></div></div><div class="game-progress"><span>DATE ${dateIndex + 1} <b>${state.sceneIndex + 1} / ${count}</b></span><i><em style="width:${((state.sceneIndex + 1) / count) * 100}%;background:${c.color}"></em></i></div></header>
     <main class="game-main"><aside class="score-strip"><div class="score-hero" style="--c:${c.color};--light:${c.light}"><span class="score-orb">${scoreIcon(tier.icon)}<strong>${total}</strong></span><div class="score-copy"><span>\u7dcf\u5408\u8a55\u4fa1</span><b>${tier.label}</b><p>${tier.sub}</p></div></div>${meters()}<div class="relationship-stage stage-${stage.tone}"><span>${stage.label}</span><p>${stage.copy}</p></div>${routeCompassCard(compass, true)}<div class="meter-help">\u30bf\u30a4\u30d7\u3054\u3068\u306b\u91cd\u304f\u898b\u308b\u30dd\u30a4\u30f3\u30c8\u304c\u5c11\u3057\u9055\u3044\u307e\u3059\u3002</div></aside>
-      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ラリー ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context compact"><b>今の読みどころ</b>${sceneFocusPanel({ date, scene, line, reading, tactic, heartKey, needCompass, connectionBid, activeSwitch })}</div>${previousImpactPanel()}${currentDateConversationPanel(dateIndex, local)}${dateMissionCard(mission)}<div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ 駆け引き: ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-option"><span>${String.fromCharCode(65 + index)}</span><p>${choice.label}</p></button>`).join("")}</div></section>
+      <section class="scene" style="--c:${c.color}"><div class="scene-label"><span>${date.title} ラリー ${local + 1}/${date.scenes.length}</span><b>${scene.title}</b></div><div class="scene-context compact">${sceneFocusPanel({ date, scene, line, reading, tactic, heartKey, needCompass, connectionBid, activeSwitch })}</div><div class="scene-visual" style="background:${c.light}">${sceneArtwork(c, scene, state.sceneIndex)}</div><div class="bubble"><span>${c.name}</span><p>「${line}」</p></div><div class="goal">✦ ${dramatic.playerMove}</div><h2>あなたなら、どう返しますか？</h2><div class="choices">${choices.map((choice, index) => `<button data-choice="${index}" class="choice-option"><span>${String.fromCharCode(65 + index)}</span><p>${choice.label}</p></button>`).join("")}</div></section>
     </main>${state.picked ? feedback() : ""}
   </div>`;
 }
@@ -1653,31 +1638,15 @@ function feedback() {
   const picked = state.picked;
   const grade = choiceGrade(picked);
   const c = state.char;
-  const { scene } = currentScene();
-  const subtext = sceneCharacterSubtext(c.id, state.sceneIndex, totalScenes(c), picked.branch);
-  const tactic = picked.tactic || sceneTacticalRead(c.id, state.sceneIndex, totalScenes(c), picked);
-  const momentum = picked.momentum || momentumRead(picked);
+  const nextAction = picked.evaluation?.recovery || picked.better;
   return `<div class="feedback-overlay"><div class="feedback-modal chat-modal feedback-stamp-modal luxury-review grade-${grade.className}">
     <div class="grade-stamp"><small>4段階スタンプ</small><span>${grade.rank}</span><b>${grade.phrase}</b><p>${grade.cue}</p></div>
-    <div class="chat-head" style="--c:${c.color};--light:${c.light}">${avatar(c)}<div><span>${c.roleName} / ${grade.rank} / ${choiceDirection(picked)}</span><h3>${c.name}\u306e反応</h3><p>${grade.cue}</p></div></div>
+    <div class="chat-head" style="--c:${c.color};--light:${c.light}">${avatar(c)}<div><span>${c.roleName} / ${grade.rank}</span><h3>${c.name}\u306e反応</h3><p>${grade.cue}</p></div></div>
     <div class="review-flow">
       <div class="reply-recap"><span>あなたの返答</span><p>${picked.label}</p></div>
       <div class="reaction-card" style="--c:${c.color};--light:${c.light}"><b>${c.name}の反応</b><p>「${picked.reaction}」</p></div>
       <div class="review-verdict"><span>辛口レビュー</span><strong>${grade.rank}</strong><b>${strictChoiceReview(picked, c)}</b><p>${grade.cue}</p></div>
-      <div class="review-next-grid">
-        ${choiceReviewReadout(picked)}
-        <article class="next-impact"><span>次に響く</span><p>${picked.evaluation?.nextImpact || choiceAftertaste(picked)}</p></article>
-        <article class="recovery-tip"><span>リカバリー</span><p>${picked.evaluation?.recovery || picked.better}</p></article>
-      </div>
-      <details class="review-detail-drawer">
-        <summary>詳細を見る</summary>
-        <div class="chat-thread feedback-simple">
-          <div class="chat-bubble subtext"><b>${subtext.title}</b><p>${subtext.copy}</p></div>
-          <div class="chat-bubble read-summary key-${picked.heartKey?.tone || "near"}"><b>${picked.heartKey?.status || "鍵の読み"} / ${picked.needCompass?.status || "関係欲求"} / ${picked.connectionBid?.status || "接続サイン"}</b><p>${tactic.choiceFits ? tactic.payoff : tactic.choiceRisks ? tactic.trap : picked.why}</p><small>${momentum.label}: ${momentum.copy}</small></div>
-          <div class="chat-bubble better"><b>次にもっと自然にするなら</b><p>${picked.better}</p></div>
-          <div class="delta-row">${Object.entries(picked.effect).filter(([, value]) => value !== 0).map(([key, value]) => `<span class="${value > 0 ? "plus" : "minus"}">${scoreIcon(scoreDecor[key]?.icon || "gauge")} ${scoreDecor[key]?.short || scoreLabels[key]} ${value > 0 ? "+" : ""}${value}</span>`).join("")}</div>
-        </div>
-      </details>
+      <article class="review-next-action"><span>次の一手</span><p>${nextAction}</p></article>
     </div>
     <button class="primary full" data-next>${state.sceneIndex === totalScenes() - 1 ? "\u7d50\u679c\u3092\u898b\u308b" : "\u6b21\u306e\u30e9\u30ea\u30fc\u3078"} \u2192</button>
   </div></div>`;
