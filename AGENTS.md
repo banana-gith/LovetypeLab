@@ -10,6 +10,7 @@ Before starting repository work, read this `AGENTS.md` and keep these project ru
 
 - Keep the app static-hostable and easy to run locally.
 - Preserve mobile-first interaction quality.
+- Avoid unnatural empty space, panel/media overlap, and clipped labels on all primary play screens. Use the available mobile viewport fully for core play, review, and intermission screens while keeping all primary actions visible. When changing UI, verify mobile and desktop rendered screens for whitespace balance, overlap, readable contrast, and stable bounds.
 - Keep persona and research-derived content source-backed. Research artifacts live under `research/`; runtime persona data lives in `src/personas.js`.
 - Avoid committing generated secrets or private research credentials.
 

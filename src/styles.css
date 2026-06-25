@@ -2591,3 +2591,171 @@
     height:44px!important;
   }
 }
+
+/* v16 layout fit: prevent empty bands and media/panel overlap */
+.briefing-card,
+.game-v2 .scene,
+.checkpoint-card-minimal,
+.feedback-modal.luxury-review{
+  contain:layout paint!important;
+}
+.briefing-photo,
+.game-v2 .scene-visual,
+.profile-art,
+.detail-art,
+.character-select-v2 .roster-card .profile-art{
+  isolation:isolate!important;
+}
+.briefing-photo .scene-photo,
+.game-v2 .scene-photo,
+.game-v2 .scene-visual img,
+.character-select-v2 .roster-card .avatar-photo img{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+}
+.checkpoint-v2 .checkpoint-main{
+  place-items:start center!important;
+  align-content:start!important;
+  padding-top:clamp(14px,4dvh,36px)!important;
+}
+.checkpoint-card-minimal .checkpoint-kicker{
+  justify-self:start!important;
+}
+
+@media(max-width:620px){
+  .briefing-card{
+    min-height:0!important;
+    max-height:calc(100dvh - 68px)!important;
+    align-content:start!important;
+    overflow:hidden!important;
+  }
+  .game-v2 .scene{
+    height:auto!important;
+    min-height:0!important;
+    max-height:calc(100dvh - 68px)!important;
+    grid-template-rows:auto auto minmax(120px,18dvh) minmax(54px,auto) auto auto minmax(104px,auto)!important;
+    align-content:start!important;
+    overflow:hidden!important;
+  }
+  .game-v2 .scene-visual{
+    min-height:120px!important;
+    height:auto!important;
+  }
+  .game-v2 .choices{
+    align-self:start!important;
+  }
+  .feedback-overlay{
+    align-items:flex-end!important;
+  }
+  .feedback-modal.luxury-review{
+    height:auto!important;
+    min-height:0!important;
+    max-height:100dvh!important;
+    grid-template-rows:auto auto auto!important;
+    overflow:auto!important;
+  }
+  .review-flow{
+    overflow:visible!important;
+  }
+  .luxury-review>.primary.full{
+    position:static!important;
+  }
+  .checkpoint-v2 .checkpoint-main{
+    height:calc(100dvh - 64px)!important;
+    place-items:start center!important;
+    align-content:start!important;
+    padding-top:8px!important;
+  }
+  .checkpoint-v2 .checkpoint-card.checkpoint-card-minimal{
+    justify-self:center!important;
+    align-self:start!important;
+  }
+}
+
+/* v17 mobile viewport fill: spend height on media/content, keep actions visible */
+@media(max-width:620px){
+  .briefing-main{
+    height:calc(100dvh - 54px)!important;
+    padding:7px!important;
+    overflow:hidden!important;
+  }
+  .briefing-card{
+    height:calc(100dvh - 68px)!important;
+    min-height:calc(100dvh - 68px)!important;
+    max-height:calc(100dvh - 68px)!important;
+    display:grid!important;
+    grid-template-rows:minmax(252px,1fr) auto auto 48px!important;
+    align-content:stretch!important;
+  }
+  .briefing-hero{
+    min-height:0!important;
+    display:grid!important;
+    grid-template-rows:auto minmax(142px,1fr)!important;
+  }
+  .briefing-photo{
+    height:auto!important;
+    min-height:142px!important;
+  }
+  .briefing-card>.primary.full{
+    align-self:end!important;
+  }
+  .game-v2 .game-main{
+    height:calc(100dvh - 54px)!important;
+    overflow:hidden!important;
+  }
+  .game-v2 .scene{
+    height:calc(100dvh - 68px)!important;
+    min-height:calc(100dvh - 68px)!important;
+    max-height:calc(100dvh - 68px)!important;
+    grid-template-rows:auto auto minmax(218px,1fr) minmax(54px,auto) auto auto minmax(112px,auto)!important;
+    align-content:stretch!important;
+  }
+  .game-v2 .scene-visual{
+    min-height:218px!important;
+  }
+  .feedback-overlay{
+    align-items:stretch!important;
+    padding:0!important;
+  }
+  .feedback-modal.luxury-review{
+    height:100dvh!important;
+    min-height:100dvh!important;
+    max-height:100dvh!important;
+    display:grid!important;
+    grid-template-rows:auto minmax(0,1fr) 44px!important;
+    overflow:hidden!important;
+  }
+  .review-flow{
+    min-height:0!important;
+    overflow:auto!important;
+  }
+  .checkpoint-v2 .checkpoint-main{
+    height:calc(100dvh - 64px)!important;
+    padding:8px 7px 7px!important;
+    overflow:hidden!important;
+  }
+  .checkpoint-v2 .checkpoint-card.checkpoint-card-minimal{
+    height:calc(100dvh - 80px)!important;
+    max-height:calc(100dvh - 80px)!important;
+    display:grid!important;
+    grid-template-rows:auto auto auto minmax(96px,1fr) minmax(104px,1fr) 44px!important;
+    overflow:hidden!important;
+  }
+  .checkpoint-card-minimal .checkpoint-core,
+  .checkpoint-card-minimal .checkpoint-next{
+    display:grid!important;
+    align-content:center!important;
+  }
+  .checkpoint-card-minimal .primary.full{
+    align-self:end!important;
+  }
+}
+
+@media(min-width:621px){
+  .game-v2 .scene{
+    max-height:calc(100dvh - 96px)!important;
+    overflow:auto!important;
+  }
+}
