@@ -1295,7 +1295,99 @@ function fiveRallyDates(story) {
   };
 }
 
+const storySkins = {
+  sana: {
+    base: () => nagiEnhancedStory,
+    profile: {
+      fullName: "花守 サナ",
+      backstory: "花と小物の組み合わせで、その日の空気を作るフローリスト。好きなものを説明させられるより、一緒に味わってもらうと安心する。",
+      attraction: "感性を評価せず、同じ景色を見ながら自分の感じ方も少し返してくれる人。",
+      innerNeed: "好みや沈黙を急かされず、選ぶ余白を残してもらうこと。",
+      dateConcept: "花屋、夕方の公園、静かな帰り道で、感性を採点しない親密さを育てる。",
+    },
+    replacements: [
+      ["月森 ナギ", "花守 サナ"],
+      ["ナギ", "サナ"],
+      ["INFP", "ISFP"],
+      ["イラストレーター", "フローリスト"],
+      ["作品", "花束"],
+      ["スケッチ帳", "花のメモ"],
+      ["小さなギャラリー", "小さな花屋"],
+      ["古本市", "花屋めぐり"],
+      ["手紙", "花束のカード"],
+      ["創作", "感性"],
+    ],
+  },
+  kaho: {
+    base: () => characterStories.haruka,
+    profile: {
+      fullName: "朝野 カホ",
+      backstory: "カフェの現場を回しながら、人の好みや疲れにすぐ気づく。明るく支える分、気遣いを当然扱いされると静かに冷める。",
+      attraction: "小さな準備や気遣いに気づき、ありがとうを行動で返してくれる人。",
+      innerNeed: "自分だけが場を整える役にならず、安心を返してもらうこと。",
+      dateConcept: "朝のカフェ、にぎやかな店内、閉店後の静けさで、気遣いを見つけて返す練習。",
+    },
+    replacements: [
+      ["ハルカ", "カホ"],
+      ["ISTJ", "ESFJ"],
+      ["プロダクト設計", "カフェマネージャー"],
+      ["建築", "カフェ"],
+      ["文房具", "小さなサプライズ"],
+      ["約束", "気遣い"],
+      ["誠実", "あたたかさ"],
+    ],
+  },
+  ibuki: {
+    base: () => rioEnhancedStory,
+    profile: {
+      fullName: "風間 イブキ",
+      backstory: "広告企画の現場で言葉遊びと発想を武器にしている。軽く見えるが、弱さまでネタにされることにはかなり敏感。",
+      attraction: "発想に乗り、対等に切り返し、最後は本音を茶化さず受け取れる人。",
+      innerNeed: "会話を勝ち負けにせず、遊びながらも感情の逃げ道を残してもらうこと。",
+      dateConcept: "夜の店、ボードゲーム、帰り道で、ひねりのある会話から本音へ着地する。",
+    },
+    replacements: [
+      ["朝倉 リオ", "風間 イブキ"],
+      ["リオ", "イブキ"],
+      ["ENFP", "ENTP"],
+      ["イベント制作", "広告プランナー"],
+      ["明るさ", "会話の軽さ"],
+      ["自由", "発想"],
+      ["ひらめき", "ひねり"],
+      ["街歩き", "ボードゲーム"],
+      ["音楽フェス", "深夜ラジオ"],
+      ["新しいカフェ", "企画会議"],
+    ],
+  },
+};
+
+function replaceStoryText(value, replacements) {
+  if (typeof value === "string") {
+    return replacements.reduce((text, [from, to]) => text.split(from).join(to), value);
+  }
+  if (Array.isArray(value)) return value.map((item) => replaceStoryText(item, replacements));
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, replaceStoryText(item, replacements)]));
+  }
+  return value;
+}
+
+function skinnedStoryFor(characterId) {
+  const skin = storySkins[characterId];
+  if (!skin) return null;
+  const story = replaceStoryText(skin.base(), skin.replacements);
+  return {
+    ...story,
+    profile: {
+      ...story.profile,
+      ...skin.profile,
+    },
+  };
+}
+
 export function storyFor(characterId) {
+  const skinned = skinnedStoryFor(characterId);
+  if (skinned) return fiveRallyDates(skinned);
   if (characterId === "rio") return fiveRallyDates(rioEnhancedStory);
   if (characterId === "nagi") return fiveRallyDates(nagiEnhancedStory);
   if (characterId === "aoi") return fiveRallyDates(aoiEnhancedStory);
