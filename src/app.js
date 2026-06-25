@@ -1638,13 +1638,18 @@ function feedback() {
   const picked = state.picked;
   const grade = choiceGrade(picked);
   const c = state.char;
+  const { scene } = currentScene();
   const nextAction = picked.evaluation?.recovery || picked.better;
+  const reactionArt = sceneArtwork(c, scene, state.sceneIndex);
   return `<div class="feedback-overlay"><div class="feedback-modal chat-modal feedback-stamp-modal luxury-review grade-${grade.className}">
     <div class="grade-stamp"><small>4段階スタンプ</small><span>${grade.rank}</span><b>${grade.phrase}</b><p>${grade.cue}</p></div>
     <div class="chat-head" style="--c:${c.color};--light:${c.light}">${avatar(c)}<div><span>${c.roleName} / ${grade.rank}</span><h3>${c.name}\u306e反応</h3><p>${grade.cue}</p></div></div>
     <div class="review-flow">
       <div class="reply-recap"><span>あなたの返答</span><p>${picked.label}</p></div>
-      <div class="reaction-card" style="--c:${c.color};--light:${c.light}"><b>${c.name}の反応</b><p>「${picked.reaction}」</p></div>
+      <div class="reaction-card has-reaction-art" style="--c:${c.color};--light:${c.light}">
+        <figure class="reaction-art">${reactionArt}<figcaption>${c.name}</figcaption></figure>
+        <div class="reaction-copy"><b>${c.name}の反応</b><p>「${picked.reaction}」</p></div>
+      </div>
       <div class="review-verdict"><span>辛口レビュー</span><strong>${grade.rank}</strong><b>${strictChoiceReview(picked, c)}</b><p>${grade.cue}</p></div>
       <article class="review-next-action"><span>次の一手</span><p>${nextAction}</p></article>
     </div>

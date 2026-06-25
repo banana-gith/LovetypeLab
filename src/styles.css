@@ -3212,3 +3212,225 @@
     max-height:calc(100dvh - 44px)!important;
   }
 }
+
+/* v22 reaction layout: content-fit board with character image */
+.reaction-card.has-reaction-art{
+  display:grid!important;
+  grid-template-columns:112px minmax(0,1fr)!important;
+  gap:12px!important;
+  align-items:stretch!important;
+  min-height:132px!important;
+  padding:10px!important;
+}
+.reaction-art{
+  position:relative!important;
+  margin:0!important;
+  min-width:0!important;
+  overflow:hidden!important;
+  border-radius:13px!important;
+  background:#0d1018!important;
+  border:1px solid #e2b66455!important;
+  box-shadow:inset 0 1px 0 #fff2!important;
+}
+.reaction-art .scene-photo,
+.reaction-art .avatar{
+  width:100%!important;
+  height:100%!important;
+  min-height:100%!important;
+  display:block!important;
+  object-fit:cover!important;
+  object-position:center 36%!important;
+}
+.reaction-art:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,#0000 42%,#07080acc 100%);
+  pointer-events:none;
+}
+.reaction-art figcaption{
+  position:absolute;
+  z-index:1;
+  left:8px;
+  bottom:7px;
+  color:#fff6df;
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.16em;
+  text-shadow:0 2px 9px #000;
+}
+.reaction-copy{
+  min-width:0!important;
+  display:grid!important;
+  align-content:center!important;
+  gap:8px!important;
+}
+.reaction-copy b{
+  justify-self:start!important;
+}
+.reaction-copy p{
+  margin:0!important;
+}
+
+@media(max-width:620px){
+  .feedback-modal.luxury-review,
+  .feedback-overlay .feedback-modal.feedback-stamp-modal.luxury-review{
+    height:auto!important;
+    min-height:0!important;
+    max-height:calc(100dvh - 14px)!important;
+    display:grid!important;
+    grid-template-rows:auto auto 46px!important;
+    align-content:start!important;
+  }
+  .review-flow{
+    flex:0 0 auto!important;
+    display:grid!important;
+    grid-template-rows:auto!important;
+    gap:8px!important;
+    min-height:0!important;
+    overflow:visible!important;
+  }
+  .reaction-card.has-reaction-art{
+    grid-template-columns:94px minmax(0,1fr)!important;
+    min-height:128px!important;
+    padding:9px!important;
+  }
+  .reaction-art{
+    min-height:110px!important;
+  }
+  .reaction-copy{
+    align-content:center!important;
+  }
+  .reaction-card p{
+    font-size:12px!important;
+    line-height:1.48!important;
+    -webkit-line-clamp:4!important;
+  }
+  .review-verdict{
+    min-height:128px!important;
+    grid-template-columns:56px minmax(0,1fr)!important;
+    grid-template-rows:auto auto auto!important;
+    gap:6px 9px!important;
+    padding:10px!important;
+  }
+  .review-verdict strong{
+    width:52px!important;
+    height:52px!important;
+    border-radius:14px!important;
+    font-size:23px!important;
+  }
+  .review-verdict b{
+    font-size:11px!important;
+    line-height:1.38!important;
+    -webkit-line-clamp:3!important;
+  }
+  .review-next-action{
+    min-height:58px!important;
+    padding:9px 10px!important;
+  }
+  .review-next-action p{
+    font-size:9px!important;
+    line-height:1.42!important;
+    -webkit-line-clamp:2!important;
+  }
+  .luxury-review>.primary.full{
+    margin-top:0!important;
+  }
+}
+
+/* v23 mobile review board: fill the phone viewport without dead gaps */
+@media(max-width:620px){
+  .feedback-overlay{
+    align-items:stretch!important;
+    padding:0!important;
+  }
+  .feedback-modal.luxury-review,
+  .feedback-overlay .feedback-modal.feedback-stamp-modal.luxury-review{
+    width:100%!important;
+    height:100dvh!important;
+    max-height:100dvh!important;
+    border-radius:0!important;
+    padding:8px 10px 10px!important;
+    grid-template-rows:auto minmax(0,1fr) 46px!important;
+    gap:8px!important;
+    overflow:hidden!important;
+  }
+  .review-flow{
+    height:100%!important;
+    min-height:0!important;
+    display:grid!important;
+    grid-template-rows:auto minmax(136px,1.18fr) minmax(136px,1fr) minmax(62px,.5fr)!important;
+    align-content:stretch!important;
+    gap:8px!important;
+    overflow:hidden!important;
+    padding:0!important;
+  }
+  .reply-recap,
+  .reaction-card,
+  .review-verdict,
+  .review-next-action{
+    min-height:0!important;
+  }
+  .reaction-card.has-reaction-art{
+    position:relative!important;
+    min-height:136px!important;
+    height:100%!important;
+    grid-template-columns:108px minmax(0,1fr)!important;
+    align-items:stretch!important;
+  }
+  .reaction-art{
+    position:absolute!important;
+    inset:9px auto 9px 9px!important;
+    width:100px!important;
+    align-self:stretch!important;
+    height:auto!important;
+    min-height:0!important;
+  }
+  .reaction-copy{
+    grid-column:2!important;
+  }
+  .reaction-copy{
+    align-content:center!important;
+  }
+  .review-verdict{
+    min-height:136px!important;
+    height:100%!important;
+    align-content:center!important;
+  }
+  .review-next-action{
+    height:100%!important;
+    display:grid!important;
+    align-content:center!important;
+  }
+  .luxury-review>.primary.full{
+    min-height:46px!important;
+    height:46px!important;
+  }
+}
+
+/* v24 desktop/tablet review board: avoid stretched empty lanes */
+@media(min-width:621px){
+  .feedback-modal.luxury-review,
+  .feedback-overlay .feedback-modal.feedback-stamp-modal.luxury-review{
+    height:auto!important;
+    min-height:0!important;
+    max-height:calc(100dvh - 32px)!important;
+    overflow:auto!important;
+  }
+  .review-flow{
+    height:auto!important;
+    display:grid!important;
+    grid-template-rows:auto!important;
+    align-content:start!important;
+    gap:10px!important;
+  }
+  .reaction-card.has-reaction-art{
+    min-height:138px!important;
+  }
+  .review-verdict{
+    min-height:158px!important;
+  }
+  .review-next-action{
+    min-height:68px!important;
+  }
+}
