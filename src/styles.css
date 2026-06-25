@@ -2759,3 +2759,456 @@
     overflow:auto!important;
   }
 }
+
+/* v18 review board polish: full-screen, but not stretched-empty */
+.feedback-overlay{
+  background:
+    radial-gradient(circle at 50% 0,#6d213133 0 180px,transparent 182px),
+    linear-gradient(180deg,#050407e8,#12080dea)!important;
+}
+.feedback-modal.luxury-review,
+.feedback-overlay .feedback-modal.feedback-stamp-modal.luxury-review{
+  width:min(720px,calc(100% - 24px))!important;
+  height:min(820px,calc(100dvh - 24px))!important;
+  max-height:calc(100dvh - 24px)!important;
+  margin:auto!important;
+  padding:12px!important;
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr) 52px!important;
+  gap:10px!important;
+  overflow:hidden!important;
+  border-radius:22px!important;
+  background:
+    linear-gradient(180deg,#fff7e8 0%,#ecd6b8 100%)!important;
+  color:#22151a!important;
+  border:1px solid #f2cc8d!important;
+  box-shadow:0 26px 90px #020104cc,inset 0 1px 0 #fffaf0!important;
+}
+.luxury-review .chat-head{
+  min-height:70px!important;
+  margin:0!important;
+  padding:10px!important;
+  display:grid!important;
+  grid-template-columns:48px minmax(0,1fr)!important;
+  gap:10px!important;
+  align-items:center!important;
+  border-radius:16px!important;
+  background:linear-gradient(135deg,#23131b,#35121d 52%,#244b6c)!important;
+  border:1px solid #e2b66466!important;
+  box-shadow:inset 0 1px 0 #fff2,0 12px 28px #2a100f28!important;
+}
+.luxury-review .chat-head .avatar,
+.luxury-review .chat-head .avatar-photo{
+  width:48px!important;
+  height:48px!important;
+  border-radius:14px!important;
+  border:1px solid #ffe0a780!important;
+}
+.luxury-review .chat-head span{
+  color:#f8dca8!important;
+  font-size:8px!important;
+  font-weight:900!important;
+  letter-spacing:.12em!important;
+}
+.luxury-review .chat-head h3{
+  margin:2px 0!important;
+  color:#fff9eb!important;
+  font-size:17px!important;
+  line-height:1.2!important;
+}
+.luxury-review .chat-head p{
+  margin:0!important;
+  color:#ffe8bf!important;
+  font-size:10px!important;
+  line-height:1.35!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+.review-flow{
+  min-height:0!important;
+  display:grid!important;
+  grid-template-rows:auto auto auto auto!important;
+  align-content:space-between!important;
+  gap:8px!important;
+  overflow:hidden!important;
+}
+.reply-recap,
+.reaction-card,
+.review-verdict,
+.review-next-action{
+  margin:0!important;
+  border-radius:16px!important;
+  box-shadow:0 10px 28px #3d160e16,inset 0 1px 0 #fff8!important;
+}
+.reply-recap{
+  min-height:42px!important;
+  padding:8px 10px!important;
+  display:grid!important;
+  grid-template-columns:auto minmax(0,1fr)!important;
+  gap:8px!important;
+  align-items:center!important;
+  background:linear-gradient(180deg,#fffaf2,#f7e7cc)!important;
+  border:1px solid #d7a85c73!important;
+}
+.reply-recap span,
+.reaction-card b,
+.review-verdict span,
+.review-next-action span{
+  margin:0!important;
+  display:inline-flex!important;
+  width:max-content!important;
+  max-width:100%!important;
+  border-radius:999px!important;
+  padding:3px 7px!important;
+  background:#35121d!important;
+  color:#f6d58e!important;
+  border:1px solid #e2b66466!important;
+  font-size:7px!important;
+  font-weight:900!important;
+  letter-spacing:.12em!important;
+  white-space:nowrap!important;
+}
+.reply-recap p{
+  margin:0!important;
+  color:#24151a!important;
+  font-size:10px!important;
+  line-height:1.35!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+.reaction-card{
+  min-height:124px!important;
+  padding:14px!important;
+  display:grid!important;
+  align-content:center!important;
+  gap:8px!important;
+  background:
+    radial-gradient(circle at 94% 18%,color-mix(in srgb,var(--c,#8a78ff) 30%,transparent) 0 80px,transparent 82px),
+    linear-gradient(135deg,#1c1420,#102033)!important;
+  border:1px solid color-mix(in srgb,var(--c,#8a78ff) 46%,#d9a64f)!important;
+}
+.reaction-card p{
+  margin:0!important;
+  color:#fff8e9!important;
+  font-family:'Shippori Mincho','Noto Sans JP',serif!important;
+  font-size:16px!important;
+  line-height:1.62!important;
+  display:-webkit-box!important;
+  -webkit-line-clamp:3!important;
+  -webkit-box-orient:vertical!important;
+  overflow:hidden!important;
+}
+.review-verdict{
+  min-height:168px!important;
+  padding:13px!important;
+  display:grid!important;
+  grid-template-columns:78px minmax(0,1fr)!important;
+  grid-template-rows:auto auto minmax(0,1fr)!important;
+  gap:7px 12px!important;
+  align-items:center!important;
+  background:linear-gradient(135deg,#54101f,#1a1018 68%,#102033)!important;
+  border:1px solid #f0a0a985!important;
+}
+.review-verdict span{
+  grid-column:1 / -1!important;
+}
+.review-verdict strong{
+  grid-row:2 / 4!important;
+  width:68px!important;
+  height:68px!important;
+  display:grid!important;
+  place-items:center!important;
+  border-radius:18px!important;
+  background:linear-gradient(180deg,#fff2c7,#d7a85c)!important;
+  color:#2a0d14!important;
+  font-family:'DM Sans','Noto Sans JP',sans-serif!important;
+  font-size:30px!important;
+  line-height:1!important;
+  text-shadow:none!important;
+  box-shadow:0 12px 28px #0005,inset 0 1px 0 #fff!important;
+}
+.review-verdict b{
+  margin:0!important;
+  color:#fffaf0!important;
+  font-size:13px!important;
+  line-height:1.45!important;
+  display:-webkit-box!important;
+  -webkit-line-clamp:3!important;
+  -webkit-box-orient:vertical!important;
+  overflow:hidden!important;
+}
+.review-verdict p{
+  margin:0!important;
+  color:#ffd6cf!important;
+  font-size:9px!important;
+  line-height:1.45!important;
+  display:-webkit-box!important;
+  -webkit-line-clamp:2!important;
+  -webkit-box-orient:vertical!important;
+  overflow:hidden!important;
+}
+.review-next-action{
+  min-height:72px!important;
+  padding:11px 12px!important;
+  display:grid!important;
+  align-content:center!important;
+  gap:7px!important;
+  background:linear-gradient(135deg,#fffaf2,#f1d9b4)!important;
+  border:1px solid #d7a85c73!important;
+}
+.review-next-action p{
+  margin:0!important;
+  color:#3f2a25!important;
+  font-size:10px!important;
+  line-height:1.48!important;
+  display:-webkit-box!important;
+  -webkit-line-clamp:2!important;
+  -webkit-box-orient:vertical!important;
+  overflow:hidden!important;
+}
+.luxury-review>.primary.full{
+  min-height:52px!important;
+  height:52px!important;
+  margin:0!important;
+  align-self:end!important;
+  border-radius:16px!important;
+}
+
+@media(max-width:620px){
+  .feedback-overlay{
+    align-items:center!important;
+    justify-content:center!important;
+    padding:0!important;
+  }
+  .feedback-modal.luxury-review,
+  .feedback-overlay .feedback-modal.feedback-stamp-modal.luxury-review{
+    width:calc(100% - 14px)!important;
+    height:calc(100dvh - 14px)!important;
+    min-height:calc(100dvh - 14px)!important;
+    max-height:calc(100dvh - 14px)!important;
+    padding:9px!important;
+    grid-template-rows:auto minmax(0,1fr) 46px!important;
+    gap:8px!important;
+    border-radius:20px!important;
+  }
+  .luxury-review .chat-head{
+    min-height:66px!important;
+    padding:8px!important;
+    grid-template-columns:44px minmax(0,1fr)!important;
+    border-radius:14px!important;
+  }
+  .luxury-review .chat-head .avatar,
+  .luxury-review .chat-head .avatar-photo{
+    width:44px!important;
+    height:44px!important;
+    border-radius:12px!important;
+  }
+  .luxury-review .chat-head h3{
+    font-size:15px!important;
+  }
+  .luxury-review .chat-head p{
+    font-size:8px!important;
+  }
+  .review-flow{
+    gap:7px!important;
+    align-content:space-between!important;
+  }
+  .reply-recap{
+    min-height:39px!important;
+    padding:7px 8px!important;
+  }
+  .reaction-card{
+    min-height:116px!important;
+    padding:12px!important;
+  }
+  .reaction-card p{
+    font-size:14px!important;
+    line-height:1.55!important;
+  }
+  .review-verdict{
+    min-height:154px!important;
+    grid-template-columns:68px minmax(0,1fr)!important;
+    gap:6px 10px!important;
+    padding:11px!important;
+  }
+  .review-verdict strong{
+    width:60px!important;
+    height:60px!important;
+    border-radius:16px!important;
+    font-size:27px!important;
+  }
+  .review-verdict b{
+    font-size:12px!important;
+    line-height:1.4!important;
+  }
+  .review-next-action{
+    min-height:66px!important;
+    padding:10px!important;
+  }
+  .luxury-review>.primary.full{
+    height:46px!important;
+    min-height:46px!important;
+    border-radius:14px!important;
+  }
+}
+
+@media(max-width:620px){
+  .checkpoint-v2 .checkpoint-card.checkpoint-card-minimal{
+    align-content:space-between!important;
+    grid-template-rows:auto auto auto auto auto 44px!important;
+    gap:8px!important;
+    padding:10px!important;
+  }
+  .checkpoint-card-minimal .checkpoint-core,
+  .checkpoint-card-minimal .checkpoint-next{
+    min-height:118px!important;
+    display:grid!important;
+    align-content:center!important;
+  }
+}
+
+/* v19 review rhythm: grouped content, bottom CTA, no awkward voids */
+@media(max-width:620px){
+  .feedback-modal.luxury-review,
+  .feedback-overlay .feedback-modal.feedback-stamp-modal.luxury-review{
+    display:flex!important;
+    flex-direction:column!important;
+    gap:8px!important;
+  }
+  .review-flow{
+    flex:0 0 auto!important;
+    display:grid!important;
+    grid-template-rows:auto auto auto auto!important;
+    align-content:start!important;
+    gap:8px!important;
+    overflow:visible!important;
+  }
+  .reaction-card{
+    min-height:132px!important;
+  }
+  .review-verdict{
+    min-height:172px!important;
+    grid-template-columns:64px minmax(0,1fr)!important;
+    grid-template-areas:
+      "label label"
+      "grade text"
+      "grade cue"!important;
+    align-items:center!important;
+  }
+  .review-verdict span{
+    grid-area:label!important;
+  }
+  .review-verdict strong{
+    grid-area:grade!important;
+    grid-row:auto!important;
+    align-self:center!important;
+  }
+  .review-verdict b{
+    grid-area:text!important;
+    align-self:end!important;
+  }
+  .review-verdict p{
+    grid-area:cue!important;
+    align-self:start!important;
+  }
+  .review-next-action{
+    min-height:72px!important;
+  }
+  .luxury-review>.primary.full{
+    margin-top:auto!important;
+    width:100%!important;
+  }
+  .checkpoint-v2 .checkpoint-card.checkpoint-card-minimal{
+    display:flex!important;
+    flex-direction:column!important;
+    align-content:stretch!important;
+    gap:10px!important;
+  }
+  .checkpoint-card-minimal .checkpoint-core,
+  .checkpoint-card-minimal .checkpoint-next{
+    min-height:96px!important;
+    align-content:center!important;
+  }
+  .checkpoint-card-minimal .primary.full{
+    margin-top:auto!important;
+    width:100%!important;
+  }
+}
+
+/* v20 eliminate dead lower space on review boards */
+@media(max-width:620px){
+  .review-flow{
+    flex:1 1 auto!important;
+    grid-template-rows:39px minmax(146px,1fr) minmax(196px,1.15fr) minmax(86px,.7fr)!important;
+    min-height:0!important;
+  }
+  .reaction-card,
+  .review-verdict,
+  .review-next-action{
+    height:auto!important;
+  }
+  .reaction-card p{
+    -webkit-line-clamp:4!important;
+  }
+  .review-verdict b{
+    -webkit-line-clamp:4!important;
+  }
+  .review-next-action p{
+    -webkit-line-clamp:3!important;
+  }
+  .checkpoint-v2 .checkpoint-card.checkpoint-card-minimal{
+    position:relative!important;
+  }
+  .checkpoint-v2 .checkpoint-card.checkpoint-card-minimal:after{
+    content:"";
+    flex:1 1 auto;
+    min-height:72px;
+    order:8;
+    border-radius:16px;
+    background:
+      radial-gradient(circle at 18% 50%,#ffffff8f 0 2px,transparent 3px),
+      radial-gradient(circle at 82% 50%,#ffffff80 0 2px,transparent 3px),
+      linear-gradient(90deg,#35121d,#244b6c 50%,#b9774f);
+    opacity:.28;
+    border:1px solid #d7a85c55;
+  }
+  .checkpoint-card-minimal .primary.full{
+    order:9;
+  }
+}
+
+/* v21 date review restraint: compact card beats fake filler */
+@media(max-width:620px){
+  .checkpoint-v2 .checkpoint-card.checkpoint-card-minimal{
+    height:auto!important;
+    min-height:0!important;
+    max-height:calc(100dvh - 80px)!important;
+    display:grid!important;
+    grid-template-rows:auto!important;
+    align-content:start!important;
+    gap:9px!important;
+    overflow:hidden!important;
+  }
+  .checkpoint-v2 .checkpoint-card.checkpoint-card-minimal:after{
+    content:none!important;
+    display:none!important;
+  }
+  .checkpoint-card-minimal .checkpoint-core,
+  .checkpoint-card-minimal .checkpoint-next{
+    min-height:92px!important;
+  }
+  .checkpoint-card-minimal .primary.full{
+    margin-top:0!important;
+    order:initial!important;
+  }
+}
+
+@media(min-width:621px){
+  .feedback-modal.luxury-review,
+  .feedback-overlay .feedback-modal.feedback-stamp-modal.luxury-review{
+    height:min(760px,calc(100dvh - 44px))!important;
+    max-height:calc(100dvh - 44px)!important;
+  }
+}
