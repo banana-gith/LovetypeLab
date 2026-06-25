@@ -1848,22 +1848,30 @@
     max-height:100dvh!important;
     border-radius:0!important;
     margin:0!important;
-    padding:7px 10px 9px!important;
-    grid-template-rows:auto minmax(0,1fr) 48px!important;
+    padding:6px 9px 7px!important;
+    display:grid!important;
+    grid-template-rows:auto minmax(0,1fr) 44px!important;
+    gap:5px!important;
+    overflow:hidden!important;
   }
   .review-flow{
     min-height:0!important;
+    max-height:100%!important;
     overflow:auto!important;
-    gap:5px!important;
+    gap:4px!important;
+    padding-bottom:0!important;
   }
   .review-detail-drawer:not([open]){
     min-height:0!important;
   }
   .review-detail-drawer:not([open]) summary{
-    padding:7px!important;
+    padding:6px!important;
   }
   .luxury-review>.primary.full{
-    min-height:48px!important;
-    height:48px!important;
+    position:static!important;
+    min-height:44px!important;
+    height:44px!important;
+    margin:0!important;
+    align-self:end!important;
   }
 }
