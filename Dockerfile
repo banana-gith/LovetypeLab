@@ -13,6 +13,7 @@ RUN apt-get update \
     ffmpeg \
     curl \
     git \
+    gh \
     ca-certificates \
   && rm -rf /var/lib/apt/lists/*
 

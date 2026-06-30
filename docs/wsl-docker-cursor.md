@@ -7,6 +7,10 @@ This repository can be opened from Cursor with Dev Containers.
 3. In Cursor, run `Dev Containers: Reopen in Container`.
 4. The container loads `.env.local` through `compose.yaml`.
 
+GitHub operations should run inside the container. The image includes `git` and
+GitHub CLI (`gh`); provide `GH_TOKEN` or `GITHUB_TOKEN` in `.env.local` for
+authenticated GitHub API, workflow, and repository operations.
+
 Local verification:
 
 ```bash
