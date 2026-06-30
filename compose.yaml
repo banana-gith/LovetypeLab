@@ -1,0 +1,17 @@
+services:
+  workspace:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: lovetypelab-dev
+    init: true
+    command: sleep infinity
+    working_dir: /workspaces/LovetypeLab
+    env_file:
+      - .env.local
+    volumes:
+      - .:/workspaces/LovetypeLab
+      - node_modules:/workspaces/LovetypeLab/node_modules
+
+volumes:
+  node_modules:
